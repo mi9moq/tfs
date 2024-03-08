@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mironov.hw1.R
+import com.mironov.hw1.adapter.ContactAdapter
 import com.mironov.hw1.databinding.ActivityMainBinding
 import com.mironov.hw1.model.Contact
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var contactAdapter: ContactAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +28,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        initAdapter()
 
         val contract = ActivityResultContracts.StartActivityForResult()
         val launcher = registerForActivityResult(contract) {
@@ -40,11 +44,27 @@ class MainActivity : AppCompatActivity() {
                         SecondActivity.EXTRA_CONTACTS,
                     ) ?: arrayListOf()
                 }
+
+                showContacts(contacts)
             }
         }
 
         binding.btn.setOnClickListener {
             launcher.launch(SecondActivity.newIntent(this))
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        contactAdapter = null
+    }
+
+    private fun showContacts(contacts: ArrayList<Contact>) {
+        contactAdapter?.setItems(contacts)
+    }
+
+    private fun initAdapter() {
+        contactAdapter = ContactAdapter()
+        binding.contacts.adapter = contactAdapter
     }
 }
