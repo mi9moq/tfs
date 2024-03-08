@@ -9,6 +9,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mironov.hw1.databinding.SecondActivityBinding
 import com.mironov.hw1.model.Contact
+import com.mironov.hw1.service.PickContactService
 
 class SecondActivity : AppCompatActivity() {
 
@@ -61,6 +62,13 @@ class SecondActivity : AppCompatActivity() {
         }
         registerReceiver(receiver, intentFilter)
         binding.btn.setOnClickListener {
+            startService()
+        }
+    }
+
+    private fun startService() {
+        Intent(this, PickContactService::class.java).apply {
+            startService(this)
         }
     }
 
