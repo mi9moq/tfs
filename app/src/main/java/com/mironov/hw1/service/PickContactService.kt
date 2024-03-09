@@ -4,11 +4,16 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.provider.ContactsContract
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mironov.hw1.activity.SecondActivity
 import com.mironov.hw1.model.Contact
 import kotlin.concurrent.thread
 
 class PickContactService : Service() {
+
+    private val localBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(this)
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -26,9 +31,10 @@ class PickContactService : Service() {
             }
             Intent(SecondActivity.ACTION_LOADED).apply {
                 putParcelableArrayListExtra(SecondActivity.EXTRA_CONTACTS, contacts)
-                sendBroadcast(this)
+                localBroadcastManager.sendBroadcast(this)
             }
         }
+        stopSelf()
         return START_NOT_STICKY
     }
 
