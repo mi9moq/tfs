@@ -26,7 +26,7 @@ class PickContactService : Service() {
                 Thread.sleep(250)
                 Intent(SecondActivity.ACTION_LOADING).apply {
                     putExtra(SecondActivity.EXTRA_PERCENT, i * 10)
-                    sendBroadcast(this)
+                    localBroadcastManager.sendBroadcast(this)
                 }
             }
             Intent(SecondActivity.ACTION_LOADED).apply {

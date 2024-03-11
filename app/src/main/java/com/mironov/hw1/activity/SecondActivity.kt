@@ -1,13 +1,22 @@
 package com.mironov.hw1.activity
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.mironov.hw1.R
 import com.mironov.hw1.databinding.SecondActivityBinding
 import com.mironov.hw1.model.Contact
 import com.mironov.hw1.service.PickContactService
@@ -56,6 +65,11 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
+    private val requestPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _->
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SecondActivityBinding.inflate(layoutInflater)
@@ -76,9 +90,41 @@ class SecondActivity : AppCompatActivity() {
         localBroadcastManager.unregisterReceiver(receiver)
     }
 
+    private fun requestContactsPermission() {
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+            requestPermission.launch(Manifest.permission.READ_CONTACTS)
+        } else {
+            showContactsPermissionRationale()
+        }
+    }
+
+    private fun showContactsPermissionRationale() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.permission_title)
+            .setMessage(R.string.permission_description)
+            .setPositiveButton(R.string.alert_button) { _, _ ->
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", packageName, null)
+                )
+                startActivity(intent)
+            }
+            .show()
+    }
+
     private fun startService() {
-        Intent(this, PickContactService::class.java).apply {
-            startService(this)
+        val permissionGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (permissionGranted) {
+            Intent(this, PickContactService::class.java).apply {
+                startService(this)
+            }
+            binding.btn.isEnabled = false
+            binding.progressBar.isVisible = true
+        } else {
+            requestContactsPermission()
         }
     }
 
