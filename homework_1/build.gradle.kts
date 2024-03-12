@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.parcelize)
 }
 
 android {
-    namespace = "com.mironov.coursework"
+    namespace = "com.mironov.hw1"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mironov.coursework"
+        applicationId = "com.mironov.hw1"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -32,6 +33,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 

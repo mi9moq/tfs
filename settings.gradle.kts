@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "hw1"
+include(":homework_1")
 include(":app")
- 
