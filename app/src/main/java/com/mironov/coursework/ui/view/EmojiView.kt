@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import com.mironov.coursework.R
+import com.mironov.coursework.ui.utils.sp
 
 class EmojiView @JvmOverloads constructor(
     context: Context,
@@ -18,14 +18,19 @@ class EmojiView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : View(context, attributeSet, defStyle, defTheme) {
 
-    var emoji: String = "\uD83E\uDD28"
+    companion object {
+
+        private const val DEFAULT_TEST_SIZE = 14f
+    }
+
+    var emoji: Int = 0x1F916
         set(value) {
             if (field != value) {
                 field = value
                 requestLayout()
             }
         }
-    var count: Int = 99
+    var reactionsCount: Int = 0
         set(value) {
             if (field != value) {
                 field = value
@@ -40,11 +45,11 @@ class EmojiView @JvmOverloads constructor(
     }
 
     private val textToDraw
-        get() = "$emoji $count"
+        get() = "${String(Character.toChars(emoji))} $reactionsCount"
 
     private val textPaint = TextPaint().apply {
         color = Color.WHITE
-        textSize = 14f.sp(context)
+        textSize = DEFAULT_TEST_SIZE.sp(context)
     }
 
     private val textRect = Rect()
@@ -69,10 +74,4 @@ class EmojiView @JvmOverloads constructor(
 
         canvas.drawText(textToDraw, paddingLeft.toFloat(), topOffset, textPaint)
     }
-
-    private fun Float.sp(context: Context) = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP,
-        this,
-        context.resources.displayMetrics
-    )
 }
