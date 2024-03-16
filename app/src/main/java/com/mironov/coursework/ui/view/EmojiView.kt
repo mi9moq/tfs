@@ -40,7 +40,7 @@ class EmojiView @JvmOverloads constructor(
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.EmojiView) {
-            getInt(R.styleable.EmojiView_count, 0)
+            reactionsCount = getInt(R.styleable.EmojiView_count, 0)
         }
     }
 
@@ -62,7 +62,7 @@ class EmojiView @JvmOverloads constructor(
             widthMeasureSpec
         )
         val actualHeight = resolveSize(
-            paddingTop + paddingBottom + textRect.width(),
+            paddingTop + paddingBottom + textRect.height(),
             heightMeasureSpec
         )
 
