@@ -5,7 +5,10 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.core.content.withStyledAttributes
 import androidx.core.view.children
+import com.mironov.coursework.R
+import com.mironov.coursework.ui.utils.dp
 
 class FlexboxLayout @JvmOverloads constructor(
     context: Context,
@@ -13,6 +16,29 @@ class FlexboxLayout @JvmOverloads constructor(
     defTheme: Int = 0,
     defStyle: Int = 0
 ) : ViewGroup(context, attributeSet, defStyle, defTheme) {
+
+    var rowMargin = 0
+        set(value) {
+            if (value != field){
+                field = value.toFloat().dp(context).toInt()
+                requestLayout()
+            }
+        }
+
+    var columnMargin = 0
+        set(value) {
+            if (value != field){
+                field = value.toFloat().dp(context).toInt()
+                requestLayout()
+            }
+        }
+
+    init {
+        context.withStyledAttributes(attributeSet, R.styleable.FlexboxLayout) {
+            rowMargin = getInt(R.styleable.FlexboxLayout_row_margin,0)
+            columnMargin = getInt(R.styleable.FlexboxLayout_column_margin,0)
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
@@ -34,8 +60,8 @@ class FlexboxLayout @JvmOverloads constructor(
         children.forEach { child ->
             if (rowWidth + child.measuredWidth >= parentWidth) {
                 rowWidth = 0
-                topInRow += maxChildHeight + 8
-                actualHeight += topInRow + maxChildHeight + 8
+                topInRow += maxChildHeight + columnMargin
+                actualHeight += topInRow + maxChildHeight + columnMargin
             }
             child.apply {
                 left = rowWidth
@@ -43,7 +69,7 @@ class FlexboxLayout @JvmOverloads constructor(
                 right = rowWidth + measuredWidth
                 bottom = top + measuredHeight
             }
-            rowWidth += child.measuredWidth + 10
+            rowWidth += child.measuredWidth + rowMargin
             actualWidth = maxOf(actualWidth, rowWidth)
         }
 

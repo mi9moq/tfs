@@ -3,4 +3,9 @@
     <declare-styleable name="EmojiView">
         <attr name="count" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="FlexboxLayout">
+        <attr name="row_margin" format="integer"/>
+        <attr name="column_margin" format="integer"/>
+    </declare-styleable>
 </resources>
