@@ -121,4 +121,10 @@ class FlexboxLayout @JvmOverloads constructor(
 
     override fun generateDefaultLayoutParams(): LayoutParams =
         MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+
+    fun setOnAddClickListener(listener: () -> Unit) {
+        iconAdd.setOnClickListener {
+            listener()
+        }
+    }
 }

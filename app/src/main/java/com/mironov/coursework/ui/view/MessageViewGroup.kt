@@ -108,4 +108,10 @@ class MessageViewGroup @JvmOverloads constructor(
     override fun checkLayoutParams(p: LayoutParams): Boolean {
         return p is MarginLayoutParams
     }
+
+    fun setOnAddClickListener(listener: () -> Unit){
+        reactions.setOnAddClickListener {
+            listener()
+        }
+    }
 }
