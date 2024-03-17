@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import com.mironov.coursework.R
+import com.mironov.coursework.ui.utils.dp
 import com.mironov.coursework.ui.utils.sp
 
 class EmojiView @JvmOverloads constructor(
@@ -21,7 +22,12 @@ class EmojiView @JvmOverloads constructor(
     companion object {
 
         private const val DEFAULT_TEST_SIZE = 14f
+        private const val DEFAULT_VERTICAL_PADDING = 4f
+        private const val DEFAULT_HORIZONTAL_PADDING = 8f
     }
+
+    private val verticalPadding = DEFAULT_VERTICAL_PADDING.dp(context).toInt()
+    private val horizontalPadding = DEFAULT_HORIZONTAL_PADDING.dp(context).toInt()
 
     var emoji: Int = 0x1F916
         set(value) {
@@ -42,6 +48,7 @@ class EmojiView @JvmOverloads constructor(
         context.withStyledAttributes(attributeSet, R.styleable.EmojiView) {
             reactionsCount = getInt(R.styleable.EmojiView_count, 0)
         }
+        setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
     }
 
     private val textToDraw
