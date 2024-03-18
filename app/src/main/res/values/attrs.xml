@@ -8,4 +8,8 @@
         <attr name="row_margin" format="integer"/>
         <attr name="column_margin" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="MessageViewGroup">
+        <attr name="message_background" format="color"/>
+    </declare-styleable>
 </resources>
