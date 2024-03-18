@@ -21,9 +21,7 @@ class FlexboxLayout @JvmOverloads constructor(
 
     companion object {
 
-        private const val DEFAULT_ADD_WEIGHT = 40f
-        private const val DEFAULT_ADD_HEIGHT = 23f
-        private const val DEFAULT_ADD_HORIZONTAL_PADDING = 8f
+        private const val DEFAULT_ADD_HORIZONTAL_PADDING = 16f
         private const val DEFAULT_ADD_VERTICAL_PADDING = 4f
     }
 
@@ -46,9 +44,6 @@ class FlexboxLayout @JvmOverloads constructor(
     private val iconAdd = ImageView(context, attributeSet, defTheme, defStyle).apply {
         setImageResource(R.drawable.ic_add)
         setBackgroundResource(R.drawable.add_bg)
-        val width = DEFAULT_ADD_WEIGHT.dp(context).toInt()
-        val height = DEFAULT_ADD_HEIGHT.dp(context).toInt()
-        layoutParams = MarginLayoutParams(width, height)
         val horizontalPadding = DEFAULT_ADD_HORIZONTAL_PADDING.dp(context).toInt()
         val verticalPadding = DEFAULT_ADD_VERTICAL_PADDING.dp(context).toInt()
 
