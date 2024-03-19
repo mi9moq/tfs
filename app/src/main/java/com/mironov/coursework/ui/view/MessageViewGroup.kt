@@ -156,9 +156,12 @@ class MessageViewGroup @JvmOverloads constructor(
         requestLayout()
     }
 
-    fun setMessage(name: String, message: String) {
+    fun setMessage(messageText: String) {
+        message.text = messageText
+    }
+
+    fun setUsername(name: String) {
         userName.text = name
-        this.message.text = message
     }
 
     override fun generateLayoutParams(p: LayoutParams?): LayoutParams {
