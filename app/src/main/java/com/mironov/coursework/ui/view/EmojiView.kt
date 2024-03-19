@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.withStyledAttributes
 import com.mironov.coursework.R
 import com.mironov.coursework.ui.utils.dp
@@ -49,6 +50,8 @@ class EmojiView @JvmOverloads constructor(
             reactionsCount = getInt(R.styleable.EmojiView_count, 0)
         }
         setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+
+        isClickable = true
     }
 
     private val textToDraw
@@ -80,5 +83,21 @@ class EmojiView @JvmOverloads constructor(
         val topOffset = height / 2 - textRect.exactCenterY()
 
         canvas.drawText(textToDraw, paddingLeft.toFloat(), topOffset, textPaint)
+    }
+
+    override fun performClick(): Boolean {
+        if (isSelected && reactionsCount == 1){
+            if (parent is FlexboxLayout){
+                (parent as ViewGroup).removeView(this)
+            }
+            return true
+        }
+        if (isSelected)  {
+            reactionsCount--
+        } else {
+            reactionsCount ++
+        }
+        isSelected = !isSelected
+        return true
     }
 }
