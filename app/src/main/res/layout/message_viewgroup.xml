@@ -16,7 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginBottom="4dp"
         android:textColor="@color/text_name_color"
         tools:text="@tools:sample/full_names" />
 
@@ -25,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="4dp"
         android:textColor="@color/white"
         tools:text="@tools:sample/lorem/random" />
 

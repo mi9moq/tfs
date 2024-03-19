@@ -29,10 +29,11 @@ class MessageViewGroup @JvmOverloads constructor(
     private val message: TextView
     private val reactions: FlexboxLayout
 
-    private val messageMarginLeft : Float
-    private val messageMarginRight : Float
-    private val messageMarginTop : Float
-    private val messageMarginBottom : Float
+    private val messageMarginLeft: Int
+    private val messageMarginRight: Int
+    private val messageMarginTop: Int
+    private val messageMarginBottom: Int
+    private val messageRound: Float
 
     var messageBackgroundColor: Int = Color.WHITE
         set(value) {
@@ -43,18 +44,20 @@ class MessageViewGroup @JvmOverloads constructor(
         }
 
     init {
-        context.withStyledAttributes(attributeSet,R.styleable.MessageViewGroup){
-            messageBackgroundColor = getColor(R.styleable.MessageViewGroup_message_background, Color.BLUE)
+        context.withStyledAttributes(attributeSet, R.styleable.MessageViewGroup) {
+            messageBackgroundColor =
+                getColor(R.styleable.MessageViewGroup_message_background, Color.BLUE)
         }
         val binding = MessageViewgroupBinding.inflate(LayoutInflater.from(context), this)
         avatar = binding.avatar
         userName = binding.userName
         message = binding.message
         reactions = binding.reactions
-        messageMarginLeft = resources.getDimensionPixelSize(R.dimen.message_margin_left).toFloat()
-        messageMarginRight = resources.getDimensionPixelSize(R.dimen.message_margin_right).toFloat()
-        messageMarginTop = resources.getDimensionPixelSize(R.dimen.message_margin_top).toFloat()
-        messageMarginBottom = resources.getDimensionPixelSize(R.dimen.message_margin_bottom).toFloat()
+        messageMarginLeft = resources.getDimensionPixelSize(R.dimen.message_margin_left)
+        messageMarginRight = resources.getDimensionPixelSize(R.dimen.message_margin_right)
+        messageMarginTop = resources.getDimensionPixelSize(R.dimen.message_margin_top)
+        messageMarginBottom = resources.getDimensionPixelSize(R.dimen.message_margin_bottom)
+        messageRound = resources.getDimensionPixelSize(R.dimen.message_round).toFloat()
         setWillNotDraw(false)
     }
 
@@ -82,7 +85,8 @@ class MessageViewGroup @JvmOverloads constructor(
         offsetY += message.measureHeightWithMargins()
 
         val backgroundRectRight = maxWidth.toFloat() + backgroundRectLeft + messageMarginRight
-        val backgroundRectBottom = offsetY.toFloat() - backgroundRectTop + messageMarginBottom
+        val backgroundRectBottom =
+            offsetY.toFloat() + backgroundRectTop + messageMarginBottom + messageMarginTop
 
         backgroundRect.set(
             backgroundRectLeft,
@@ -95,8 +99,8 @@ class MessageViewGroup @JvmOverloads constructor(
         offsetY += reactions.measureHeightWithMargins()
         maxWidth = maxOf(maxWidth, reactions.measureWidthWithMargins())
 
-        val actualWidth = offsetX + maxWidth + messageMarginLeft.toInt() + messageMarginRight.toInt()
-        val actualHeight = offsetY + paddingBottom + messageMarginTop.toInt() + messageMarginBottom.toInt()
+        val actualWidth = offsetX + maxWidth + messageMarginLeft + messageMarginRight
+        val actualHeight = offsetY + paddingBottom + messageMarginTop + messageMarginBottom
         setMeasuredDimension(actualWidth, actualHeight)
     }
 
@@ -107,19 +111,23 @@ class MessageViewGroup @JvmOverloads constructor(
         avatar.layoutWithMargins(offsetX, offsetY)
         offsetX += avatar.measureWidthWithMargins()
 
-        userName.layoutWithMargins(offsetX + messageMarginLeft.toInt(), offsetY)
+        userName.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
         offsetY += userName.measureHeightWithMargins()
 
-        message.layoutWithMargins(offsetX+ messageMarginLeft.toInt(), offsetY)
+        message.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
         offsetY += message.measureHeightWithMargins()
 
-        reactions.layoutWithMargins(offsetX, offsetY + messageMarginBottom.toInt())
+        reactions.layoutWithMargins(
+            offsetX, offsetY + messageMarginBottom + messageMarginTop
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawRect(
+        canvas.drawRoundRect(
             backgroundRect,
+            messageRound,
+            messageRound,
             backgroundPaint
         )
     }
@@ -161,7 +169,7 @@ class MessageViewGroup @JvmOverloads constructor(
         return p is MarginLayoutParams
     }
 
-    fun setOnAddClickListener(listener: () -> Unit){
+    fun setOnAddClickListener(listener: () -> Unit) {
         reactions.setOnAddClickListener {
             listener()
         }
