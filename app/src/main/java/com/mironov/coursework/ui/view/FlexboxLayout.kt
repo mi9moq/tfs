@@ -21,7 +21,7 @@ class FlexboxLayout @JvmOverloads constructor(
 
     companion object {
 
-        private const val DEFAULT_ADD_HORIZONTAL_PADDING = 16f
+        private const val DEFAULT_ADD_HORIZONTAL_PADDING = 12f
         private const val DEFAULT_ADD_VERTICAL_PADDING = 4f
     }
 
