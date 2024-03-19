@@ -1,18 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.mironov.coursework.ui.view.EmojiView
-        android:background="@drawable/emoji_bg"
+    <com.mironov.coursework.ui.view.MessageViewGroup
+        android:id="@+id/message_view_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="4dp"
-        android:paddingHorizontal="8dp"
-        app:count="99" />
+        android:layout_marginRight="36dp"
+        app:message_background="@color/received_message_background" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/bt_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="set avatar" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="input name" />
+
+    <Button
+        android:id="@+id/bt_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="set name" />
+
+    <EditText
+        android:id="@+id/et_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:hint="input message" />
+
+    <Button
+        android:id="@+id/bt_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="set message" />
+</LinearLayout>
