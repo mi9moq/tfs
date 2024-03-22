@@ -3,6 +3,14 @@
     <style name="Base.Theme.Hw1" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Chanel -->
+        <item name="chanel_edit_text_background_color">@color/chanel_et_background</item>
+        <item name="chanel_edit_text_hint_color">@color/chanel_et_hint</item>
+        <item name="chanel_background_color">@color/chanel_background</item>
+        <item name="chanel_messages_background_color">@color/chanel_messages_background</item>
+        <item name="chanel_date_background_color">@color/chanel_date_background</item>
+        <item name="chanel_date_color">@color/chanel_date</item>
     </style>
 
     <style name="Theme.Hw1" parent="Base.Theme.Hw1" />

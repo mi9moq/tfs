@@ -12,4 +12,13 @@
     <declare-styleable name="MessageViewGroup">
         <attr name="message_background" format="color"/>
     </declare-styleable>
+    
+    <declare-styleable name="chanel">
+        <attr name="chanel_edit_text_background_color" format="color"/>
+        <attr name="chanel_edit_text_hint_color" format="color"/>
+        <attr name="chanel_background_color" format="color"/>
+        <attr name="chanel_messages_background_color" format="color"/>
+        <attr name="chanel_date_background_color" format="color"/>
+        <attr name="chanel_date_color" format="color"/>
+    </declare-styleable>
 </resources>
