@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.mironov.coursework.ui.view.MessageViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:message_background="@color/received_message_background"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginRight="64dp"
-    android:layout_height="wrap_content">
+    app:message_background="@color/received_message_background">
 
 </com.mironov.coursework.ui.view.MessageViewGroup>
