@@ -1,0 +1,14 @@
+package com.mironov.coursework.domain.entity
+
+import java.time.LocalDate
+
+data class Message (
+    val avatarUrl: String? = null,
+    val content: String,
+    val id: Int,
+    val isMeMessage: Boolean = false,
+    val senderName: String,
+    val senderId: Int,
+    val sendTime: LocalDate,
+    val reactions: List<Reaction>
+)
