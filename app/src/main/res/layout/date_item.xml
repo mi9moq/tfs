@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="20dp"
         android:textColor="?attr/chanel_date_color"
         android:textSize="14sp"

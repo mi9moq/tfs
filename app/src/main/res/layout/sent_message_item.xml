@@ -11,6 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginRight="12dp"
+        android:layout_marginLeft="128dp"
+        android:layout_marginBottom="24dp"
+        app:is_sent_message="true"
         app:message_background="@color/text_name_color" />
 
 </FrameLayout>
