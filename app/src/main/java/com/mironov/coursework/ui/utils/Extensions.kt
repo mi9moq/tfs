@@ -7,6 +7,13 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.launch
 
 fun Float.sp(context: Context) = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_SP,
@@ -30,4 +37,12 @@ fun View.layoutWithMargins(left: Int, top: Int) {
     val x = left + marginLeft
     val y = top + marginTop
     layout(x, y, x + measuredWidth, y + measuredHeight)
+}
+
+fun <T> Fragment.collectStateFlow(flow: Flow<T>, collector: FlowCollector<T>) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collector)
+        }
+    }
 }
