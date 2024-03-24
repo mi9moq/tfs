@@ -11,6 +11,7 @@
 
     <declare-styleable name="MessageViewGroup">
         <attr name="message_background" format="color"/>
+        <attr name="is_sent_message" format="boolean"/>
     </declare-styleable>
     
     <declare-styleable name="chanel">
