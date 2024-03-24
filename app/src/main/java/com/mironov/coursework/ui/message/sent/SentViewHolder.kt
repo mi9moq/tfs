@@ -9,8 +9,7 @@ class SentViewHolder(private val binding: SentMessageItemBinding) :
 
     fun bind(model: Message) {
         with(binding.main) {
-            setMessage(model.content)
-            setUsername(model.senderName)
+            setMessage(model)
         }
     }
 }

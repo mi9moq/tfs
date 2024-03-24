@@ -10,11 +10,8 @@ class ReceivedViewHolder(private val binding: ReceivedMessageItemBinding) :
 
     fun bind(model: Message) {
         with(binding.main) {
-            setMessage(model.content)
-            setUsername(model.senderName)
+            setMessage(model)
             setAvatar(R.drawable.ic_avatar)
-            val emoji = model.reactions[0]
-            addReaction(emoji = emoji.emojiUnicode, count = emoji.count, isSelected = false)
         }
     }
 }
