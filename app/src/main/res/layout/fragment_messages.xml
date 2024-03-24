@@ -12,31 +12,30 @@
         android:layout_height="0dp"
         android:background="@color/chanel_messages_background"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/til_message"
+        app:layout_constraintBottom_toTopOf="@+id/message_input"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="4dp"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_message"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/message_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/edit_text_bg"
+        android:hint="@string/write"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:paddingLeft="20dp"
+        android:paddingVertical="16dp"
+        android:textColorHint="?attr/chanel_edit_text_hint_color"
+        android:textColor="?attr/chanel_edit_text_hint_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_message"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/edit_text_bg"
-            android:hint="@string/write"
-            android:inputType="number"
-            android:textColorHint="?attr/chanel_edit_text_hint_color" />
-    </com.google.android.material.textfield.TextInputLayout>
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/send_message"
@@ -49,6 +48,6 @@
         android:src="@drawable/ic_upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/til_message" />
+        app:layout_constraintStart_toEndOf="@+id/message_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
