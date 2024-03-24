@@ -46,4 +46,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    implementation(libs.lifecycle.vm)
+    implementation(libs.lifecycle.rt)
+    implementation(libs.fragment)
 }
