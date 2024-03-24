@@ -11,8 +11,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.withStyledAttributes
+import androidx.core.view.children
+import androidx.core.view.isVisible
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.MessageViewgroupBinding
+import com.mironov.coursework.domain.entity.Message
+import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.ui.utils.layoutWithMargins
 import com.mironov.coursework.ui.utils.measureHeightWithMargins
 import com.mironov.coursework.ui.utils.measureWidthWithMargins
@@ -43,12 +47,27 @@ class MessageViewGroup @JvmOverloads constructor(
             }
         }
 
+    private val binding by lazy {
+        MessageViewgroupBinding.inflate(LayoutInflater.from(context), this)
+    }
+
     init {
         context.withStyledAttributes(attributeSet, R.styleable.MessageViewGroup) {
-            messageBackgroundColor =
-                getColor(R.styleable.MessageViewGroup_message_background, Color.BLUE)
+            messageBackgroundColor = getColor(
+                R.styleable.MessageViewGroup_message_background,
+                Color.BLUE
+            )
+
+            val isSentMessage = getBoolean(
+                R.styleable.MessageViewGroup_is_sent_message,
+                false
+            )
+
+            if (isSentMessage) {
+                binding.avatar.visibility = GONE
+                binding.userName.visibility = GONE
+            }
         }
-        val binding = MessageViewgroupBinding.inflate(LayoutInflater.from(context), this)
         avatar = binding.avatar
         userName = binding.userName
         message = binding.message
@@ -68,25 +87,36 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        children.forEach { child ->
+            measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+        }
         var offsetX = paddingLeft
         var offsetY = paddingTop
-        measureChildWithMargins(avatar, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
-        offsetX += avatar.measureWidthWithMargins()
+        var maxWidth = 0
 
-        val backgroundRectLeft = offsetX.toFloat() + messageMarginRight
+        if (avatar.isVisible) {
+            measureChildWithMargins(avatar, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
+            offsetX += avatar.measureWidthWithMargins()
+        }
+
+        offsetX += messageMarginRight
+        val backgroundRectLeft = offsetX.toFloat()
         val backgroundRectTop = offsetY.toFloat()
 
-        measureChildWithMargins(userName, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
-        var maxWidth = userName.measureWidthWithMargins()
-        offsetY += userName.measureHeightWithMargins()
+        offsetY += messageMarginTop
+
+        if (userName.isVisible) {
+            measureChildWithMargins(userName, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
+            offsetY += userName.measureHeightWithMargins()
+            maxWidth = userName.measureWidthWithMargins()
+        }
 
         measureChildWithMargins(message, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
+        offsetY += message.measureHeightWithMargins() + messageMarginBottom
         maxWidth = maxOf(maxWidth, message.measureWidthWithMargins())
-        offsetY += message.measureHeightWithMargins()
 
-        val backgroundRectRight = maxWidth.toFloat() + backgroundRectLeft + messageMarginRight
-        val backgroundRectBottom =
-            offsetY.toFloat() + backgroundRectTop + messageMarginBottom + messageMarginTop
+        val backgroundRectRight = backgroundRectLeft + maxWidth.toFloat() + messageMarginRight
+        val backgroundRectBottom = offsetY.toFloat() + backgroundRectTop
 
         backgroundRect.set(
             backgroundRectLeft,
@@ -95,12 +125,15 @@ class MessageViewGroup @JvmOverloads constructor(
             backgroundRectBottom
         )
 
+        offsetX -= messageMarginLeft
+
         measureChildWithMargins(reactions, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
-        offsetY += reactions.measureHeightWithMargins()
         maxWidth = maxOf(maxWidth, reactions.measureWidthWithMargins())
+        offsetY += reactions.measureHeightWithMargins()
 
         val actualWidth = offsetX + maxWidth + messageMarginLeft + messageMarginRight
-        val actualHeight = offsetY + paddingBottom + messageMarginTop + messageMarginBottom
+        val actualHeight = offsetY + paddingBottom
+
         setMeasuredDimension(actualWidth, actualHeight)
     }
 
@@ -108,12 +141,14 @@ class MessageViewGroup @JvmOverloads constructor(
         var offsetX = paddingLeft
         var offsetY = paddingTop
 
-        avatar.layoutWithMargins(offsetX, offsetY)
-        offsetX += avatar.measureWidthWithMargins()
-
-        userName.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
-        offsetY += userName.measureHeightWithMargins()
-
+        if (avatar.isVisible) {
+            avatar.layoutWithMargins(offsetX, offsetY)
+            offsetX += avatar.measureWidthWithMargins()
+        }
+        if (userName.isVisible) {
+            userName.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
+            offsetY += userName.measureHeightWithMargins()
+        }
         message.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
         offsetY += message.measureHeightWithMargins()
 
@@ -132,15 +167,14 @@ class MessageViewGroup @JvmOverloads constructor(
         )
     }
 
-    fun addReaction(emoji: Int, count: Int, isSelected: Boolean) {
+    fun addReaction(reaction: Reaction) {
         val emojiView = EmojiView(context).apply {
-            this.emoji = emoji
-            this.reactionsCount = count
-            this.isSelected = isSelected
+            this.emoji = reaction.emojiUnicode
+            this.reactionsCount = reaction.count
+            this.isSelected = reaction.isSelected
             setBackgroundResource(R.drawable.emoji_bg)
         }
         reactions.addView(emojiView)
-        requestLayout()
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
@@ -156,12 +190,12 @@ class MessageViewGroup @JvmOverloads constructor(
         requestLayout()
     }
 
-    fun setMessage(messageText: String) {
-        message.text = messageText
-    }
-
-    fun setUsername(name: String) {
-        userName.text = name
+    fun setMessage(messageEntity: Message) {
+        message.text = messageEntity.content
+        userName.text = messageEntity.senderName
+        messageEntity.reactions.forEach { reaction ->
+            addReaction(reaction)
+        }
     }
 
     override fun generateLayoutParams(p: LayoutParams?): LayoutParams {
