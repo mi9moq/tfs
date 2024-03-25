@@ -11,6 +11,7 @@
         <item name="chanel_messages_background_color">@color/chanel_messages_background</item>
         <item name="chanel_date_background_color">@color/chanel_date_background</item>
         <item name="chanel_date_color">@color/chanel_date</item>
+        <item name="chanel_choose_reaction_divider_color">@color/divider_color</item>
     </style>
 
     <style name="Theme.Hw1" parent="Base.Theme.Hw1" />
