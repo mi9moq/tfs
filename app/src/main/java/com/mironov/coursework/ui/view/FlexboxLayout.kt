@@ -41,7 +41,7 @@ class FlexboxLayout @JvmOverloads constructor(
             }
         }
 
-    private val iconAdd = ImageView(context, attributeSet, defTheme, defStyle).apply {
+    val iconAdd = ImageView(context, attributeSet, defTheme, defStyle).apply {
         setImageResource(R.drawable.ic_add)
         setBackgroundResource(R.drawable.add_bg)
         val horizontalPadding = DEFAULT_ADD_HORIZONTAL_PADDING.dp(context).toInt()

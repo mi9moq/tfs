@@ -28,6 +28,14 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyle: Int = 0
 ) : ViewGroup(context, attributeSet, defStyle, defTheme) {
 
+    companion object {
+
+        private const val UNDEFINED_ID = -1
+    }
+
+    var messageId = UNDEFINED_ID
+        private set
+
     private val avatar: ImageView
     private val userName: TextView
     private val message: TextView
@@ -191,10 +199,16 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     fun setMessage(messageEntity: Message) {
+        messageId = messageEntity.id
         message.text = messageEntity.content
         userName.text = messageEntity.senderName
-        messageEntity.reactions.forEach { reaction ->
-            addReaction(reaction)
+        if (messageEntity.reactions.isEmpty()) {
+            reactions.iconAdd.visibility = INVISIBLE
+        } else {
+            messageEntity.reactions.forEach { reaction ->
+                addReaction(reaction)
+            }
+            reactions.iconAdd.visibility = VISIBLE
         }
     }
 
@@ -206,9 +220,20 @@ class MessageViewGroup @JvmOverloads constructor(
         return p is MarginLayoutParams
     }
 
-    fun setOnAddClickListener(listener: () -> Unit) {
+    fun setOnAddClickListener(listener: (Int) -> Unit) {
         reactions.setOnAddClickListener {
-            listener()
+            listener(messageId)
+        }
+    }
+
+    fun setOnMessageLongClickListener(listener: (Int) -> Unit) {
+        userName.setOnLongClickListener {
+            listener(messageId)
+            true
+        }
+        message.setOnLongClickListener {
+            listener(messageId)
+            true
         }
     }
 }
