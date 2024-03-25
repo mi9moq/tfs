@@ -7,7 +7,6 @@ import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.withStyledAttributes
 import com.mironov.coursework.R
 import com.mironov.coursework.ui.utils.dp
@@ -45,6 +44,14 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
+    var emojiTextSize = DEFAULT_TEST_SIZE
+        set(value) {
+            if (field != value) {
+                field = value
+                requestLayout()
+            }
+        }
+
     init {
         context.withStyledAttributes(attributeSet, R.styleable.EmojiView) {
             reactionsCount = getInt(R.styleable.EmojiView_count, 0)
@@ -55,11 +62,11 @@ class EmojiView @JvmOverloads constructor(
     }
 
     private val textToDraw
-        get() = "${String(Character.toChars(emoji))} $reactionsCount"
+        get() = getFormattedTextToDraw()
 
     private val textPaint = TextPaint().apply {
         color = Color.WHITE
-        textSize = DEFAULT_TEST_SIZE.sp(context)
+        textSize = emojiTextSize.sp(context)
     }
 
     private val textRect = Rect()
@@ -85,19 +92,11 @@ class EmojiView @JvmOverloads constructor(
         canvas.drawText(textToDraw, paddingLeft.toFloat(), topOffset, textPaint)
     }
 
-    override fun performClick(): Boolean {
-        if (isSelected && reactionsCount == 1){
-            if (parent is FlexboxLayout){
-                (parent as ViewGroup).removeView(this)
-            }
-            return true
-        }
-        if (isSelected)  {
-            reactionsCount--
-        } else {
-            reactionsCount ++
-        }
-        isSelected = !isSelected
-        return true
+    private fun getFormattedTextToDraw(): String {
+        textPaint.textSize = emojiTextSize.sp(context)
+        return if (reactionsCount == 0)
+            String(Character.toChars(emoji))
+        else
+            "${String(Character.toChars(emoji))} $reactionsCount"
     }
 }
