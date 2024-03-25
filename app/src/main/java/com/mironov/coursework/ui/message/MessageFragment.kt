@@ -14,6 +14,7 @@ import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
 import com.mironov.coursework.ui.message.sent.SentDelegate
+import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.groupByDate
 
@@ -26,6 +27,8 @@ class MessageFragment : Fragment() {
     val adapter by lazy {
         MainAdapter()
     }
+
+    private var messageId = 5
 
     private val viewModel: MessageViewModel by viewModels()
 
@@ -43,8 +46,8 @@ class MessageFragment : Fragment() {
 
         adapter.apply {
             addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate())
-            addDelegate(SentDelegate())
+            addDelegate(ReceivedDelegate(::chooseReaction))
+            addDelegate(SentDelegate(::chooseReaction))
         }
         addClickListeners()
         addTextWatcher()
@@ -66,15 +69,16 @@ class MessageFragment : Fragment() {
     }
 
     private fun collectMessages() {
-        collectStateFlow(viewModel.messages){
+        collectStateFlow(viewModel.messages) {
             adapter.submitList(it.groupByDate())
         }
     }
 
     private fun sendMessage() {
         val text = binding.messageInput.text.toString()
-        if (viewModel.sentMessage(text)){
+        if (viewModel.sentMessage(text)) {
             binding.messageInput.text?.clear()
+            messageId++
         }
     }
 
@@ -91,5 +95,12 @@ class MessageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun chooseReaction(messageId: Int) {
+        ChooseReactionDialogFragment.newInstance(messageId).show(
+            requireActivity().supportFragmentManager,
+            ChooseReactionDialogFragment.TAG
+        )
     }
 }
