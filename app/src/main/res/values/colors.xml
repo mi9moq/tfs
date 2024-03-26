@@ -11,7 +11,7 @@
     <color name="chanel_et_background">#282828</color>
     <color name="chanel_et_hint">#CCCCCC</color>
     <color name="chanel_background">#1E1E1E</color>
-    <color name="chanel_messages_background">#0F0F0F</color>
+    <color name="chanel_messages_background">#121212</color>
 
     <color name="chanel_date_background">#070707</color>
     <color name="chanel_date">#999999</color>
