@@ -28,7 +28,7 @@ class MessageFragment : Fragment() {
         MainAdapter()
     }
 
-    private var messageId = 5
+    private var messageId = 6
 
     private val viewModel: MessageViewModel by viewModels()
 
@@ -46,14 +46,13 @@ class MessageFragment : Fragment() {
 
         adapter.apply {
             addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate(::chooseReaction))
-            addDelegate(SentDelegate(::chooseReaction))
+            addDelegate(ReceivedDelegate(::chooseReaction, viewModel::changeReaction))
+            addDelegate(SentDelegate(::chooseReaction, viewModel::changeReaction))
         }
+        binding.messages.adapter = adapter
         addClickListeners()
         addTextWatcher()
         collectMessages()
-
-        binding.messages.adapter = adapter
     }
 
     private fun addTextWatcher() {
@@ -70,13 +69,15 @@ class MessageFragment : Fragment() {
 
     private fun collectMessages() {
         collectStateFlow(viewModel.messages) {
-            adapter.submitList(it.groupByDate())
+            adapter.submitList(it.groupByDate()) {
+                binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
+            }
         }
     }
 
     private fun sendMessage() {
         val text = binding.messageInput.text.toString()
-        if (viewModel.sentMessage(text)) {
+        if (viewModel.sendMessage(text, messageId)) {
             binding.messageInput.text?.clear()
             messageId++
         }

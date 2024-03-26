@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mironov.coursework.data.reactionList
 import com.mironov.coursework.databinding.FragmentChooseReactionBinding
+import com.mironov.coursework.presentation.message.MessageViewModel
 import com.mironov.coursework.ui.view.EmojiView
 
 class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
@@ -27,7 +29,9 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
         const val TAG = "ChooseReactionDialogFragment"
     }
 
-    private var id = UNDEFINED_ID
+    private val viewModel: MessageViewModel by viewModels()
+
+    private var messageId = UNDEFINED_ID
 
     private var _binding: FragmentChooseReactionBinding? = null
     private val binding: FragmentChooseReactionBinding
@@ -53,8 +57,8 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.behavior?.apply {
             state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
-
         setupScreen()
+        setClickListener()
     }
 
     override fun onDestroyView() {
@@ -64,14 +68,21 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
     private fun parseArguments() {
         val args = requireArguments()
-        id = args.getInt(MESSAGE_ID)
+        messageId = args.getInt(MESSAGE_ID)
+    }
+
+    private fun setClickListener() {
+        binding.flexBox.setOnReactionsClickListeners { emojiUnicode ->
+            viewModel.addReaction(messageId = messageId, emojiUnicode = emojiUnicode)
+            dismiss()
+        }
     }
 
     private fun setupScreen() {
         binding.flexBox.iconAdd.visibility = View.INVISIBLE
         reactionList.forEach { reaction ->
             val emojiView = EmojiView(requireContext()).apply {
-                emoji =reaction.emojiUnicode
+                emoji = reaction.emojiUnicode
                 reactionsCount = reaction.count
                 isSelected = false
                 emojiTextSize = 40f
