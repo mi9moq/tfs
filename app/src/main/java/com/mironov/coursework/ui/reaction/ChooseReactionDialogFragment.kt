@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mironov.coursework.data.reactionList
 import com.mironov.coursework.databinding.FragmentChooseReactionBinding
-import com.mironov.coursework.presentation.message.MessageViewModel
 import com.mironov.coursework.ui.view.EmojiView
 
 class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
+
+    var onEmojiClickedCallback: ((Int, Int) -> Unit)? = null
 
     companion object {
 
@@ -28,8 +28,6 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
         const val TAG = "ChooseReactionDialogFragment"
     }
-
-    private val viewModel: MessageViewModel by viewModels()
 
     private var messageId = UNDEFINED_ID
 
@@ -73,7 +71,7 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
     private fun setClickListener() {
         binding.flexBox.setOnReactionsClickListeners { emojiUnicode ->
-            viewModel.addReaction(messageId = messageId, emojiUnicode = emojiUnicode)
+            onEmojiClickedCallback?.invoke(messageId, emojiUnicode)
             dismiss()
         }
     }

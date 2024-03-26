@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentMessagesBinding
 import com.mironov.coursework.presentation.message.MessageViewModel
+import com.mironov.coursework.presentation.message.MessagesState
 import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
@@ -68,9 +69,15 @@ class MessageFragment : Fragment() {
     }
 
     private fun collectMessages() {
-        collectStateFlow(viewModel.messages) {
-            adapter.submitList(it.groupByDate()) {
-                binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
+        collectStateFlow(viewModel.messages) { state ->
+            when (state) {
+                is MessagesState.Content -> {
+                    adapter.submitList(state.data.groupByDate()) {
+                        binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
+                    }
+                }
+
+                MessagesState.Loading -> Unit
             }
         }
     }
@@ -99,9 +106,8 @@ class MessageFragment : Fragment() {
     }
 
     private fun chooseReaction(messageId: Int) {
-        ChooseReactionDialogFragment.newInstance(messageId).show(
-            requireActivity().supportFragmentManager,
-            ChooseReactionDialogFragment.TAG
-        )
+        val dialog = ChooseReactionDialogFragment.newInstance(messageId)
+        dialog.show(requireActivity().supportFragmentManager, ChooseReactionDialogFragment.TAG)
+        dialog.onEmojiClickedCallback = viewModel::addReaction
     }
 }
