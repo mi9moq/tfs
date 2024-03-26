@@ -256,10 +256,9 @@ class MessageViewGroup @JvmOverloads constructor(
 
         val rectTop = backgroundRect.top
         val rectBottom = backgroundRect.bottom
-        val rectLeft = offsetX.toFloat() - messageMarginRight
+        val rectLeft = offsetX.toFloat()
         val rectRight = rectLeft +
                 message.measureWidthWithMargins() +
-                messageMarginRight +
                 messageMarginLeft
 
         backgroundRect.set(
