@@ -2,6 +2,7 @@ package com.mironov.coursework.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -56,6 +57,11 @@ class FlexboxLayout @JvmOverloads constructor(
             columnMargin = getInt(R.styleable.FlexboxLayout_column_margin, 0)
         }
 
+        addView(iconAdd)
+    }
+
+    override fun removeAllViews() {
+        super.removeAllViews()
         addView(iconAdd)
     }
 
@@ -120,6 +126,16 @@ class FlexboxLayout @JvmOverloads constructor(
     fun setOnAddClickListener(listener: () -> Unit) {
         iconAdd.setOnClickListener {
             listener()
+        }
+    }
+
+    fun setOnReactionsClickListeners(listener: (Int) -> Unit) {
+        children.forEach { child ->
+            if (child is EmojiView) {
+                child.setOnClickListener {
+                    listener(child.emoji)
+                }
+            }
         }
     }
 }

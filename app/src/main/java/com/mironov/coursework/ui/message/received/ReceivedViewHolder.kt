@@ -7,7 +7,8 @@ import com.mironov.coursework.domain.entity.Message
 
 class ReceivedViewHolder(
     private val binding: ReceivedMessageItemBinding,
-    private val onLongClick: (Int) -> Unit
+    private val addReaction: (Int) -> Unit,
+    private val onReactionClickListener: (Int, Int) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -15,9 +16,9 @@ class ReceivedViewHolder(
         with(binding.main) {
             setMessage(model)
             setAvatar(R.drawable.ic_avatar)
-            setOnMessageLongClickListener {
-                onLongClick(it)
-            }
+            setOnMessageLongClickListener(addReaction)
+            setOnAddClickListener(addReaction)
+            setOnReactionsClickListeners(onReactionClickListener)
         }
     }
 }

@@ -7,7 +7,8 @@ import com.mironov.coursework.ui.message.adapter.ListItemAdapterDelegate
 import com.mironov.coursework.ui.message.adapter.DelegateItem
 
 class ReceivedDelegate(
-    private val onLongClick: (Int) -> Unit
+    private val addReaction: (Int) -> Unit,
+    private val onReactionClickListener: (Int, Int) -> Unit,
 ) : ListItemAdapterDelegate<ReceivedDelegateItem, DelegateItem, ReceivedViewHolder>() {
 
     override fun onBindViewHolder(item: ReceivedDelegateItem, holder: ReceivedViewHolder) {
@@ -16,7 +17,8 @@ class ReceivedDelegate(
 
     override fun onCreateViewHolder(parent: ViewGroup): ReceivedViewHolder = ReceivedViewHolder(
         ReceivedMessageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        onLongClick
+        addReaction = addReaction,
+        onReactionClickListener = onReactionClickListener
     )
 
     override fun isOfViewType(item: DelegateItem): Boolean =

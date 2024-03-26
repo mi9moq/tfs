@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -202,6 +203,7 @@ class MessageViewGroup @JvmOverloads constructor(
         messageId = messageEntity.id
         message.text = messageEntity.content
         userName.text = messageEntity.senderName
+        reactions.removeAllViews()
         if (messageEntity.reactions.isEmpty()) {
             reactions.iconAdd.visibility = INVISIBLE
         } else {
@@ -234,6 +236,16 @@ class MessageViewGroup @JvmOverloads constructor(
         message.setOnLongClickListener {
             listener(messageId)
             true
+        }
+    }
+
+    fun setOnReactionsClickListeners(listener: (Int, Int) -> Unit) {
+        reactions.children.forEach { child ->
+            if (child is EmojiView) {
+                child.setOnClickListener {
+                    listener(messageId, child.emoji)
+                }
+            }
         }
     }
 }
