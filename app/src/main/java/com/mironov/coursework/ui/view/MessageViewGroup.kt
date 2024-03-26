@@ -47,6 +47,8 @@ class MessageViewGroup @JvmOverloads constructor(
     private val messageMarginBottom: Int
     private val messageRound: Float
 
+    private var isSentMessage: Boolean = false
+
     var messageBackgroundColor: Int = Color.WHITE
         set(value) {
             if (field != value) {
@@ -66,7 +68,7 @@ class MessageViewGroup @JvmOverloads constructor(
                 Color.BLUE
             )
 
-            val isSentMessage = getBoolean(
+            isSentMessage = getBoolean(
                 R.styleable.MessageViewGroup_is_sent_message,
                 false
             )
@@ -102,7 +104,7 @@ class MessageViewGroup @JvmOverloads constructor(
         var offsetY = paddingTop
         var maxWidth = 0
 
-        if (avatar.isVisible) {
+        if (!isSentMessage) {
             measureChildWithMargins(avatar, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
             offsetX += avatar.measureWidthWithMargins()
         }
@@ -113,7 +115,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
         offsetY += messageMarginTop
 
-        if (userName.isVisible) {
+        if (!isSentMessage) {
             measureChildWithMargins(userName, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
             offsetY += userName.measureHeightWithMargins()
             maxWidth = userName.measureWidthWithMargins()
@@ -135,10 +137,17 @@ class MessageViewGroup @JvmOverloads constructor(
 
         offsetX -= messageMarginLeft
 
-        measureChildWithMargins(reactions, widthMeasureSpec, offsetX, heightMeasureSpec, offsetY)
-        maxWidth = maxOf(maxWidth, reactions.measureWidthWithMargins())
-        offsetY += reactions.measureHeightWithMargins()
-
+        if (reactions.iconAdd.isVisible) {
+            measureChildWithMargins(
+                reactions,
+                widthMeasureSpec,
+                offsetX,
+                heightMeasureSpec,
+                offsetY
+            )
+            maxWidth = maxOf(maxWidth, reactions.measureWidthWithMargins())
+            offsetY += reactions.measureHeightWithMargins()
+        }
         val actualWidth = offsetX + maxWidth + messageMarginLeft + messageMarginRight
         val actualHeight = offsetY + paddingBottom
 
@@ -146,23 +155,11 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        var offsetX = paddingLeft
-        var offsetY = paddingTop
-
-        if (avatar.isVisible) {
-            avatar.layoutWithMargins(offsetX, offsetY)
-            offsetX += avatar.measureWidthWithMargins()
+        if (isSentMessage) {
+            layoutSent()
+        } else {
+            layoutReceived()
         }
-        if (userName.isVisible) {
-            userName.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
-            offsetY += userName.measureHeightWithMargins()
-        }
-        message.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
-        offsetY += message.measureHeightWithMargins()
-
-        reactions.layoutWithMargins(
-            offsetX, offsetY + messageMarginBottom + messageMarginTop
-        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -245,6 +242,60 @@ class MessageViewGroup @JvmOverloads constructor(
                     listener(messageId, child.emoji)
                 }
             }
+        }
+    }
+
+    private fun layoutSent() {
+        var offsetX = paddingLeft
+        var offsetY = paddingTop + messageMarginTop
+
+        offsetX += measuredWidth - message.measureWidthWithMargins() - messageMarginRight
+
+        message.layoutWithMargins(offsetX, offsetY)
+        offsetY += message.measureHeightWithMargins()
+
+        val rectTop = backgroundRect.top
+        val rectBottom = backgroundRect.bottom
+        val rectLeft = offsetX.toFloat() - messageMarginRight
+        val rectRight = rectLeft +
+                message.measureWidthWithMargins() +
+                messageMarginRight +
+                messageMarginLeft
+
+        backgroundRect.set(
+            rectLeft,
+            rectTop,
+            rectRight,
+            rectBottom
+        )
+
+        offsetX -= measuredWidth - message.measureWidthWithMargins() - messageMarginRight
+
+        if (reactions.iconAdd.isVisible) {
+            offsetX = measuredWidth - reactions.measureWidthWithMargins()
+            reactions.layoutWithMargins(
+                offsetX, offsetY + messageMarginBottom
+            )
+        }
+    }
+
+    private fun layoutReceived() {
+        var offsetX = paddingLeft
+        var offsetY = paddingTop
+
+        avatar.layoutWithMargins(offsetX, offsetY)
+        offsetX += avatar.measureWidthWithMargins()
+
+        userName.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
+        offsetY += userName.measureHeightWithMargins()
+
+        message.layoutWithMargins(offsetX + messageMarginLeft, offsetY + messageMarginTop)
+        offsetY += message.measureHeightWithMargins()
+
+        if (reactions.iconAdd.isVisible) {
+            reactions.layoutWithMargins(
+                offsetX, offsetY + messageMarginBottom + messageMarginTop
+            )
         }
     }
 }
