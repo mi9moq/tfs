@@ -10,5 +10,5 @@ data class Message (
     val senderName: String,
     val senderId: Int,
     val sendTime: LocalDate,
-    val reactions: List<Reaction>
+    val reactions: MutableSet<Reaction>
 )
