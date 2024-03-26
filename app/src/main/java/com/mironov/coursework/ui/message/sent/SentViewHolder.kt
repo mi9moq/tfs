@@ -8,8 +8,7 @@ class SentViewHolder(
     private val binding: SentMessageItemBinding,
     private val addReaction: (Int) -> Unit,
     private val onReactionClickListener: (id: Int, emoji: Int) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: Message) {
         with(binding.main) {
