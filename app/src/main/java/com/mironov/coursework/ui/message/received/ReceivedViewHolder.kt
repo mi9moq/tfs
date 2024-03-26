@@ -8,7 +8,7 @@ import com.mironov.coursework.domain.entity.Message
 class ReceivedViewHolder(
     private val binding: ReceivedMessageItemBinding,
     private val addReaction: (Int) -> Unit,
-    private val onReactionClickListener: (Int, Int) -> Unit,
+    private val onReactionClickListener: (id: Int, emoji: Int) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
 

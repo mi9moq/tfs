@@ -8,7 +8,7 @@ import com.mironov.coursework.ui.message.adapter.DelegateItem
 
 class SentDelegate(
     private val addReaction: (Int) -> Unit,
-    private val onReactionClickListener: (Int, Int) -> Unit,
+    private val onReactionClickListener: (id: Int, emoji: Int) -> Unit,
 ) : ListItemAdapterDelegate<SentDelegateItem, DelegateItem, SentViewHolder>() {
 
     override fun onBindViewHolder(item: SentDelegateItem, holder: SentViewHolder) {

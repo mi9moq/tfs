@@ -7,7 +7,7 @@ import com.mironov.coursework.domain.entity.Message
 class SentViewHolder(
     private val binding: SentMessageItemBinding,
     private val addReaction: (Int) -> Unit,
-    private val onReactionClickListener: (Int, Int) -> Unit,
+    private val onReactionClickListener: (id: Int, emoji: Int) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
