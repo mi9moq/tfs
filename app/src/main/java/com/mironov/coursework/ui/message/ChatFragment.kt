@@ -8,9 +8,9 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mironov.coursework.R
-import com.mironov.coursework.databinding.FragmentMessagesBinding
-import com.mironov.coursework.presentation.message.MessageViewModel
-import com.mironov.coursework.presentation.message.MessagesState
+import com.mironov.coursework.databinding.FragmentChatBinding
+import com.mironov.coursework.presentation.chat.ChatViewModel
+import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
@@ -19,10 +19,10 @@ import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.groupByDate
 
-class MessageFragment : Fragment() {
+class ChatFragment : Fragment() {
 
-    private var _binding: FragmentMessagesBinding? = null
-    private val binding: FragmentMessagesBinding
+    private var _binding: FragmentChatBinding? = null
+    private val binding: FragmentChatBinding
         get() = _binding!!
 
     val adapter by lazy {
@@ -31,14 +31,14 @@ class MessageFragment : Fragment() {
 
     private var messageId = 6
 
-    private val viewModel: MessageViewModel by viewModels()
+    private val viewModel: ChatViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMessagesBinding.inflate(inflater, container, false)
+        _binding = FragmentChatBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -71,13 +71,13 @@ class MessageFragment : Fragment() {
     private fun collectMessages() {
         collectStateFlow(viewModel.messages) { state ->
             when (state) {
-                is MessagesState.Content -> {
+                is ChatState.Content -> {
                     adapter.submitList(state.data.groupByDate()) {
                         binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
                     }
                 }
 
-                MessagesState.Loading -> Unit
+                ChatState.Loading -> Unit
             }
         }
     }

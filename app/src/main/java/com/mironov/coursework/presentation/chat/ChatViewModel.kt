@@ -1,4 +1,4 @@
-package com.mironov.coursework.presentation.message
+package com.mironov.coursework.presentation.chat
 
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.data.reactionList
@@ -10,9 +10,9 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
 
-class MessageViewModel : ViewModel() {
+class ChatViewModel : ViewModel() {
 
-    private val _messages = MutableStateFlow<MessagesState>(MessagesState.Content(emptyList()))
+    private val _messages = MutableStateFlow<ChatState>(ChatState.Content(emptyList()))
     val messages = _messages.asStateFlow()
 
     private val date1 = LocalDate.now(ZoneId.systemDefault())
@@ -99,7 +99,7 @@ class MessageViewModel : ViewModel() {
     )
 
     init {
-        _messages.value = MessagesState.Content(data.toList())
+        _messages.value = ChatState.Content(data.toList())
     }
 
     fun sendMessage(messageText: String, id: Int): Boolean {
@@ -115,14 +115,14 @@ class MessageViewModel : ViewModel() {
                 reactions = mutableSetOf()
             )
             data.add(message)
-            _messages.value = MessagesState.Content(data.toList())
+            _messages.value = ChatState.Content(data.toList())
             true
         } else false
     }
 
     fun addReaction(messageId: Int, emojiUnicode: Int) {
 
-        _messages.value = MessagesState.Loading
+        _messages.value = ChatState.Loading
 
         val ind = data.indexOfFirst {
             it.id == messageId
@@ -130,7 +130,7 @@ class MessageViewModel : ViewModel() {
         if (ind != -1) {
             data[ind].reactions.forEach { reaction ->
                 if (reaction.emojiUnicode == emojiUnicode) {
-                    _messages.value = MessagesState.Content(data.toList())
+                    _messages.value = ChatState.Content(data.toList())
                     return
                 }
             }
@@ -140,12 +140,12 @@ class MessageViewModel : ViewModel() {
                 isSelected = true
             )
             data[ind].reactions.add(newReaction)
-            _messages.value = MessagesState.Content(data.toList())
+            _messages.value = ChatState.Content(data.toList())
         }
     }
 
     fun changeReaction(messageId: Int, emojiUnicode: Int) {
-        _messages.value = MessagesState.Loading
+        _messages.value = ChatState.Loading
         val ind = data.indexOfFirst {
             it.id == messageId
         }
@@ -159,7 +159,7 @@ class MessageViewModel : ViewModel() {
 
             if (r.isSelected && count == 1) {
                 data[ind].reactions.remove(r)
-                _messages.value = MessagesState.Content(data.toList())
+                _messages.value = ChatState.Content(data.toList())
                 return
             }
 
@@ -171,7 +171,7 @@ class MessageViewModel : ViewModel() {
             data[ind].reactions.remove(r)
             data[ind].reactions.add(newReaction)
 
-            _messages.value = MessagesState.Content(data.toList())
+            _messages.value = ChatState.Content(data.toList())
         }
     }
 }
