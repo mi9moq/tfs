@@ -22,5 +22,6 @@
         <attr name="chanel_date_background_color" format="color"/>
         <attr name="chanel_date_color" format="color"/>
         <attr name="chanel_choose_reaction_divider_color" format="color"/>
+        <attr name="chanel_toolbar_color" format="color"/>
     </declare-styleable>
 </resources>
