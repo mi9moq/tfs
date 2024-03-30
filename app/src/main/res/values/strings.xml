@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">coursework</string>
     <string name="write">Write…</string>
+    <string name="log_out">Log out</string>
 </resources>

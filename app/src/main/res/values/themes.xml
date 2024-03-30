@@ -13,6 +13,13 @@
         <item name="chanel_date_color">@color/chanel_date</item>
         <item name="chanel_choose_reaction_divider_color">@color/divider_color</item>
         <item name="chanel_toolbar_color">@color/primary_color</item>
+
+
+        <item name="profile_name_text_color">@color/white</item>
+        <item name="profile_log_out_text_color">@color/white</item>
+        <item name="profile_log_out_background_color">@color/log_out_background</item>
+        <item name="profile_status_text_color">@color/user_status</item>
+        <item name="profile_online_text_color">@color/user_online</item>
     </style>
 
     <style name="Theme.Hw1" parent="Base.Theme.Hw1" />

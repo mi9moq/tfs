@@ -24,4 +24,12 @@
         <attr name="chanel_choose_reaction_divider_color" format="color"/>
         <attr name="chanel_toolbar_color" format="color"/>
     </declare-styleable>
+    
+    <declare-styleable name="profile">
+        <attr name="profile_name_text_color" format="color"/>
+        <attr name="profile_status_text_color" format="color"/>
+        <attr name="profile_online_text_color" format="color"/>
+        <attr name="profile_log_out_text_color" format="color"/>
+        <attr name="profile_log_out_background_color" format="color"/>
+    </declare-styleable>
 </resources>
