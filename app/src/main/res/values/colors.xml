@@ -22,4 +22,6 @@
     <color name="user_status">#BCBCBC</color>
 
     <color name="log_out_background">#1B1B1B</color>
+    
+    <color name="chanel_name_text">#FAFAFA</color>
 </resources>
