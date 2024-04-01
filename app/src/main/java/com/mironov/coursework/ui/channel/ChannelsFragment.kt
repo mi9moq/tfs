@@ -13,6 +13,8 @@ class ChannelsFragment : Fragment() {
 
     companion object {
 
+        fun newInstance() = ChannelsFragment()
+
         private const val POSITION_SUBSCRIBE = 0
         private const val POSITION_ALL = 1
     }

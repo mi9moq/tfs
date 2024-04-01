@@ -14,6 +14,11 @@ import com.mironov.coursework.ui.utils.collectStateFlow
 
 class ContactsFragment : Fragment() {
 
+    companion object {
+
+        fun newInstance() = ContactsFragment()
+    }
+
     private var _binding: FragmentContactsBinding? = null
     private val binding: FragmentContactsBinding
         get() = _binding!!
