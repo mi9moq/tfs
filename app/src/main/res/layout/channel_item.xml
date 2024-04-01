@@ -7,7 +7,7 @@
     android:background="@color/chanel_messages_background">
 
     <TextView
-        android:id="@+id/chanel"
+        android:id="@+id/channel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
