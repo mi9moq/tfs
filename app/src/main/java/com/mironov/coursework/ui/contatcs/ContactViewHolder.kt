@@ -14,7 +14,7 @@ class ContactViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false)
 ) {
 
-    private val binding = ContactItemBinding.bind(parent)
+    private val binding = ContactItemBinding.bind(itemView)
 
     fun bind(contact: Contact) {
         with(binding) {
