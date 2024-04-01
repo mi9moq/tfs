@@ -24,4 +24,6 @@
     <color name="log_out_background">#1B1B1B</color>
     
     <color name="chanel_name_text">#FAFAFA</color>
+    
+    <color name="bottom_navigation_unselected">#919191</color>
 </resources>
