@@ -77,7 +77,10 @@ class UserProfileFragment : Fragment() {
             avatar.setImageResource(R.drawable.ic_avatar) //TODO переписать на coil
             userName.text = user.userName
             status.text = user.status
-            online.text = if (user.isOnline) "online" else "offline"
+            online.text = if (user.isOnline)
+                getString(R.string.online)
+            else
+                getString(R.string.offline)
             toolbar.isVisible = true
             toolbar.setNavigationOnClickListener {
                 viewModel.back()
