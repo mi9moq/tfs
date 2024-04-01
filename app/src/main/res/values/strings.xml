@@ -6,4 +6,6 @@
     <string name="channels">Channels</string>
     <string name="people">People</string>
     <string name="profile">Profile</string>
+    <string name="online">online</string>
+    <string name="offline">offline</string>
 </resources>
