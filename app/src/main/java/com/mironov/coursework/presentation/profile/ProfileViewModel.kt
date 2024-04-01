@@ -19,7 +19,7 @@ class ProfileViewModel : ViewModel() {
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Initial)
     val state = _state.asStateFlow()
 
-    init {
+    fun loadUser(userId: Int) {
         _state.value = ProfileState.Content(user)
     }
 
