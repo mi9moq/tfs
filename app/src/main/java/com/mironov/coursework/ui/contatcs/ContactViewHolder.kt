@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.ContactItemBinding
-import com.mironov.coursework.domain.entity.Contact
+import com.mironov.coursework.domain.entity.User
 
 class ContactViewHolder(
     parent: ViewGroup,
@@ -16,7 +16,7 @@ class ContactViewHolder(
 
     private val binding = ContactItemBinding.bind(itemView)
 
-    fun bind(contact: Contact) {
+    fun bind(contact: User) {
         with(binding) {
             userName.text = contact.userName
             email.text = contact.email

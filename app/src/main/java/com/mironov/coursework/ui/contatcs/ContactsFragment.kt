@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mironov.coursework.databinding.FragmentContactsBinding
-import com.mironov.coursework.domain.entity.Contact
+import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.presentation.contacts.ContactsState
 import com.mironov.coursework.presentation.contacts.ContactsViewModel
 import com.mironov.coursework.ui.utils.collectStateFlow
@@ -49,7 +49,7 @@ class ContactsFragment : Fragment() {
         }
     }
 
-    private fun applyContentState(contactList: List<Contact>) {
+    private fun applyContentState(contactList: List<User>) {
         binding.contacts.adapter = adapter
         adapter.submitList(contactList)
     }
