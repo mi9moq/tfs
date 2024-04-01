@@ -15,6 +15,17 @@ import com.mironov.coursework.ui.utils.collectStateFlow
 
 class ChannelsPageFragment : Fragment() {
 
+    companion object {
+
+        fun newInstance(isAllChannels: Boolean) = ChannelsPageFragment().apply {
+            Bundle().apply {
+                putBoolean(IS_ALL_CHANNELS_KEY, isAllChannels)
+            }
+        }
+
+        private const val IS_ALL_CHANNELS_KEY = "is all channels"
+    }
+
     private var _binding: FragmentChannelsPageBinding? = null
     private val binding
         get() = _binding!!
