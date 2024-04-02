@@ -33,7 +33,15 @@ class ChannelsPageFragment : Fragment() {
     private val viewModel by viewModels<ChannelViewModel>()
 
     private val adapter by lazy {
-        MainAdapter()
+        MainAdapter().apply {
+            addDelegate(
+                ChannelDelegate(
+                    viewModel::showTopics,
+                    viewModel::hideTopics
+                )
+            )
+            addDelegate(TopicDelegate(viewModel::openTopic))
+        }
     }
 
     override fun onCreateView(
@@ -47,7 +55,7 @@ class ChannelsPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.addDelegate(ChannelDelegate())
+
         observeState()
     }
 

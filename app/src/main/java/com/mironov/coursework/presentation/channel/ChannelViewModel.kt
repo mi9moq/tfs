@@ -2,7 +2,9 @@ package com.mironov.coursework.presentation.channel
 
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.domain.entity.Channel
+import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.ui.channel.ChannelDelegateItem
+import com.mironov.coursework.ui.channel.TopicDelegateItem
 import com.mironov.coursework.ui.message.adapter.DelegateItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,10 +38,52 @@ class ChannelViewModel : ViewModel() {
         ),
     )
 
+    private val topicList = listOf(
+        Topic(
+            id = 1,
+            name = "Test",
+            messageCount = 243,
+        ),
+        Topic(
+            id = 2,
+            name = "Bruh",
+            messageCount = 64,
+        ),
+    )
+
     private val _state = MutableStateFlow<ChannelState>(ChannelState.Initial)
     val state = _state.asStateFlow()
 
     init {
         _state.value = ChannelState.Content(delegateList.toList())
     }
+
+    fun showTopics(channelId: Int) {
+        val ind = delegateList.indexOfFirst {
+            it is ChannelDelegateItem && it.id() == channelId
+        }
+        val a = (delegateList[ind].content() as Channel).copy(isOpen = true)
+        delegateList[ind] = ChannelDelegateItem(a)
+        delegateList.addAll(ind + 1, topicList.toListDelegate())
+        _state.value = ChannelState.Content(delegateList.toList())
+    }
+
+    fun hideTopics(channelId: Int) {
+        val ind = delegateList.indexOfFirst {
+            it is ChannelDelegateItem && it.id() == channelId
+        }
+        val a = (delegateList[ind].content() as Channel).copy(isOpen = false)
+        delegateList[ind] = ChannelDelegateItem(a)
+        delegateList.removeAt(ind+1)
+        delegateList.removeAt(ind+1)
+        _state.value = ChannelState.Content(delegateList.toList())
+    }
+
+    fun openTopic(topicId: Int) {
+        //TODO открыть список сообщений топика
+    }
+
+    private fun Topic.toDelegate() = TopicDelegateItem(this)
+
+    private fun List<Topic>.toListDelegate() = this.map { it.toDelegate() }
 }
