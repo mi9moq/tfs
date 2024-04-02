@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.channel
+package com.mironov.coursework.ui.channels
 
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +14,8 @@ import com.mironov.coursework.presentation.channel.ChannelViewModel
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
+import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
+import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.utils.collectStateFlow
 import javax.inject.Inject
 

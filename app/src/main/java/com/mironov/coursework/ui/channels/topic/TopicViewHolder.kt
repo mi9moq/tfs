@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.channel
+package com.mironov.coursework.ui.channels.topic
 
 import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.databinding.TopicItemBinding

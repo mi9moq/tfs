@@ -1,6 +1,6 @@
 package com.mironov.coursework.di
 
-import com.mironov.coursework.ui.channel.ChannelsPageFragment
+import com.mironov.coursework.ui.channels.ChannelsPageFragment
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.main.NavigationFragment

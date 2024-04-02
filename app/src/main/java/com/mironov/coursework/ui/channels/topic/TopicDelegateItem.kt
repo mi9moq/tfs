@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.channel
+package com.mironov.coursework.ui.channels.topic
 
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.ui.adapter.DelegateItem

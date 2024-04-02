@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
-import com.mironov.coursework.ui.channel.ChannelDelegateItem
-import com.mironov.coursework.ui.channel.TopicDelegateItem
+import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
+import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
 import com.mironov.coursework.ui.adapter.DelegateItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

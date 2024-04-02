@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.channel
+package com.mironov.coursework.ui.channels
 
 import android.os.Bundle
 import android.view.LayoutInflater
