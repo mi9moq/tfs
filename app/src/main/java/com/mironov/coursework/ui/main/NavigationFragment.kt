@@ -85,17 +85,14 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_channels -> {
-//                cicerone.router.navigateTo(getChannelsScreen())
                 viewModel.openChannels()
             }
 
             R.id.menu_people -> {
-//                cicerone.router.navigateTo(getContactsScreen())
                 viewModel.openContacts()
             }
 
             R.id.menu_profile -> {
-//                cicerone.router.navigateTo(getOwnProfileScreen())
                 viewModel.openOwnProfile()
             }
         }
