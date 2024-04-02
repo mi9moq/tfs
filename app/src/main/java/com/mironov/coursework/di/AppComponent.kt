@@ -2,6 +2,8 @@ package com.mironov.coursework.di
 
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.profile.OwnProfileFragment
+import com.mironov.coursework.ui.profile.UserProfileFragment
 import dagger.Component
 
 @AppScope
@@ -16,4 +18,8 @@ interface AppComponent {
     fun inject(activity: MainActivity)
 
     fun inject(fragment: ContactsFragment)
+
+    fun inject(fragment: OwnProfileFragment)
+
+    fun inject(fragment: UserProfileFragment)
 }

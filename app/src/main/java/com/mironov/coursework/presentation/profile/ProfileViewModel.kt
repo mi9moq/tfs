@@ -2,10 +2,14 @@ package com.mironov.coursework.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.navigation.router.ProfileRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val router: ProfileRouter
+): ViewModel() {
 
     private val user = User(
         id = 1,
@@ -24,6 +28,6 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun back() {
-        //TODO Добавить навигацию
+        router.back()
     }
 }

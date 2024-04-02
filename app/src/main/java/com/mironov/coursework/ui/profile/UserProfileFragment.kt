@@ -1,18 +1,22 @@
 package com.mironov.coursework.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentProfileBinding
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.profile.ProfileState
 import com.mironov.coursework.presentation.profile.ProfileViewModel
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.collectStateFlow
+import javax.inject.Inject
 
 class UserProfileFragment : Fragment() {
 
@@ -27,13 +31,27 @@ class UserProfileFragment : Fragment() {
         private const val DEFAULT_ID = -1
     }
 
+    private val component by lazy {
+        (requireActivity() as MainActivity).component
+    }
+
     private var id = DEFAULT_ID
 
     private var _binding: FragmentProfileBinding? = null
     private val binding: FragmentProfileBinding
         get() = _binding!!
 
-    private val viewModel by viewModels<ProfileViewModel>()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ProfileViewModel::class.java]
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
