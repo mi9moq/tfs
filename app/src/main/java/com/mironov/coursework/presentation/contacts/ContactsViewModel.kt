@@ -2,10 +2,14 @@ package com.mironov.coursework.presentation.contacts
 
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.navigation.router.ContactsRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class ContactsViewModel : ViewModel() {
+class ContactsViewModel @Inject constructor(
+    private val router: ContactsRouter
+) : ViewModel() {
 
     private val contactList = listOf(
         User(
@@ -50,6 +54,6 @@ class ContactsViewModel : ViewModel() {
     }
 
     fun openProfile(userId: Int) {
-        //TODO navigate to profile
+        router.openProfile(userId)
     }
 }

@@ -1,16 +1,20 @@
 package com.mironov.coursework.ui.contatcs
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.databinding.FragmentContactsBinding
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.contacts.ContactsState
 import com.mironov.coursework.presentation.contacts.ContactsViewModel
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.collectStateFlow
+import javax.inject.Inject
 
 class ContactsFragment : Fragment() {
 
@@ -19,14 +23,28 @@ class ContactsFragment : Fragment() {
         fun newInstance() = ContactsFragment()
     }
 
+    private val component by lazy {
+        (requireActivity() as MainActivity).component
+    }
+
     private var _binding: FragmentContactsBinding? = null
     private val binding: FragmentContactsBinding
         get() = _binding!!
 
-    private val viewModel by viewModels<ContactsViewModel>()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ContactsViewModel::class.java]
+    }
 
     private val adapter by lazy {
         ContactsAdapter(viewModel::openProfile)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        component.inject(this)
     }
 
     override fun onCreateView(

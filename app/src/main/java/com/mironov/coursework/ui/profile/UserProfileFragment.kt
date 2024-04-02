@@ -18,7 +18,7 @@ class UserProfileFragment : Fragment() {
 
     companion object {
         fun newInstance(userId: Int) = UserProfileFragment().apply {
-            Bundle().apply {
+            arguments = Bundle().apply {
                 putInt(ID_KEY, userId)
             }
         }
