@@ -10,6 +10,8 @@ import com.mironov.coursework.navigation.router.ChatRouter
 import com.mironov.coursework.navigation.router.ChatRouterImpl
 import com.mironov.coursework.navigation.router.ContactsRouter
 import com.mironov.coursework.navigation.router.ContactsRouterImpl
+import com.mironov.coursework.navigation.router.MainRouter
+import com.mironov.coursework.navigation.router.MainRouterImpl
 import com.mironov.coursework.navigation.router.ProfileRouter
 import com.mironov.coursework.navigation.router.ProfileRouterImpl
 import dagger.Binds
@@ -51,4 +53,8 @@ interface NavigationModule {
     @AppScope
     @Binds
     fun bindChatRouter(impl: ChatRouterImpl): ChatRouter
+
+    @AppScope
+    @Binds
+    fun bindMainRouter(impl: MainRouterImpl): MainRouter
 }

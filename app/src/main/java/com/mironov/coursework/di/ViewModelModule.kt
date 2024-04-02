@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.mironov.coursework.presentation.channel.ChannelViewModel
 import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.presentation.contacts.ContactsViewModel
+import com.mironov.coursework.presentation.main.NavigationViewModel
 import com.mironov.coursework.presentation.profile.ProfileViewModel
 import dagger.Binds
 import dagger.Module
@@ -31,4 +32,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(ChatViewModel::class)
     fun bindChatViewModel(impl: ChatViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NavigationViewModel::class)
+    fun bindNavigationViewModel(impl: NavigationViewModel): ViewModel
 }

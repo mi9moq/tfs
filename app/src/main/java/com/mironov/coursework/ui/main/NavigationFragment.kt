@@ -7,16 +7,17 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.github.terrakok.cicerone.Cicerone
-import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentNavigationBinding
-import com.mironov.coursework.navigation.screen.getChannelsScreen
-import com.mironov.coursework.navigation.screen.getContactsScreen
-import com.mironov.coursework.navigation.screen.getOwnProfileScreen
+import com.mironov.coursework.navigation.LocalCiceroneHolder
+import com.mironov.coursework.presentation.ViewModelFactory
+import com.mironov.coursework.presentation.main.NavigationViewModel
+import javax.inject.Inject
 
 class NavigationFragment : Fragment(), OnItemSelectedListener {
 
@@ -28,8 +29,18 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
         (requireActivity() as MainActivity).component
     }
 
-    private lateinit var navHolder: NavigatorHolder
-    private lateinit var router: Router
+    @Inject
+    lateinit var localCiceroneHolder: LocalCiceroneHolder
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[NavigationViewModel::class.java]
+    }
+
+    private val cicerone: Cicerone<Router>
+        get() = localCiceroneHolder.getCicerone("bottom navigation")
 
     private var _binding: FragmentNavigationBinding? = null
     private val binding: FragmentNavigationBinding
@@ -38,16 +49,6 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val cicerone = Cicerone.create()
-        navHolder = cicerone.getNavigatorHolder()
-        router = cicerone.router
-        if (savedInstanceState == null) {
-            router.newRootScreen(getChannelsScreen())
-        }
     }
 
     override fun onCreateView(
@@ -68,11 +69,11 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     override fun onResume() {
         super.onResume()
         val localNavigator = AppNavigator(requireActivity(), R.id.container, childFragmentManager)
-        navHolder.setNavigator(localNavigator)
+        cicerone.getNavigatorHolder().setNavigator(localNavigator)
     }
 
     override fun onPause() {
-        navHolder.removeNavigator()
+        cicerone.getNavigatorHolder().removeNavigator()
         super.onPause()
     }
 
@@ -84,15 +85,18 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_channels -> {
-                router.navigateTo(getChannelsScreen())
+//                cicerone.router.navigateTo(getChannelsScreen())
+                viewModel.openChannels()
             }
 
             R.id.menu_people -> {
-                router.navigateTo(getContactsScreen())
+//                cicerone.router.navigateTo(getContactsScreen())
+                viewModel.openContacts()
             }
 
             R.id.menu_profile -> {
-                router.navigateTo(getOwnProfileScreen())
+//                cicerone.router.navigateTo(getOwnProfileScreen())
+                viewModel.openOwnProfile()
             }
         }
         return true
