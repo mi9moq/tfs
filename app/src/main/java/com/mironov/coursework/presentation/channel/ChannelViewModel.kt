@@ -6,7 +6,7 @@ import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
 import com.mironov.coursework.ui.channel.ChannelDelegateItem
 import com.mironov.coursework.ui.channel.TopicDelegateItem
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

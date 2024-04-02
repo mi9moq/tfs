@@ -1,7 +1,7 @@
 package com.mironov.coursework.ui.channel
 
 import com.mironov.coursework.domain.entity.Channel
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 class ChannelDelegateItem (private val channel: Channel): DelegateItem {
 

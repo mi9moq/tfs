@@ -3,8 +3,8 @@ package com.mironov.coursework.ui.channel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mironov.coursework.databinding.ChannelItemBinding
-import com.mironov.coursework.ui.message.adapter.DelegateItem
-import com.mironov.coursework.ui.message.adapter.ListItemAdapterDelegate
+import com.mironov.coursework.ui.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
 
 class ChannelDelegate(
     private val showTopics: (Int) -> Unit,

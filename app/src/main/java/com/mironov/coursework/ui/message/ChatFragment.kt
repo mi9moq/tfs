@@ -15,7 +15,7 @@ import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.ui.main.MainActivity
-import com.mironov.coursework.ui.message.adapter.MainAdapter
+import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
 import com.mironov.coursework.ui.message.sent.SentDelegate

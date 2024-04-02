@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.adapter
+package com.mironov.coursework.ui.adapter
 
 interface DelegateItem {
 

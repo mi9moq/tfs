@@ -1,7 +1,7 @@
 package com.mironov.coursework.ui.message.received
 
 import com.mironov.coursework.domain.entity.Message
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 class ReceivedDelegateItem(private val message: Message) : DelegateItem {
 

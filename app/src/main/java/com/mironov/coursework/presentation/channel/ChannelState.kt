@@ -1,6 +1,6 @@
 package com.mironov.coursework.presentation.channel
 
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 sealed interface ChannelState {
 

@@ -2,7 +2,7 @@ package com.mironov.coursework.ui.utils
 
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.MessageDate
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.message.date.DateDelegateItem
 import com.mironov.coursework.ui.message.received.ReceivedDelegateItem
 import com.mironov.coursework.ui.message.sent.SentDelegateItem

@@ -12,8 +12,8 @@ import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.ChannelViewModel
 import com.mironov.coursework.ui.main.MainActivity
-import com.mironov.coursework.ui.message.adapter.DelegateItem
-import com.mironov.coursework.ui.message.adapter.MainAdapter
+import com.mironov.coursework.ui.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.utils.collectStateFlow
 import javax.inject.Inject
 

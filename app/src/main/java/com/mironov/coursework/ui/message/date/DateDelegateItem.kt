@@ -1,7 +1,7 @@
 package com.mironov.coursework.ui.message.date
 
 import com.mironov.coursework.domain.entity.MessageDate
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 class DateDelegateItem(private val date: MessageDate) : DelegateItem {
 

@@ -3,8 +3,8 @@ package com.mironov.coursework.ui.message.received
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mironov.coursework.databinding.ReceivedMessageItemBinding
-import com.mironov.coursework.ui.message.adapter.ListItemAdapterDelegate
-import com.mironov.coursework.ui.message.adapter.DelegateItem
+import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 class ReceivedDelegate(
     private val addReaction: (Int) -> Unit,
