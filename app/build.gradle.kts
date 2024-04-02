@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -50,4 +51,9 @@ dependencies {
     implementation(libs.lifecycle.vm)
     implementation(libs.lifecycle.rt)
     implementation(libs.fragment)
+
+    implementation(libs.cicerone)
+
+    implementation(libs.dagger.core)
+    ksp(libs.dagger.compiler)
 }
