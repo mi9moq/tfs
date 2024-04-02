@@ -6,6 +6,8 @@ import com.github.terrakok.cicerone.Router
 import com.mironov.coursework.navigation.LocalCiceroneHolder
 import com.mironov.coursework.navigation.router.ChannelRouter
 import com.mironov.coursework.navigation.router.ChannelRouterImpl
+import com.mironov.coursework.navigation.router.ChatRouter
+import com.mironov.coursework.navigation.router.ChatRouterImpl
 import com.mironov.coursework.navigation.router.ContactsRouter
 import com.mironov.coursework.navigation.router.ContactsRouterImpl
 import com.mironov.coursework.navigation.router.ProfileRouter
@@ -45,4 +47,8 @@ interface NavigationModule {
     @AppScope
     @Binds
     fun bindChannelRouter(impl: ChannelRouterImpl): ChannelRouter
+
+    @AppScope
+    @Binds
+    fun bindChatRouter(impl: ChatRouterImpl): ChatRouter
 }
