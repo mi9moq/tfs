@@ -98,7 +98,7 @@ class ChatViewModel : ViewModel() {
         ),
     )
 
-    init {
+    fun loadMessages(chatId: Int) {
         _messages.value = ChatState.Content(data.toList())
     }
 

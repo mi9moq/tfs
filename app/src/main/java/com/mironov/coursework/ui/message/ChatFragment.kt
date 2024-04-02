@@ -9,8 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
-import com.mironov.coursework.presentation.chat.ChatViewModel
+import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.chat.ChatState
+import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
@@ -21,17 +22,40 @@ import com.mironov.coursework.ui.utils.groupByDate
 
 class ChatFragment : Fragment() {
 
+    companion object {
+        fun newInstance(chatId: Int) = ChatFragment().apply {
+            arguments = Bundle().apply {
+                putInt(CHAT_ID_KEY, chatId)
+            }
+        }
+
+        private const val CHAT_ID_KEY = "chat id"
+        private const val DEFAULT_ID = -1
+    }
+
+    private var chatId = DEFAULT_ID
+
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
         get() = _binding!!
 
     val adapter by lazy {
-        MainAdapter()
+        MainAdapter().apply {
+            addDelegate(DateDelegate())
+            addDelegate(ReceivedDelegate(::chooseReaction, viewModel::changeReaction))
+            addDelegate(SentDelegate(::chooseReaction, viewModel::changeReaction))
+        }
     }
 
     private var messageId = 6
 
     private val viewModel: ChatViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseArguments()
+        viewModel.loadMessages(chatId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,15 +69,14 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.apply {
-            addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate(::chooseReaction, viewModel::changeReaction))
-            addDelegate(SentDelegate(::chooseReaction, viewModel::changeReaction))
-        }
-        binding.messages.adapter = adapter
         addClickListeners()
         addTextWatcher()
-        collectMessages()
+        observeViewModel()
+    }
+
+    private fun parseArguments() {
+        val args = requireArguments()
+        chatId = args.getInt(CHAT_ID_KEY)
     }
 
     private fun addTextWatcher() {
@@ -68,17 +91,22 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun collectMessages() {
-        collectStateFlow(viewModel.messages) { state ->
-            when (state) {
-                is ChatState.Content -> {
-                    adapter.submitList(state.data.groupByDate()) {
-                        binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
-                    }
-                }
+    private fun observeViewModel() {
+        collectStateFlow(viewModel.messages, ::applyState)
+    }
 
-                ChatState.Loading -> Unit
-            }
+    private fun applyState(state: ChatState) {
+        when (state) {
+            is ChatState.Content -> applyContentState(state.data)
+
+            ChatState.Loading -> Unit
+        }
+    }
+
+    private fun applyContentState(messages: List<Message>) {
+        binding.messages.adapter = adapter
+        adapter.submitList(messages.groupByDate()) {
+            binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
     }
 
