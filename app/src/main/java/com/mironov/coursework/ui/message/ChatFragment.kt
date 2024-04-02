@@ -1,17 +1,20 @@
 package com.mironov.coursework.ui.message
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
 import com.mironov.coursework.domain.entity.Message
+import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.presentation.chat.ChatViewModel
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
@@ -19,6 +22,7 @@ import com.mironov.coursework.ui.message.sent.SentDelegate
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.groupByDate
+import javax.inject.Inject
 
 class ChatFragment : Fragment() {
 
@@ -31,6 +35,10 @@ class ChatFragment : Fragment() {
 
         private const val CHAT_ID_KEY = "chat id"
         private const val DEFAULT_ID = -1
+    }
+
+    private val component by lazy {
+        (requireActivity() as MainActivity).component
     }
 
     private var chatId = DEFAULT_ID
@@ -49,7 +57,17 @@ class ChatFragment : Fragment() {
 
     private var messageId = 6
 
-    private val viewModel: ChatViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: ChatViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ChatViewModel::class.java]
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +106,9 @@ class ChatFragment : Fragment() {
     private fun addClickListeners() = with(binding) {
         sendMessage.setOnClickListener {
             sendMessage()
+        }
+        toolbar.setNavigationOnClickListener {
+            viewModel.back()
         }
     }
 

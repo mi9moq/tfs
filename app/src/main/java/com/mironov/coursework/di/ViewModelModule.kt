@@ -2,6 +2,7 @@ package com.mironov.coursework.di
 
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.presentation.channel.ChannelViewModel
+import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.presentation.contacts.ContactsViewModel
 import com.mironov.coursework.presentation.profile.ProfileViewModel
 import dagger.Binds
@@ -25,4 +26,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(ChannelViewModel::class)
     fun bindChannelViewModel(impl: ChannelViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChatViewModel::class)
+    fun bindChatViewModel(impl: ChatViewModel): ViewModel
 }

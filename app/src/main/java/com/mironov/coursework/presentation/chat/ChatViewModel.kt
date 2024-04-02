@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import com.mironov.coursework.data.reactionList
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
+import com.mironov.coursework.navigation.router.ChatRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
+import javax.inject.Inject
 
-class ChatViewModel : ViewModel() {
+class ChatViewModel @Inject constructor(
+    private val router: ChatRouter
+) : ViewModel() {
 
     private val _messages = MutableStateFlow<ChatState>(ChatState.Content(emptyList()))
     val messages = _messages.asStateFlow()
@@ -173,5 +177,9 @@ class ChatViewModel : ViewModel() {
 
             _messages.value = ChatState.Content(data.toList())
         }
+    }
+
+    fun back() {
+        router.back()
     }
 }
