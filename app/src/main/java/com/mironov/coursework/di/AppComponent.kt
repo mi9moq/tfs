@@ -3,6 +3,7 @@ package com.mironov.coursework.di
 import com.mironov.coursework.ui.channel.ChannelsPageFragment
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.main.NavigationFragment
 import com.mironov.coursework.ui.message.ChatFragment
 import com.mironov.coursework.ui.profile.OwnProfileFragment
 import com.mironov.coursework.ui.profile.UserProfileFragment
@@ -28,4 +29,6 @@ interface AppComponent {
     fun inject(fragment: ChannelsPageFragment)
 
     fun inject(fragment: ChatFragment)
+
+    fun inject(fragment: NavigationFragment)
 }
