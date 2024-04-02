@@ -1,5 +1,6 @@
 package com.mironov.coursework.di
 
+import com.mironov.coursework.ui.channel.ChannelsPageFragment
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.profile.OwnProfileFragment
@@ -22,4 +23,6 @@ interface AppComponent {
     fun inject(fragment: OwnProfileFragment)
 
     fun inject(fragment: UserProfileFragment)
+
+    fun inject(fragment: ChannelsPageFragment)
 }

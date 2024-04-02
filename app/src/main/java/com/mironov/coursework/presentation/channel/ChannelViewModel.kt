@@ -3,13 +3,17 @@ package com.mironov.coursework.presentation.channel
 import androidx.lifecycle.ViewModel
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
+import com.mironov.coursework.navigation.router.ChannelRouter
 import com.mironov.coursework.ui.channel.ChannelDelegateItem
 import com.mironov.coursework.ui.channel.TopicDelegateItem
 import com.mironov.coursework.ui.message.adapter.DelegateItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class ChannelViewModel : ViewModel() {
+class ChannelViewModel @Inject constructor(
+    private val router: ChannelRouter
+) : ViewModel() {
 
     private val delegateList = mutableListOf<DelegateItem>(
         ChannelDelegateItem(
@@ -74,13 +78,13 @@ class ChannelViewModel : ViewModel() {
         }
         val a = (delegateList[ind].content() as Channel).copy(isOpen = false)
         delegateList[ind] = ChannelDelegateItem(a)
-        delegateList.removeAt(ind+1)
-        delegateList.removeAt(ind+1)
+        delegateList.removeAt(ind + 1)
+        delegateList.removeAt(ind + 1)
         _state.value = ChannelState.Content(delegateList.toList())
     }
 
-    fun openTopic(topicId: Int) {
-        //TODO открыть список сообщений топика
+    fun openChat(chatId: Int) {
+        router.openChat(chatId)
     }
 
     private fun Topic.toDelegate() = TopicDelegateItem(this)

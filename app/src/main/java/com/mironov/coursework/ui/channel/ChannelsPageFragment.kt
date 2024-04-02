@@ -1,17 +1,21 @@
 package com.mironov.coursework.ui.channel
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
+import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.ChannelViewModel
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.message.adapter.DelegateItem
 import com.mironov.coursework.ui.message.adapter.MainAdapter
 import com.mironov.coursework.ui.utils.collectStateFlow
+import javax.inject.Inject
 
 class ChannelsPageFragment : Fragment() {
 
@@ -26,11 +30,20 @@ class ChannelsPageFragment : Fragment() {
         private const val IS_ALL_CHANNELS_KEY = "is all channels"
     }
 
+    private val component by lazy {
+        (requireActivity() as MainActivity).component
+    }
+
     private var _binding: FragmentChannelsPageBinding? = null
     private val binding
         get() = _binding!!
 
-    private val viewModel by viewModels<ChannelViewModel>()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ChannelViewModel::class.java]
+    }
 
     private val adapter by lazy {
         MainAdapter().apply {
@@ -40,8 +53,13 @@ class ChannelsPageFragment : Fragment() {
                     viewModel::hideTopics
                 )
             )
-            addDelegate(TopicDelegate(viewModel::openTopic))
+            addDelegate(TopicDelegate(viewModel::openChat))
         }
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
