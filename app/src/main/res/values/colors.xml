@@ -26,4 +26,6 @@
     <color name="chanel_name_text">#FAFAFA</color>
     
     <color name="bottom_navigation_unselected">#919191</color>
+
+    <color name="shimmer_color">#7A7171</color>
 </resources>
