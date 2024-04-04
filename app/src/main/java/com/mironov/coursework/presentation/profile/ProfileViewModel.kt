@@ -1,10 +1,13 @@
 package com.mironov.coursework.presentation.profile
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.navigation.router.ProfileRouter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
@@ -24,7 +27,11 @@ class ProfileViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     fun loadUser(userId: Int) {
-        _state.value = ProfileState.Content(user)
+        viewModelScope.launch {
+            _state.value = ProfileState.Loading
+            delay(1000)
+            _state.value = ProfileState.Content(user)
+        }
     }
 
     fun back() {

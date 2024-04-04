@@ -16,6 +16,8 @@ import com.mironov.coursework.presentation.profile.ProfileState
 import com.mironov.coursework.presentation.profile.ProfileViewModel
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.collectStateFlow
+import com.mironov.coursework.ui.utils.hide
+import com.mironov.coursework.ui.utils.show
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment() {
@@ -69,6 +71,7 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.logOut.isVisible = false
         observeState()
     }
 
@@ -86,12 +89,13 @@ class UserProfileFragment : Fragment() {
         when (state) {
             is ProfileState.Content -> applyContentState(state.data)
             ProfileState.Initial -> Unit
+            ProfileState.Loading -> applyLoadingState()
         }
     }
 
     private fun applyContentState(user: User) {
         with(binding) {
-            logOut.isVisible = false
+            shimmer.hide()
             avatar.setImageResource(R.drawable.ic_avatar) //TODO переписать на coil
             userName.text = user.userName
             status.text = user.status
@@ -104,6 +108,10 @@ class UserProfileFragment : Fragment() {
                 viewModel.back()
             }
         }
+    }
+
+    private fun applyLoadingState() {
+        binding.shimmer.show()
     }
 
     override fun onDestroyView() {

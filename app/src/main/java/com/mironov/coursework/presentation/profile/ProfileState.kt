@@ -6,5 +6,7 @@ sealed interface ProfileState {
 
     data object Initial: ProfileState
 
+    data object Loading: ProfileState
+
     data class Content(val data: User): ProfileState
 }
