@@ -1,10 +1,13 @@
 package com.mironov.coursework.presentation.contacts
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.navigation.router.ContactsRouter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ContactsViewModel @Inject constructor(
@@ -50,7 +53,11 @@ class ContactsViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        _state.value = ContactsState.Content(contactList)
+        viewModelScope.launch {
+            _state.value = ContactsState.Loading
+            delay(1000)
+            _state.value = ContactsState.Content(contactList)
+        }
     }
 
     fun openProfile(userId: Int) {

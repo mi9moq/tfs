@@ -6,5 +6,7 @@ sealed interface ContactsState {
 
     data object Initial : ContactsState
 
+    data object Loading : ContactsState
+
     data class Content(val data: List<User>) : ContactsState
 }

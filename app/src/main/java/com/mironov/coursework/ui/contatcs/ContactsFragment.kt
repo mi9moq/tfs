@@ -14,6 +14,8 @@ import com.mironov.coursework.presentation.contacts.ContactsState
 import com.mironov.coursework.presentation.contacts.ContactsViewModel
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.collectStateFlow
+import com.mironov.coursework.ui.utils.hide
+import com.mironov.coursework.ui.utils.show
 import javax.inject.Inject
 
 class ContactsFragment : Fragment() {
@@ -67,18 +69,25 @@ class ContactsFragment : Fragment() {
 
     private fun applyState(state: ContactsState) {
         when (state) {
-            is ContactsState.Content -> applyContentState(state.data)
             ContactsState.Initial -> Unit
+            ContactsState.Loading -> applyLoadingState()
+            is ContactsState.Content -> applyContentState(state.data)
         }
     }
 
     private fun applyContentState(contactList: List<User>) {
+        binding.shimmer.hide()
         binding.contacts.adapter = adapter
         adapter.submitList(contactList)
     }
 
+    private fun applyLoadingState() {
+        binding.shimmer.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.contacts.adapter = null
         _binding = null
     }
 }
