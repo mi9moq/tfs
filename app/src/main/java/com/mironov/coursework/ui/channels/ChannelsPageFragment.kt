@@ -108,6 +108,7 @@ class ChannelsPageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.channels.adapter = null
         _binding = null
     }
 }

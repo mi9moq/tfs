@@ -70,9 +70,10 @@ class ChannelsFragment : Fragment() {
         binding.viewPager.adapter = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         tabLayoutMediator.detach()
+        binding.viewPager.adapter = null
         _binding = null
     }
 }
