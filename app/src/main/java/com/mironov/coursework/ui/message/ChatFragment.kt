@@ -14,14 +14,16 @@ import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.presentation.chat.ChatViewModel
-import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.adapter.MainAdapter
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.message.date.DateDelegate
 import com.mironov.coursework.ui.message.received.ReceivedDelegate
 import com.mironov.coursework.ui.message.sent.SentDelegate
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.groupByDate
+import com.mironov.coursework.ui.utils.hide
+import com.mironov.coursework.ui.utils.show
 import javax.inject.Inject
 
 class ChatFragment : Fragment() {
@@ -120,15 +122,22 @@ class ChatFragment : Fragment() {
         when (state) {
             is ChatState.Content -> applyContentState(state.data)
 
-            ChatState.Loading -> Unit
+            ChatState.Initial -> Unit
+
+            ChatState.Loading -> applyLoadingState()
         }
     }
 
     private fun applyContentState(messages: List<Message>) {
         binding.messages.adapter = adapter
+        binding.shimmer.hide()
         adapter.submitList(messages.groupByDate()) {
             binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
+    }
+
+    private fun applyLoadingState() {
+        binding.shimmer.show()
     }
 
     private fun sendMessage() {

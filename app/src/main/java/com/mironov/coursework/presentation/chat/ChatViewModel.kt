@@ -1,12 +1,15 @@
 package com.mironov.coursework.presentation.chat
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.data.reactionList
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.navigation.router.ChatRouter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -16,7 +19,7 @@ class ChatViewModel @Inject constructor(
     private val router: ChatRouter
 ) : ViewModel() {
 
-    private val _messages = MutableStateFlow<ChatState>(ChatState.Content(emptyList()))
+    private val _messages = MutableStateFlow<ChatState>(ChatState.Initial)
     val messages = _messages.asStateFlow()
 
     private val date1 = LocalDate.now(ZoneId.systemDefault())
@@ -102,8 +105,16 @@ class ChatViewModel @Inject constructor(
         ),
     )
 
+    init {
+        loadMessages(0)
+    }
+
     fun loadMessages(chatId: Int) {
-        _messages.value = ChatState.Content(data.toList())
+        viewModelScope.launch {
+            _messages.value = ChatState.Loading
+            delay(600)
+            _messages.value = ChatState.Content(data.toList())
+        }
     }
 
     fun sendMessage(messageText: String, id: Int): Boolean {

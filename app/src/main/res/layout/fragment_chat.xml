@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:listitem="@layout/received_message_item"/>
+        tools:listitem="@layout/received_message_item" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/message_input"
@@ -62,5 +62,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/message_input" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,9 @@ import com.mironov.coursework.domain.entity.Message
 
 sealed interface ChatState {
 
-    data object Loading: ChatState
+    data object Initial : ChatState
 
-    data class Content(val data: List<Message>): ChatState
+    data object Loading : ChatState
+
+    data class Content(val data: List<Message>) : ChatState
 }
