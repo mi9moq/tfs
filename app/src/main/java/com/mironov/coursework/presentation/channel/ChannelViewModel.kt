@@ -1,14 +1,17 @@
 package com.mironov.coursework.presentation.channel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
 import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
 import com.mironov.coursework.ui.adapter.DelegateItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ChannelViewModel @Inject constructor(
@@ -59,7 +62,11 @@ class ChannelViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        _state.value = ChannelState.Content(delegateList.toList())
+        viewModelScope.launch{
+            _state.value = ChannelState.Loading
+            delay(3500)
+            _state.value = ChannelState.Content(delegateList.toList())
+        }
     }
 
     fun showTopics(channelId: Int) {

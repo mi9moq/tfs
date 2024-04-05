@@ -6,5 +6,7 @@ sealed interface ChannelState {
 
     data object Initial : ChannelState
 
+    data object Loading : ChannelState
+
     data class Content(val data: List<DelegateItem>) : ChannelState
 }

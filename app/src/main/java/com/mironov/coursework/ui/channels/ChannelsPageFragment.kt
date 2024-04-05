@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
@@ -17,6 +18,8 @@ import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.utils.collectStateFlow
+import com.mironov.coursework.ui.utils.hide
+import com.mironov.coursework.ui.utils.show
 import javax.inject.Inject
 
 class ChannelsPageFragment : Fragment() {
@@ -85,14 +88,22 @@ class ChannelsPageFragment : Fragment() {
 
     private fun applyState(state: ChannelState) {
         when (state) {
-            is ChannelState.Content -> applyContentState(state.data)
             ChannelState.Initial -> Unit
+            ChannelState.Loading -> applyLoadingState()
+            is ChannelState.Content -> applyContentState(state.data)
         }
     }
 
     private fun applyContentState(delegateItemList: List<DelegateItem>) {
+        binding.shimmer.hide()
+        binding.channels.isVisible = true
         binding.channels.adapter = adapter
         adapter.submitList(delegateItemList)
+    }
+
+    private fun applyLoadingState() {
+        binding.channels.isVisible = false
+        binding.shimmer.show()
     }
 
     override fun onDestroyView() {
