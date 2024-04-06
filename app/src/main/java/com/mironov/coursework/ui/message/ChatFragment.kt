@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
-import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.presentation.chat.ChatViewModel
+import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.message.date.DateDelegate
@@ -21,7 +21,6 @@ import com.mironov.coursework.ui.message.received.ReceivedDelegate
 import com.mironov.coursework.ui.message.sent.SentDelegate
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
-import com.mironov.coursework.ui.utils.groupByDate
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import javax.inject.Inject
@@ -128,10 +127,10 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun applyContentState(messages: List<Message>) {
+    private fun applyContentState(messages: List<DelegateItem>) {
         binding.messages.adapter = adapter
         binding.shimmer.hide()
-        adapter.submitList(messages.groupByDate()) {
+        adapter.submitList(messages) {
             binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
     }

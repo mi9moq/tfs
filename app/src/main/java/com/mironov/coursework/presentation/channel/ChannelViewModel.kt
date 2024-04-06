@@ -64,7 +64,7 @@ class ChannelViewModel @Inject constructor(
     init {
         viewModelScope.launch{
             _state.value = ChannelState.Loading
-            delay(3500)
+            delay(800)
             _state.value = ChannelState.Content(delegateList.toList())
         }
     }

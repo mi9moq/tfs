@@ -6,6 +6,7 @@ import com.mironov.coursework.data.reactionList
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.navigation.router.ChatRouter
+import com.mironov.coursework.ui.utils.groupByDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -113,7 +114,7 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             _messages.value = ChatState.Loading
             delay(600)
-            _messages.value = ChatState.Content(data.toList())
+            _messages.value = ChatState.Content(data.toList().groupByDate())
         }
     }
 
@@ -130,63 +131,67 @@ class ChatViewModel @Inject constructor(
                 reactions = mutableSetOf()
             )
             data.add(message)
-            _messages.value = ChatState.Content(data.toList())
+            _messages.value = ChatState.Content(data.toList().groupByDate())
             true
         } else false
     }
 
     fun addReaction(messageId: Int, emojiUnicode: Int) {
+        viewModelScope.launch {
 
-        _messages.value = ChatState.Loading
+            _messages.value = ChatState.Loading
 
-        val ind = data.indexOfFirst {
-            it.id == messageId
-        }
-        if (ind != -1) {
-            data[ind].reactions.forEach { reaction ->
-                if (reaction.emojiUnicode == emojiUnicode) {
-                    _messages.value = ChatState.Content(data.toList())
-                    return
-                }
+            val ind = data.indexOfFirst {
+                it.id == messageId
             }
-            val newReaction = Reaction(
-                emojiUnicode = emojiUnicode,
-                count = 1,
-                isSelected = true
-            )
-            data[ind].reactions.add(newReaction)
-            _messages.value = ChatState.Content(data.toList())
+            if (ind != -1) {
+                data[ind].reactions.forEach { reaction ->
+                    if (reaction.emojiUnicode == emojiUnicode) {
+                        _messages.value = ChatState.Content(data.toList().groupByDate())
+                        return@launch
+                    }
+                }
+                val newReaction = Reaction(
+                    emojiUnicode = emojiUnicode,
+                    count = 1,
+                    isSelected = true
+                )
+                data[ind].reactions.add(newReaction)
+                _messages.value = ChatState.Content(data.toList().groupByDate())
+            }
         }
     }
 
     fun changeReaction(messageId: Int, emojiUnicode: Int) {
-        _messages.value = ChatState.Loading
-        val ind = data.indexOfFirst {
-            it.id == messageId
-        }
+        viewModelScope.launch {
+            _messages.value = ChatState.Loading
+            val ind = data.indexOfFirst {
+                it.id == messageId
+            }
 
-        if (ind != -1) {
-            val r = data[ind].reactions.find {
-                it.emojiUnicode == emojiUnicode
-            } ?: return
+            if (ind != -1) {
+                val r = data[ind].reactions.find {
+                    it.emojiUnicode == emojiUnicode
+                } ?: return@launch
 
-            val count = r.count
+                val count = r.count
 
-            if (r.isSelected && count == 1) {
+                if (r.isSelected && count == 1) {
+                    data[ind].reactions.remove(r)
+                    _messages.value = ChatState.Content(data.toList().groupByDate())
+                    return@launch
+                }
+
+                val newReaction = if (r.isSelected) {
+                    r.copy(isSelected = false, count = count - 1)
+                } else {
+                    r.copy(isSelected = true, count = count + 1)
+                }
                 data[ind].reactions.remove(r)
-                _messages.value = ChatState.Content(data.toList())
-                return
-            }
+                data[ind].reactions.add(newReaction)
 
-            val newReaction = if (r.isSelected) {
-                r.copy(isSelected = false, count = count - 1)
-            } else {
-                r.copy(isSelected = true, count = count + 1)
+                _messages.value = ChatState.Content(data.toList().groupByDate())
             }
-            data[ind].reactions.remove(r)
-            data[ind].reactions.add(newReaction)
-
-            _messages.value = ChatState.Content(data.toList())
         }
     }
 

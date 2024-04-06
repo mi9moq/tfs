@@ -1,6 +1,6 @@
 package com.mironov.coursework.presentation.chat
 
-import com.mironov.coursework.domain.entity.Message
+import com.mironov.coursework.ui.adapter.DelegateItem
 
 sealed interface ChatState {
 
@@ -8,5 +8,5 @@ sealed interface ChatState {
 
     data object Loading : ChatState
 
-    data class Content(val data: List<Message>) : ChatState
+    data class Content(val data: List<DelegateItem>) : ChatState
 }
