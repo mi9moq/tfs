@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationBarView.OnItemSelectedLi
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentNavigationBinding
 import com.mironov.coursework.navigation.LocalCiceroneHolder
+import com.mironov.coursework.navigation.screen.getChannelsScreen
 import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.main.NavigationViewModel
 import javax.inject.Inject
@@ -51,6 +52,13 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
         super.onAttach(context)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            cicerone.router.newRootScreen(getChannelsScreen())
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,8 +81,8 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     }
 
     override fun onPause() {
-        cicerone.getNavigatorHolder().removeNavigator()
         super.onPause()
+        cicerone.getNavigatorHolder().removeNavigator()
     }
 
     override fun onDestroyView() {
@@ -83,17 +91,19 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_channels -> {
-                viewModel.openChannels()
-            }
+        if (item.itemId != binding.bottomNavigation.selectedItemId) {
+            when (item.itemId) {
+                R.id.menu_channels -> {
+                    viewModel.openChannels()
+                }
 
-            R.id.menu_people -> {
-                viewModel.openContacts()
-            }
+                R.id.menu_people -> {
+                    viewModel.openContacts()
+                }
 
-            R.id.menu_profile -> {
-                viewModel.openOwnProfile()
+                R.id.menu_profile -> {
+                    viewModel.openOwnProfile()
+                }
             }
         }
         return true
