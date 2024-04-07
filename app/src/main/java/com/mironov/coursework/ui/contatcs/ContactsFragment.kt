@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.databinding.FragmentContactsBinding
@@ -61,6 +62,9 @@ class ContactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
+        binding.search.doOnTextChanged { text, _, _, _ ->
+            viewModel.searchQuery.tryEmit(text.toString())
+        }
     }
 
     private fun observeViewModel() {
@@ -71,6 +75,7 @@ class ContactsFragment : Fragment() {
         when (state) {
             ContactsState.Initial -> Unit
             ContactsState.Loading -> applyLoadingState()
+            ContactsState.Error -> Unit
             is ContactsState.Content -> applyContentState(state.data)
         }
     }

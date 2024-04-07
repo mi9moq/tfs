@@ -8,5 +8,7 @@ sealed interface ContactsState {
 
     data object Loading : ContactsState
 
+    data object Error : ContactsState
+
     data class Content(val data: List<User>) : ContactsState
 }
