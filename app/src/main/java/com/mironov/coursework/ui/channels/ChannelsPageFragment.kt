@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
 import com.mironov.coursework.presentation.ViewModelFactory
+import com.mironov.coursework.presentation.channel.ChannelShareViewModel
 import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.ChannelViewModel
+import com.mironov.coursework.presentation.channel.SharedChannelState
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
@@ -35,6 +38,8 @@ class ChannelsPageFragment : Fragment() {
         private const val IS_ALL_CHANNELS_KEY = "is all channels"
     }
 
+    private var isAllChannels = false
+
     private val component by lazy {
         (requireActivity() as MainActivity).component
     }
@@ -49,6 +54,8 @@ class ChannelsPageFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ChannelViewModel::class.java]
     }
+
+    private val sharedViewModel by activityViewModels<ChannelShareViewModel>()
 
     private val adapter by lazy {
         MainAdapter().apply {
@@ -65,6 +72,11 @@ class ChannelsPageFragment : Fragment() {
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseArguments()
     }
 
     override fun onCreateView(
@@ -84,6 +96,7 @@ class ChannelsPageFragment : Fragment() {
 
     private fun observeState() {
         collectStateFlow(viewModel.state, ::applyState)
+        collectStateFlow(sharedViewModel.state, ::applySharedState)
     }
 
     private fun applyState(state: ChannelState) {
@@ -104,6 +117,19 @@ class ChannelsPageFragment : Fragment() {
     private fun applyLoadingState() {
         binding.channels.isVisible = false
         binding.shimmer.show()
+    }
+
+    private fun applySharedState(state: SharedChannelState) {
+        when (state) {
+            SharedChannelState.Initial -> Unit
+            is SharedChannelState.Content -> {
+                viewModel.loadFilms(state.data, isAllChannels)
+            }
+        }
+    }
+
+    private fun parseArguments() {
+        isAllChannels = arguments?.getBoolean(IS_ALL_CHANNELS_KEY) ?: false
     }
 
     override fun onDestroyView() {

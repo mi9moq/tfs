@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
+import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
 import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
-import com.mironov.coursework.ui.adapter.DelegateItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,32 +18,27 @@ class ChannelViewModel @Inject constructor(
     private val router: ChannelRouter
 ) : ViewModel() {
 
-    private val delegateList = mutableListOf<DelegateItem>(
-        ChannelDelegateItem(
-            Channel(
-                id = 1,
-                name = "General"
-            )
+    private val channelList = mutableListOf(
+        Channel(
+            id = 1,
+            name = "General"
         ),
-        ChannelDelegateItem(
-            Channel(
-                id = 2,
-                name = "Design"
-            )
+        Channel(
+            id = 2,
+            name = "Design"
         ),
-        ChannelDelegateItem(
-            Channel(
-                id = 3,
-                name = "Development"
-            )
+        Channel(
+            id = 3,
+            name = "Development"
         ),
-        ChannelDelegateItem(
-            Channel(
-                id = 4,
-                name = "PR"
-            )
+        Channel(
+            id = 4,
+            name = "PR"
         ),
     )
+
+    private val delegateList: MutableList<DelegateItem> =
+        channelList.channelListToDelegateList().toMutableList()
 
     private val topicList = listOf(
         Topic(
@@ -62,10 +57,20 @@ class ChannelViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch{
+        viewModelScope.launch {
             _state.value = ChannelState.Loading
             delay(800)
             _state.value = ChannelState.Content(delegateList.toList())
+        }
+    }
+
+    fun loadFilms(queryItem: QueryItem, isAllChannels: Boolean) {
+        viewModelScope.launch {
+            val query = queryItem.query
+            val newList = delegateList.filter {
+                it is ChannelDelegateItem && it.content().name.startsWith(query)
+            }
+            _state.value = ChannelState.Content(newList)
         }
     }
 
@@ -75,7 +80,7 @@ class ChannelViewModel @Inject constructor(
         }
         val a = (delegateList[ind].content() as Channel).copy(isOpen = true)
         delegateList[ind] = ChannelDelegateItem(a)
-        delegateList.addAll(ind + 1, topicList.toListDelegate())
+        delegateList.addAll(ind + 1, topicList.topicListToListDelegate())
         _state.value = ChannelState.Content(delegateList.toList())
     }
 
@@ -96,5 +101,9 @@ class ChannelViewModel @Inject constructor(
 
     private fun Topic.toDelegate() = TopicDelegateItem(this)
 
-    private fun List<Topic>.toListDelegate() = this.map { it.toDelegate() }
+    private fun List<Topic>.topicListToListDelegate() = map { it.toDelegate() }
+
+    private fun Channel.toDelegate() = ChannelDelegateItem(this)
+
+    private fun List<Channel>.channelListToDelegateList() = map { it.toDelegate() }
 }
