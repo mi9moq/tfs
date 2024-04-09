@@ -75,13 +75,15 @@ class ChannelViewModel @Inject constructor(
     }
 
     fun showTopics(channelId: Int) {
-        val ind = delegateList.indexOfFirst {
-            it is ChannelDelegateItem && it.id() == channelId
+        viewModelScope.launch {
+            val ind = delegateList.indexOfFirst {
+                it is ChannelDelegateItem && it.id() == channelId
+            }
+            val a = (delegateList[ind].content() as Channel).copy(isOpen = true)
+            delegateList[ind] = ChannelDelegateItem(a)
+            delegateList.addAll(ind + 1, topicList.topicListToListDelegate())
+            _state.value = ChannelState.Content(delegateList.toList())
         }
-        val a = (delegateList[ind].content() as Channel).copy(isOpen = true)
-        delegateList[ind] = ChannelDelegateItem(a)
-        delegateList.addAll(ind + 1, topicList.topicListToListDelegate())
-        _state.value = ChannelState.Content(delegateList.toList())
     }
 
     fun hideTopics(channelId: Int) {
