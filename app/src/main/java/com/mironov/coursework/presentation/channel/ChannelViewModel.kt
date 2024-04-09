@@ -1,6 +1,5 @@
 package com.mironov.coursework.presentation.channel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mironov.coursework.domain.entity.Channel
@@ -58,7 +57,6 @@ class ChannelViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        Log.e("ViewModel", "imit")
         viewModelScope.launch {
             _state.value = ChannelState.Loading
             delay(800)
