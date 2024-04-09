@@ -60,9 +60,15 @@ class ChannelsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initStatusBar()
         addTextChangeListener()
         observeViewModel()
         setupViewPager()
+    }
+
+    private fun initStatusBar() {
+        requireActivity().window.statusBarColor = requireContext()
+            .getColor(R.color.common_300)
     }
 
     private fun addTextChangeListener() {
