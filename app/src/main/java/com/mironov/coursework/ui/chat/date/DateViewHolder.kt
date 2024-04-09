@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.date
+package com.mironov.coursework.ui.chat.date
 
 import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.databinding.DateItemBinding

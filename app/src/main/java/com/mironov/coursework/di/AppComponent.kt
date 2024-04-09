@@ -4,7 +4,7 @@ import com.mironov.coursework.ui.channels.ChannelsPageFragment
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.main.NavigationFragment
-import com.mironov.coursework.ui.message.ChatFragment
+import com.mironov.coursework.ui.chat.ChatFragment
 import com.mironov.coursework.ui.profile.OwnProfileFragment
 import com.mironov.coursework.ui.profile.UserProfileFragment
 import dagger.Component

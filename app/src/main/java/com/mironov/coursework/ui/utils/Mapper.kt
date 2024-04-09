@@ -3,9 +3,9 @@ package com.mironov.coursework.ui.utils
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.MessageDate
 import com.mironov.coursework.ui.adapter.DelegateItem
-import com.mironov.coursework.ui.message.date.DateDelegateItem
-import com.mironov.coursework.ui.message.received.ReceivedDelegateItem
-import com.mironov.coursework.ui.message.sent.SentDelegateItem
+import com.mironov.coursework.ui.chat.date.DateDelegateItem
+import com.mironov.coursework.ui.chat.received.ReceivedDelegateItem
+import com.mironov.coursework.ui.chat.sent.SentDelegateItem
 
 fun List<Message>.groupByDate(): List<DelegateItem> {
 

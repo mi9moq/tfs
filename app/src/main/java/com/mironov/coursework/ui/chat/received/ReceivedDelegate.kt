@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.received
+package com.mironov.coursework.ui.chat.received
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

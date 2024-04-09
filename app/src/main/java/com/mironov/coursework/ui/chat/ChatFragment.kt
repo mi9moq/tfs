@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message
+package com.mironov.coursework.ui.chat
 
 import android.content.Context
 import android.os.Bundle
@@ -17,9 +17,9 @@ import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.main.MainActivity
-import com.mironov.coursework.ui.message.date.DateDelegate
-import com.mironov.coursework.ui.message.received.ReceivedDelegate
-import com.mironov.coursework.ui.message.sent.SentDelegate
+import com.mironov.coursework.ui.chat.date.DateDelegate
+import com.mironov.coursework.ui.chat.received.ReceivedDelegate
+import com.mironov.coursework.ui.chat.sent.SentDelegate
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
@@ -87,10 +87,15 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        initStatusBar()
         addClickListeners()
         addTextWatcher()
         observeViewModel()
+    }
+
+    private fun initStatusBar() {
+        requireActivity().window.statusBarColor = requireContext()
+            .getColor(R.color.primary_color)
     }
 
     private fun parseArguments() {

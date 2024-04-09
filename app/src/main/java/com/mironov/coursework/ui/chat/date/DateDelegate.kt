@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.date
+package com.mironov.coursework.ui.chat.date
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

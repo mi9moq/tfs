@@ -1,11 +1,12 @@
-package com.mironov.coursework.ui.message.sent
+package com.mironov.coursework.ui.chat.received
 
 import androidx.recyclerview.widget.RecyclerView
-import com.mironov.coursework.databinding.SentMessageItemBinding
+import com.mironov.coursework.R
+import com.mironov.coursework.databinding.ReceivedMessageItemBinding
 import com.mironov.coursework.domain.entity.Message
 
-class SentViewHolder(
-    private val binding: SentMessageItemBinding,
+class ReceivedViewHolder(
+    private val binding: ReceivedMessageItemBinding,
     private val addReaction: (Int) -> Unit,
     private val onReactionClickListener: (id: Int, emoji: Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -13,6 +14,7 @@ class SentViewHolder(
     fun bind(model: Message) {
         with(binding.main) {
             setMessage(model)
+            setAvatar(R.drawable.ic_avatar)
             setOnMessageLongClickListener(addReaction)
             setOnAddClickListener(addReaction)
             setOnReactionsClickListeners(onReactionClickListener)

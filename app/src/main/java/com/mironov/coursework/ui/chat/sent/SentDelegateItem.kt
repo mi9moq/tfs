@@ -1,14 +1,14 @@
-package com.mironov.coursework.ui.message.received
+package com.mironov.coursework.ui.chat.sent
 
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.ui.adapter.DelegateItem
 
-class ReceivedDelegateItem(private val message: Message) : DelegateItem {
+class SentDelegateItem(private val message: Message) : DelegateItem {
 
     override fun content(): Message = message
 
     override fun id(): Int = message.id
 
     override fun compareToOther(other: DelegateItem): Boolean =
-        (other as ReceivedDelegateItem).content() == message
+        (other as SentDelegateItem).content() == message
 }

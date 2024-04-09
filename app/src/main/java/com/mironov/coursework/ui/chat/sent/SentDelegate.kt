@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.sent
+package com.mironov.coursework.ui.chat.sent
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

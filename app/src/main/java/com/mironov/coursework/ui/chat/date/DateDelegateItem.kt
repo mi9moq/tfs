@@ -1,4 +1,4 @@
-package com.mironov.coursework.ui.message.date
+package com.mironov.coursework.ui.chat.date
 
 import com.mironov.coursework.domain.entity.MessageDate
 import com.mironov.coursework.ui.adapter.DelegateItem
