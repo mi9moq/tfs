@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/chanel_messages_background">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/chanel_background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
@@ -44,13 +45,13 @@
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:textColor="?attr/profile_status_text_color"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/online"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_name"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        android:layout_marginEnd="20dp"
         tools:text="In a meeting" />
 
     <TextView
@@ -69,27 +70,27 @@
         android:id="@+id/log_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="64dp"
-        android:text="@string/log_out"
-        android:textSize="20sp"
+        android:backgroundTint="?attr/profile_log_out_background_color"
         android:paddingHorizontal="56dp"
         android:paddingVertical="14dp"
+        android:text="@string/log_out"
         android:textColor="?attr/profile_log_out_text_color"
-        android:backgroundTint="?attr/profile_log_out_background_color"/>
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/shimmer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:visibility="visible">
 
-        <include layout="@layout/profile_placeholder"/>
+        <include layout="@layout/profile_placeholder" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
