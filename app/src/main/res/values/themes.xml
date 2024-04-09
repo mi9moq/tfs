@@ -5,20 +5,20 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
         <!-- Chanel -->
-        <item name="chanel_edit_text_background_color">@color/chanel_et_background</item>
-        <item name="chanel_edit_text_hint_color">@color/chanel_et_hint</item>
-        <item name="chanel_background_color">@color/chanel_background</item>
-        <item name="chanel_messages_background_color">@color/chanel_messages_background</item>
+        <item name="chanel_edit_text_background_color">@color/common_200</item>
+        <item name="chanel_edit_text_hint_color">@color/text_common_300</item>
+        <item name="chanel_background_color">@color/common_300</item>
+        <item name="chanel_messages_background_color">@color/common_500</item>
         <item name="chanel_date_background_color">@color/chanel_date_background</item>
         <item name="chanel_date_color">@color/chanel_date</item>
         <item name="chanel_choose_reaction_divider_color">@color/divider_color</item>
         <item name="chanel_toolbar_color">@color/primary_color</item>
 
 
-        <item name="profile_name_text_color">@color/white</item>
-        <item name="profile_log_out_text_color">@color/white</item>
+        <item name="profile_name_text_color">@color/text_common_100</item>
+        <item name="profile_log_out_text_color">@color/text_common_100</item>
         <item name="profile_log_out_background_color">@color/log_out_background</item>
-        <item name="profile_status_text_color">@color/user_status</item>
+        <item name="profile_status_text_color">@color/text_common_500</item>
         <item name="profile_online_text_color">@color/user_online</item>
     </style>
 

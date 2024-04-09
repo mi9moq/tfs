@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/chanel_messages_background"
+    android:background="@color/common_500"
     android:orientation="vertical">
 
     <View
@@ -20,6 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"
-        android:background="@color/chanel_et_background"/>
+        android:background="@color/common_200"/>
 
 </LinearLayout>

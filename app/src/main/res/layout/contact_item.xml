@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         tools:text="@tools:sample/full_names"
         android:textSize="22sp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_common_100"
         app:layout_constraintStart_toEndOf="@id/avatar"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"

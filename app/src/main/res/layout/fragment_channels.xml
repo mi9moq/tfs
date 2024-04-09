@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chanel_messages_background"
+    android:background="@color/common_500"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputEditText
@@ -16,14 +16,14 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/chanel_background"
+        android:background="@color/common_300"
         app:tabGravity="fill"
         app:tabIndicator="@drawable/indicator_shape"
         app:tabIndicatorColor="#219653"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="2dp"
         app:tabMode="fixed"
-        app:tabTextColor="@color/white" />
+        app:tabTextColor="@color/text_common_100" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"

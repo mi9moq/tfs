@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="4dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_common_100"
         tools:text="@tools:sample/lorem/random" />
 
     <com.mironov.coursework.ui.view.FlexboxLayout

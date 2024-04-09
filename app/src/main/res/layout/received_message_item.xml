@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="64dp"
     android:layout_marginBottom="24dp"
-    app:message_background="@color/received_message_background">
+    app:message_background="@color/common_100">
 
 </com.mironov.coursework.ui.view.MessageViewGroup>
