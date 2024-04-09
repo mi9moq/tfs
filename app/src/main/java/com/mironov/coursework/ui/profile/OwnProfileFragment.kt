@@ -62,7 +62,24 @@ class OwnProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initStatusBar()
+        addClickListeners()
         observeState()
+    }
+
+    private fun initStatusBar() {
+        binding.toolbar.visibility = View.GONE
+        requireActivity().window.statusBarColor = requireContext()
+            .getColor(R.color.common_300)
+    }
+
+    private fun addClickListeners() {
+        binding.logOut.setOnClickListener {
+            //TODO
+        }
+        binding.tryAgain.setOnClickListener {
+            viewModel.loadUser(1)
+        }
     }
 
     private fun observeState() {
@@ -70,12 +87,11 @@ class OwnProfileFragment : Fragment() {
     }
 
     private fun applyState(state: ProfileState) {
-        binding.logOut.isVisible = true
-        binding.toolbar.visibility = View.GONE
         when (state) {
-            is ProfileState.Content -> applyContentState(state.data)
             ProfileState.Initial -> Unit
             ProfileState.Loading -> applyLoadingState()
+            ProfileState.Error -> applyErrorState()
+            is ProfileState.Content -> applyContentState(state.data)
         }
     }
 
@@ -88,11 +104,26 @@ class OwnProfileFragment : Fragment() {
             status.text = user.status
             online.text = getString(R.string.online)
             toolbar.visibility = View.GONE
+            errorMessage.isVisible = false
+            tryAgain.isVisible = false
         }
     }
 
     private fun applyLoadingState() {
-        binding.shimmer.show()
+        with(binding) {
+            shimmer.show()
+            errorMessage.isVisible = false
+            tryAgain.isVisible = false
+        }
+    }
+
+    private fun applyErrorState() {
+        with(binding) {
+            shimmer.hide()
+            errorMessage.isVisible = true
+            tryAgain.isVisible = true
+            errorMessage.setText(R.string.error_loading_profile)
+        }
     }
 
     override fun onDestroyView() {

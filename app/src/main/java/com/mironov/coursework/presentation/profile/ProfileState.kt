@@ -8,5 +8,7 @@ sealed interface ProfileState {
 
     data object Loading: ProfileState
 
+    data object Error: ProfileState
+
     data class Content(val data: User): ProfileState
 }

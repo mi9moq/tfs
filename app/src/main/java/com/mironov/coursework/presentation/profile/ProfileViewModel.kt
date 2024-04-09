@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 class ProfileViewModel @Inject constructor(
     private val router: ProfileRouter
@@ -30,7 +31,11 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = ProfileState.Loading
             delay(1000)
-            _state.value = ProfileState.Content(user)
+            if (Random.nextBoolean()){
+                _state.value = ProfileState.Content(user)
+            } else {
+                _state.value = ProfileState.Error
+            }
         }
     }
 

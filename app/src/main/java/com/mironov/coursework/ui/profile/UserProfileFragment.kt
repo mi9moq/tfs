@@ -71,7 +71,8 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.logOut.isVisible = false
+        initStatusBar()
+        addClickListeners()
         observeState()
     }
 
@@ -81,15 +82,31 @@ class UserProfileFragment : Fragment() {
         viewModel.loadUser(id)
     }
 
+    private fun initStatusBar() {
+        requireActivity().window.statusBarColor = requireContext()
+            .getColor(R.color.common_300)
+        binding.logOut.isVisible = false
+        binding.toolbar.setNavigationOnClickListener {
+            viewModel.back()
+        }
+    }
+
+    private fun addClickListeners() {
+        binding.tryAgain.setOnClickListener {
+            viewModel.loadUser(1)
+        }
+    }
+
     private fun observeState() {
         collectStateFlow(viewModel.state, ::applyState)
     }
 
     private fun applyState(state: ProfileState) {
         when (state) {
-            is ProfileState.Content -> applyContentState(state.data)
             ProfileState.Initial -> Unit
             ProfileState.Loading -> applyLoadingState()
+            ProfileState.Error -> applyErrorState()
+            is ProfileState.Content -> applyContentState(state.data)
         }
     }
 
@@ -104,14 +121,24 @@ class UserProfileFragment : Fragment() {
             else
                 getString(R.string.offline)
             toolbar.isVisible = true
-            toolbar.setNavigationOnClickListener {
-                viewModel.back()
-            }
         }
     }
 
     private fun applyLoadingState() {
-        binding.shimmer.show()
+        with(binding) {
+            shimmer.show()
+            errorMessage.isVisible = false
+            tryAgain.isVisible = false
+        }
+    }
+
+    private fun applyErrorState() {
+        with(binding) {
+            shimmer.hide()
+            errorMessage.isVisible = true
+            tryAgain.isVisible = true
+            errorMessage.setText(R.string.error_loading_profile)
+        }
     }
 
     override fun onDestroyView() {
