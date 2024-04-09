@@ -12,12 +12,13 @@
         android:layout_height="wrap_content"
         android:background="@color/chanel_background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:titleTextColor="@color/white"
-        tools:title="#general" />
+        app:title="Profile"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        app:titleTextColor="@color/white" />
 
     <ImageView
         android:id="@+id/avatar"
