@@ -11,6 +11,7 @@
         <attr name="text_200" format="color" />
         <attr name="text_300" format="color" />
         <attr name="text_400" format="color" />
+        <attr name="text_500" format="color" />
     </declare-styleable>
 
     <declare-styleable name="EmojiView">
