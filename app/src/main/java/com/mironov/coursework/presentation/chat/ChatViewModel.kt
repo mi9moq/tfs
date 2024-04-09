@@ -7,6 +7,7 @@ import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.navigation.router.ChatRouter
 import com.mironov.coursework.ui.utils.groupByDate
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,17 +16,21 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 class ChatViewModel @Inject constructor(
     private val router: ChatRouter
 ) : ViewModel() {
 
-    private val _messages = MutableStateFlow<ChatState>(ChatState.Initial)
-    val messages = _messages.asStateFlow()
+    private val _state = MutableStateFlow<ChatState>(ChatState.Initial)
+    val state = _state.asStateFlow()
 
     private val date1 = LocalDate.now(ZoneId.systemDefault())
     private val date2 = LocalDate.of(2024, Month.MARCH, 22)
     private val date3 = LocalDate.of(2024, Month.MARCH, 21)
+
+    private var messageId = 6
 
     private val data = mutableListOf(
         Message(
@@ -106,40 +111,38 @@ class ChatViewModel @Inject constructor(
         ),
     )
 
-    init {
-        loadMessages(0)
-    }
-
     fun loadMessages(chatId: Int) {
         viewModelScope.launch {
-            _messages.value = ChatState.Loading
+            _state.value = ChatState.Loading
             delay(600)
-            _messages.value = ChatState.Content(data.toList().groupByDate())
+            try {
+                val messages = loadMessageOrThrow()
+                _state.value = ChatState.Content(messages.toList().groupByDate())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _state.value = ChatState.Error.LoadingError
+            }
         }
     }
 
-    fun sendMessage(messageText: String, id: Int): Boolean {
-        return if (messageText.isNotEmpty()) {
-            val date = LocalDate.now(ZoneId.systemDefault())
-            val message = Message(
-                content = messageText,
-                id = id,
-                isMeMessage = true,
-                senderId = 6,
-                sendTime = date,
-                senderName = "qwerty",
-                reactions = mutableSetOf()
-            )
-            data.add(message)
-            _messages.value = ChatState.Content(data.toList().groupByDate())
-            true
-        } else false
+    fun sendMessage(messageText: String) {
+        viewModelScope.launch {
+            try {
+                sendMessageOrThrow(messageText)
+                _state.value = ChatState.Content(data.toList().groupByDate())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _state.value = ChatState.Error.SendingError(data.toList().groupByDate())
+            }
+        }
     }
 
     fun addReaction(messageId: Int, emojiUnicode: Int) {
         viewModelScope.launch {
 
-            _messages.value = ChatState.Loading
+            _state.value = ChatState.Loading
 
             val ind = data.indexOfFirst {
                 it.id == messageId
@@ -147,7 +150,7 @@ class ChatViewModel @Inject constructor(
             if (ind != -1) {
                 data[ind].reactions.forEach { reaction ->
                     if (reaction.emojiUnicode == emojiUnicode) {
-                        _messages.value = ChatState.Content(data.toList().groupByDate())
+                        _state.value = ChatState.Content(data.toList().groupByDate())
                         return@launch
                     }
                 }
@@ -157,14 +160,14 @@ class ChatViewModel @Inject constructor(
                     isSelected = true
                 )
                 data[ind].reactions.add(newReaction)
-                _messages.value = ChatState.Content(data.toList().groupByDate())
+                _state.value = ChatState.Content(data.toList().groupByDate())
             }
         }
     }
 
     fun changeReaction(messageId: Int, emojiUnicode: Int) {
         viewModelScope.launch {
-            _messages.value = ChatState.Loading
+            _state.value = ChatState.Loading
             val ind = data.indexOfFirst {
                 it.id == messageId
             }
@@ -178,7 +181,7 @@ class ChatViewModel @Inject constructor(
 
                 if (r.isSelected && count == 1) {
                     data[ind].reactions.remove(r)
-                    _messages.value = ChatState.Content(data.toList().groupByDate())
+                    _state.value = ChatState.Content(data.toList().groupByDate())
                     return@launch
                 }
 
@@ -190,12 +193,36 @@ class ChatViewModel @Inject constructor(
                 data[ind].reactions.remove(r)
                 data[ind].reactions.add(newReaction)
 
-                _messages.value = ChatState.Content(data.toList().groupByDate())
+                _state.value = ChatState.Content(data.toList().groupByDate())
             }
         }
     }
 
     fun back() {
         router.back()
+    }
+
+    private fun loadMessageOrThrow(): List<Message> {
+        val canLoading = Random.nextBoolean()
+        if (canLoading) {
+            return data
+        } else {
+            throw RuntimeException()
+        }
+    }
+
+    private fun sendMessageOrThrow(messageText: String) {
+        if (Random.nextInt(1..4) == 3) throw RuntimeException()
+        val date = LocalDate.now(ZoneId.systemDefault())
+        val message = Message(
+            content = messageText,
+            id = messageId++,
+            isMeMessage = true,
+            senderId = 6,
+            sendTime = date,
+            senderName = "qwerty",
+            reactions = mutableSetOf()
+        )
+        data.add(message)
     }
 }

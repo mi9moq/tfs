@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
@@ -57,4 +58,9 @@ fun ShimmerFrameLayout.show() {
 fun ShimmerFrameLayout.hide() {
     stopShimmer()
     isVisible = false
+}
+
+fun Fragment.showErrorSnackBar(message: String) {
+    val parent = requireActivity().findViewById<View>(android.R.id.content)
+    Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
 }
