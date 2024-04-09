@@ -9,18 +9,10 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/search"
+        style="@style/SearchEditTex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/chanel_background"
-        android:drawableEnd="@drawable/ic_search"
-        android:hint="@string/search"
-        android:maxLines="1"
-        android:paddingVertical="20dp"
-        android:paddingLeft="62dp"
-        android:paddingEnd="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textSize="22sp" />
+        android:hint="@string/search" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
