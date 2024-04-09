@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentContactsBinding
 import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.presentation.ViewModelFactory
@@ -61,7 +62,17 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initStatusBar()
+        addTextChangeListener()
         observeViewModel()
+    }
+
+    private fun initStatusBar() {
+        requireActivity().window.statusBarColor = requireContext()
+            .getColor(R.color.common_300)
+    }
+
+    private fun addTextChangeListener() {
         binding.search.doOnTextChanged { text, _, _, _ ->
             viewModel.searchQuery.tryEmit(text.toString())
         }
