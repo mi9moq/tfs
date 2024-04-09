@@ -15,11 +15,11 @@ import com.mironov.coursework.presentation.channel.ChannelShareViewModel
 import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.ChannelViewModel
 import com.mironov.coursework.presentation.channel.SharedChannelState
-import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
@@ -123,7 +123,7 @@ class ChannelsPageFragment : Fragment() {
         when (state) {
             SharedChannelState.Initial -> Unit
             is SharedChannelState.Content -> {
-                viewModel.loadFilms(state.data, isAllChannels)
+                viewModel.loadChannel(state.data, isAllChannels)
             }
         }
     }
