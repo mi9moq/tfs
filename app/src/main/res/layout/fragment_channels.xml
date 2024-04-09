@@ -10,8 +10,6 @@
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/search"
         style="@style/SearchEditTex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="@string/search" />
 
     <com.google.android.material.tabs.TabLayout
