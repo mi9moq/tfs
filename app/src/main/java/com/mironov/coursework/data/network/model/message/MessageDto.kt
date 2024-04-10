@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Message(
+data class MessageDto(
     @SerialName("avatar_url") val avatarUrl: String?,
     @SerialName("id") val id: Long,
     @SerialName("sender_id") val senderId: Long,
