@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 android {
@@ -58,4 +59,7 @@ dependencies {
     ksp(libs.dagger.compiler)
 
     implementation(libs.shimmer)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.bundles.retrofit)
 }
