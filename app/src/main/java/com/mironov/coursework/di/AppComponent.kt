@@ -14,6 +14,7 @@ import dagger.Component
     modules = [
         NavigationModule::class,
         ViewModelModule::class,
+        NetworkModule::class,
     ]
 )
 interface AppComponent {
