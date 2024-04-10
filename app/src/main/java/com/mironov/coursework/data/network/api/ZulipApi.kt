@@ -1,9 +1,11 @@
 package com.mironov.coursework.data.network.api
 
+import com.mironov.coursework.data.network.model.message.MessageResponse
 import com.mironov.coursework.data.network.model.streams.StreamResponse
 import com.mironov.coursework.data.network.model.streams.SubscribedStreamsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ZulipApi {
 
@@ -17,4 +19,11 @@ interface ZulipApi {
     suspend fun getTopics(
         @Path("stream_id") streamId: Long
     )
+
+    @GET("messages")
+    suspend fun getMessages(
+        @Query("anchor") anchor: String = "newest",
+        @Query("num_before") numBefore: Int = 150,
+        @Query("num_after") numAfter: Int = 0,
+    ): MessageResponse
 }
