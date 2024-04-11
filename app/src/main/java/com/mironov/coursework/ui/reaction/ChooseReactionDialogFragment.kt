@@ -13,18 +13,18 @@ import com.mironov.coursework.ui.view.EmojiView
 
 class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
-    var onEmojiClickedCallback: ((Int, Int) -> Unit)? = null
+    var onEmojiClickedCallback: ((Long, Int) -> Unit)? = null
 
     companion object {
 
-        fun newInstance(messageId: Int) = ChooseReactionDialogFragment().apply {
+        fun newInstance(messageId: Long) = ChooseReactionDialogFragment().apply {
             arguments = Bundle().apply {
-                putInt(MESSAGE_ID, messageId)
+                putLong(MESSAGE_ID, messageId)
             }
         }
 
         private const val MESSAGE_ID = "message id"
-        private const val UNDEFINED_ID = -1
+        private const val UNDEFINED_ID = -1L
 
         const val TAG = "ChooseReactionDialogFragment"
     }
@@ -66,7 +66,7 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
     private fun parseArguments() {
         val args = requireArguments()
-        messageId = args.getInt(MESSAGE_ID)
+        messageId = args.getLong(MESSAGE_ID)
     }
 
     private fun setClickListener() {
@@ -81,7 +81,7 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
         reactionList.forEach { reaction ->
             val emojiView = EmojiView(requireContext()).apply {
                 emoji = reaction.emojiUnicode
-                reactionsCount = reaction.count
+                reactionsCount = 0
                 isSelected = false
                 emojiTextSize = 40f
             }

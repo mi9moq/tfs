@@ -17,6 +17,7 @@ import com.mironov.coursework.R
 import com.mironov.coursework.databinding.MessageViewgroupBinding
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
+import com.mironov.coursework.domain.entity.ReactionCondition
 import com.mironov.coursework.ui.utils.layoutWithMargins
 import com.mironov.coursework.ui.utils.measureHeightWithMargins
 import com.mironov.coursework.ui.utils.measureWidthWithMargins
@@ -30,7 +31,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     companion object {
 
-        private const val UNDEFINED_ID = -1
+        private const val UNDEFINED_ID = -1L
     }
 
     var messageId = UNDEFINED_ID
@@ -172,11 +173,11 @@ class MessageViewGroup @JvmOverloads constructor(
         )
     }
 
-    fun addReaction(reaction: Reaction) {
+    fun addReaction(reaction: Reaction, condition: ReactionCondition) {
         val emojiView = EmojiView(context).apply {
             this.emoji = reaction.emojiUnicode
-            this.reactionsCount = reaction.count
-            this.isSelected = reaction.isSelected
+            this.reactionsCount = condition.count
+            this.isSelected = condition.isSelected
             setBackgroundResource(R.drawable.emoji_bg)
         }
         reactions.addView(emojiView)
@@ -203,8 +204,8 @@ class MessageViewGroup @JvmOverloads constructor(
         if (messageEntity.reactions.isEmpty()) {
             reactions.iconAdd.visibility = INVISIBLE
         } else {
-            messageEntity.reactions.forEach { reaction ->
-                addReaction(reaction)
+            messageEntity.reactions.forEach { (key, value) ->
+                addReaction(key, value)
             }
             reactions.iconAdd.visibility = VISIBLE
         }
@@ -218,13 +219,13 @@ class MessageViewGroup @JvmOverloads constructor(
         return p is MarginLayoutParams
     }
 
-    fun setOnAddClickListener(listener: (Int) -> Unit) {
+    fun setOnAddClickListener(listener: (Long) -> Unit) {
         reactions.setOnAddClickListener {
             listener(messageId)
         }
     }
 
-    fun setOnMessageLongClickListener(listener: (Int) -> Unit) {
+    fun setOnMessageLongClickListener(listener: (Long) -> Unit) {
         userName.setOnLongClickListener {
             listener(messageId)
             true
@@ -235,7 +236,7 @@ class MessageViewGroup @JvmOverloads constructor(
         }
     }
 
-    fun setOnReactionsClickListeners(listener: (id: Int, emoji: Int) -> Unit) {
+    fun setOnReactionsClickListeners(listener: (id: Long, emoji: Int) -> Unit) {
         reactions.children.forEach { child ->
             if (child is EmojiView) {
                 child.setOnClickListener {

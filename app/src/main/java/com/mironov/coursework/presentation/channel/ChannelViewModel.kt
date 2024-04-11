@@ -2,6 +2,7 @@ package com.mironov.coursework.presentation.channel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ChannelViewModel @Inject constructor(
-    private val router: ChannelRouter
+    private val router: ChannelRouter,
+    private val api: ZulipApi
 ) : ViewModel() {
 
     private val channelList = mutableListOf(
@@ -58,6 +60,7 @@ class ChannelViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            api.getMessages()
             _state.value = ChannelState.Loading
             delay(800)
             _state.value = ChannelState.Content(delegateList.toList())

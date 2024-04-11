@@ -7,7 +7,7 @@ class ReceivedDelegateItem(private val message: Message) : DelegateItem {
 
     override fun content(): Message = message
 
-    override fun id(): Int = message.id
+    override fun id(): Int = message.id.toInt()
 
     override fun compareToOther(other: DelegateItem): Boolean =
         (other as ReceivedDelegateItem).content() == message

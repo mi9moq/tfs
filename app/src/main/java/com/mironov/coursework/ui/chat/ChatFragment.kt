@@ -16,10 +16,10 @@ import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
-import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.chat.date.DateDelegate
 import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
+import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
@@ -206,7 +206,7 @@ class ChatFragment : Fragment() {
         _binding = null
     }
 
-    private fun chooseReaction(messageId: Int) {
+    private fun chooseReaction(messageId: Long) {
         val dialog = ChooseReactionDialogFragment.newInstance(messageId)
         dialog.show(requireActivity().supportFragmentManager, ChooseReactionDialogFragment.TAG)
         dialog.onEmojiClickedCallback = viewModel::addReaction
