@@ -8,7 +8,7 @@ data class Message(
     val id: Long,
     val isMeMessage: Boolean = false,
     val senderName: String,
-    val senderId: Long,
+    val senderId: Int,
     val sendTime: LocalDate,
     val reactions: Map<Reaction, ReactionCondition>
 )
