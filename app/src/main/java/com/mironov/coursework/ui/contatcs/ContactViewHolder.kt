@@ -3,6 +3,8 @@ package com.mironov.coursework.ui.contatcs
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.ContactItemBinding
 import com.mironov.coursework.domain.entity.User
@@ -20,7 +22,10 @@ class ContactViewHolder(
         with(binding) {
             userName.text = contact.userName
             email.text = contact.email
-            avatar.setImageResource(R.drawable.ic_avatar)//TODO переписать на coil
+            avatar.load(contact.avatarUrl){
+                transformations(CircleCropTransformation())
+                error(R.drawable.ic_avatar)
+            }
         }
 
         itemView.setOnClickListener {
