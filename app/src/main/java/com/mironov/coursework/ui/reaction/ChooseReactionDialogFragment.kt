@@ -13,7 +13,7 @@ import com.mironov.coursework.ui.view.EmojiView
 
 class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
 
-    var onEmojiClickedCallback: ((Long, Int) -> Unit)? = null
+    var onEmojiClickedCallback: ((Long, String) -> Unit)? = null
 
     companion object {
 
@@ -70,8 +70,11 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setClickListener() {
-        binding.flexBox.setOnReactionsClickListeners { emojiUnicode ->
-            onEmojiClickedCallback?.invoke(messageId, emojiUnicode)
+        binding.flexBox.setOnReactionsClickListeners {code->
+            val emoji = reactionList.find {
+                it.emojiUnicode == code
+            }
+            onEmojiClickedCallback?.invoke(messageId, emoji?.emojiName ?: "")
             dismiss()
         }
     }

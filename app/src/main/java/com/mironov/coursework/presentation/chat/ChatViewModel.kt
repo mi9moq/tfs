@@ -21,19 +21,20 @@ class ChatViewModel @Inject constructor(
 
     fun loadMessages(chatId: Int) {
         viewModelScope.launch {
-            val messages = api.getMessages().messages.toListEntity(1L)
+            val messages = api.getMessages().messages.toListEntity(708832)
             _state.value = ChatState.Content(messages.groupByDate())
         }
     }
 
     fun sendMessage(messageText: String) {
         viewModelScope.launch {
-
+            api.sendMessage(to = "general", topic = "testing", content = messageText)
         }
     }
 
-    fun addReaction(messageId: Long, emojiUnicode: Int) {
+    fun addReaction(messageId: Long, emojiName: String) {
         viewModelScope.launch {
+            api.addReaction(messageId, emojiName)
         }
     }
 
