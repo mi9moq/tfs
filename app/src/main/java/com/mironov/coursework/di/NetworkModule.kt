@@ -6,8 +6,9 @@ import com.mironov.coursework.data.network.api.ZulipApi
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.create
 
@@ -25,13 +26,12 @@ object NetworkModule {
 
     @AppScope
     @Provides
-    fun provideMediaType(): MediaType = MediaType.get(MEDIA_TYPE)
-
-    @AppScope
-    @Provides
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient = OkHttpClient
         .Builder()
         .addInterceptor(authInterceptor)
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
         .build()
 
     @AppScope
@@ -39,12 +39,11 @@ object NetworkModule {
     fun provideRetrofit(
         client: OkHttpClient,
         jsonSerializer: Json,
-        mediaType: MediaType
     ): Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(jsonSerializer.asConverterFactory(mediaType))
-            .client(client)
-            .build()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(jsonSerializer.asConverterFactory(MEDIA_TYPE.toMediaType()))
+        .client(client)
+        .build()
 
     @AppScope
     @Provides
