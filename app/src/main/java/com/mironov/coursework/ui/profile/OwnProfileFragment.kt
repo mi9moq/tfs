@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentProfileBinding
 import com.mironov.coursework.domain.entity.User
@@ -57,7 +59,7 @@ class OwnProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadUser(1)
+        viewModel.loadOwnProfile()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,7 +80,7 @@ class OwnProfileFragment : Fragment() {
             //TODO
         }
         binding.tryAgain.setOnClickListener {
-            viewModel.loadUser(1)
+            viewModel.loadOwnProfile()
         }
     }
 
@@ -99,7 +101,10 @@ class OwnProfileFragment : Fragment() {
         with(binding) {
             shimmer.hide()
             logOut.isVisible = true
-            avatar.setImageResource(R.drawable.ic_avatar) //TODO переписать на coil
+            avatar.load(user.avatarUrl) {
+                transformations(RoundedCornersTransformation(16f))
+                error(R.drawable.ic_avatar)
+            }
             userName.text = user.userName
             status.text = user.status
             online.text = getString(R.string.online)

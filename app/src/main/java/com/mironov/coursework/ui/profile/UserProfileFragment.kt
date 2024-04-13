@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentProfileBinding
 import com.mironov.coursework.domain.entity.User
@@ -113,7 +115,10 @@ class UserProfileFragment : Fragment() {
     private fun applyContentState(user: User) {
         with(binding) {
             shimmer.hide()
-            avatar.setImageResource(R.drawable.ic_avatar) //TODO переписать на coil
+            avatar.load(user.avatarUrl) {
+                transformations(RoundedCornersTransformation(16f))
+                error(R.drawable.ic_avatar)
+            }
             userName.text = user.userName
             status.text = user.status
             online.text = if (user.isOnline)
