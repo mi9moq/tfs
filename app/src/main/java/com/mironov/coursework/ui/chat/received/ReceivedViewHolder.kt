@@ -14,7 +14,7 @@ class ReceivedViewHolder(
     fun bind(model: Message) {
         with(binding.main) {
             setMessage(model)
-            setAvatar(R.drawable.ic_avatar)
+            setAvatar(model.avatarUrl)
             setOnMessageLongClickListener(addReaction)
             setOnAddClickListener(addReaction)
             setOnReactionsClickListeners(onReactionClickListener)

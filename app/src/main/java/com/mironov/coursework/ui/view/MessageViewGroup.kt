@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.MessageViewgroupBinding
 import com.mironov.coursework.domain.entity.Message
@@ -191,8 +193,11 @@ class MessageViewGroup @JvmOverloads constructor(
         return MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
-    fun setAvatar(resId: Int) {
-        avatar.setImageResource(resId)
+    fun setAvatar(avatarUrl: String?) {
+        avatar.load(avatarUrl){
+            transformations(CircleCropTransformation())
+            error(R.drawable.ic_avatar)
+        }
         requestLayout()
     }
 
