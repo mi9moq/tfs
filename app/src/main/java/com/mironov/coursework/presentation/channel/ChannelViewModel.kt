@@ -85,8 +85,8 @@ class ChannelViewModel @Inject constructor(
         _state.value = ChannelState.Content(channels.channelListToDelegateList())
     }
 
-    fun openChat(chatId: Int) {
-        router.openChat(chatId)
+    fun openChat(topic: Topic) {
+        router.openChat(topic.parentChannelName,topic.name)
     }
 
     private fun Topic.toDelegate() = TopicDelegateItem(this)

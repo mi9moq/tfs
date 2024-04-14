@@ -30,21 +30,23 @@ import javax.inject.Inject
 class ChatFragment : Fragment() {
 
     companion object {
-        fun newInstance(chatId: Int) = ChatFragment().apply {
+        fun newInstance(channelName: String, topicName: String) = ChatFragment().apply {
             arguments = Bundle().apply {
-                putInt(CHAT_ID_KEY, chatId)
+                putString(CHANNEL_NAME_KEY, channelName)
+                putString(TOPIC_NAME_KEY, topicName)
             }
         }
 
-        private const val CHAT_ID_KEY = "chat id"
-        private const val DEFAULT_ID = -1
+        private const val CHANNEL_NAME_KEY = "channel name"
+        private const val TOPIC_NAME_KEY = "topic name"
     }
 
     private val component by lazy {
         (requireActivity() as MainActivity).component
     }
 
-    private var chatId = DEFAULT_ID
+    private var channelName = ""
+    private var topicName = ""
 
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
@@ -73,7 +75,7 @@ class ChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArguments()
-        viewModel.loadMessages(chatId)
+        viewModel.loadMessages(channelName, topicName)
     }
 
     override fun onCreateView(
@@ -96,11 +98,13 @@ class ChatFragment : Fragment() {
     private fun initStatusBar() {
         requireActivity().window.statusBarColor = requireContext()
             .getColor(R.color.primary_color)
+        binding.toolbar.title = "#$channelName"
     }
 
     private fun parseArguments() {
         val args = requireArguments()
-        chatId = args.getInt(CHAT_ID_KEY)
+        topicName = args.getString(TOPIC_NAME_KEY, "")
+        channelName = args.getString(CHANNEL_NAME_KEY, "")
     }
 
     private fun addTextWatcher() {
@@ -109,7 +113,7 @@ class ChatFragment : Fragment() {
         }
 
         binding.tryAgain.setOnClickListener {
-            viewModel.loadMessages(chatId)
+            viewModel.loadMessages(channelName, topicName)
         }
     }
 
@@ -186,7 +190,7 @@ class ChatFragment : Fragment() {
     private fun sendMessage() {
         val text = binding.messageInput.text.toString()
         if (text.trim().isNotEmpty()) {
-            viewModel.sendMessage(text)
+            viewModel.sendMessage(channelName, topicName, text)
             binding.messageInput.text?.clear()
         }
     }

@@ -9,6 +9,8 @@ import com.mironov.coursework.ui.utils.groupByDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -19,16 +21,21 @@ class ChatViewModel @Inject constructor(
     private val _state = MutableStateFlow<ChatState>(ChatState.Initial)
     val state = _state.asStateFlow()
 
-    fun loadMessages(chatId: Int) {
+    fun loadMessages(channelName: String, topicName: String) {
         viewModelScope.launch {
-            val messages = api.getMessages().messages.toListEntity(708832)
+            val narrow = mutableListOf<Narrow>()
+            narrow.add(Narrow("stream", channelName))
+            narrow.add(Narrow("topic", topicName))
+
+            val messages =
+                api.getMessages(narrow = Json.encodeToString(narrow)).messages.toListEntity(708832)
             _state.value = ChatState.Content(messages.groupByDate())
         }
     }
 
-    fun sendMessage(messageText: String) {
+    fun sendMessage(channelName: String, topicName: String, messageText: String) {
         viewModelScope.launch {
-            api.sendMessage(to = "general", topic = "testing", content = messageText)
+            api.sendMessage(to = channelName, topic = topicName, content = messageText)
         }
     }
 

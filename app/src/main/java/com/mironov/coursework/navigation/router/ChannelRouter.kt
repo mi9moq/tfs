@@ -6,14 +6,14 @@ import javax.inject.Inject
 
 interface ChannelRouter {
 
-    fun openChat(chatId: Int)
+    fun openChat(channelName: String, topicName: String)
 }
 
 class ChannelRouterImpl @Inject constructor(
     private val router: Router
 ) : ChannelRouter {
 
-    override fun openChat(chatId: Int) {
-        router.navigateTo(getChatScreen(chatId))
+    override fun openChat(channelName: String, topicName: String) {
+        router.navigateTo(getChatScreen(channelName, topicName))
     }
 }

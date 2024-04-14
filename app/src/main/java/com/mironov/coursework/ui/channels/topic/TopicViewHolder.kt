@@ -6,7 +6,7 @@ import com.mironov.coursework.domain.entity.Topic
 
 class TopicViewHolder(
     private val binding: TopicItemBinding,
-    private val onTopicClicked: (Int) -> Unit
+    private val onTopicClicked: (Topic) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(topic: Topic) {
@@ -17,7 +17,7 @@ class TopicViewHolder(
         }
 
         itemView.setOnClickListener {
-            onTopicClicked(topic.id)
+            onTopicClicked(topic)
         }
     }
 }
