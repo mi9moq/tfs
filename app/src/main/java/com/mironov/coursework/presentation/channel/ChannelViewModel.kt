@@ -23,11 +23,14 @@ class ChannelViewModel @Inject constructor(
     private val _state = MutableStateFlow<ChannelState>(ChannelState.Initial)
     val state = _state.asStateFlow()
 
+    private val channelCache = mutableListOf<Channel>()
+
     fun loadAllChannel() {
         viewModelScope.launch {
             _state.value = ChannelState.Loading
-            val channels = api.getAllStreams().streams.toListChannel().channelListToDelegateList()
-            _state.value = ChannelState.Content(channels)
+            val channels = api.getAllStreams().streams.toListChannel()
+            channelCache.addAll(channels)
+            _state.value = ChannelState.Content(channels.channelListToDelegateList())
         }
     }
 
@@ -38,8 +41,8 @@ class ChannelViewModel @Inject constructor(
                 .getSubscribedStreams()
                 .streams
                 .toListChannel()
-                .channelListToDelegateList()
-            _state.value = ChannelState.Content(channels)
+            channelCache.addAll(channels)
+            _state.value = ChannelState.Content(channels.channelListToDelegateList())
         }
     }
 
@@ -72,6 +75,14 @@ class ChannelViewModel @Inject constructor(
             }
             _state.value = ChannelState.Content(cache.toList())
         }
+    }
+
+    fun filterChannels(queryItem: QueryItem) {
+        if (queryItem.query.isBlank()) return
+        val channels = channelCache.filter {
+            it.name.startsWith(queryItem.query)
+        }
+        _state.value = ChannelState.Content(channels.channelListToDelegateList())
     }
 
     fun openChat(chatId: Int) {

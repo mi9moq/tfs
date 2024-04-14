@@ -123,7 +123,7 @@ class ChannelsPageFragment : Fragment() {
         when (state) {
             SharedChannelState.Initial -> Unit
             is SharedChannelState.Content -> {
-                //viewModel.loadChannel(state.data)
+                viewModel.filterChannels(state.data)
             }
         }
     }
