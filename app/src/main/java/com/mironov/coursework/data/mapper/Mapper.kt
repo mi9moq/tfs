@@ -66,8 +66,15 @@ fun StreamDto.toChannel(): Channel = Channel(id = streamId, name = name)
 
 fun List<StreamDto>.toListChannel(): List<Channel> = map { it.toChannel() }
 
-fun TopicDto.toTopic(): Topic = Topic(id = maxId, name = name, messageCount = 0)
+fun TopicDto.toTopic(parentChannelName: String): Topic = Topic(
+    id = maxId,
+    name = name,
+    messageCount = 0,
+    parentChannelName = parentChannelName
+)
 
-fun TopicResponse.toListTopic(): List<Topic> = topics.map { it.toTopic() }
+fun TopicResponse.toListTopic(parentChannelName: String): List<Topic> = topics.map {
+    it.toTopic(parentChannelName)
+}
 
 const val MY_ID = 708832

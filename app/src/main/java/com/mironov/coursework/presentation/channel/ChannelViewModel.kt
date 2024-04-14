@@ -47,15 +47,15 @@ class ChannelViewModel @Inject constructor(
     }
 
 
-    fun showTopics(channelId: Int) {
+    fun showTopics(channel: Channel) {
         viewModelScope.launch {
             val cache = (_state.value as ChannelState.Content).data.toMutableList()
             val ind = cache.indexOfFirst {
-                it is ChannelDelegateItem && it.id() == channelId
+                it is ChannelDelegateItem && it.id() == channel.id
             }
             val openChannel = (cache[ind].content() as Channel).copy(isOpen = true)
             cache[ind] = ChannelDelegateItem(openChannel)
-            val topics = api.getTopics(channelId).toListTopic()
+            val topics = api.getTopics(channel.id).toListTopic(channel.name)
             cache.addAll(ind + 1, topics.topicListToListDelegate())
             _state.value = ChannelState.Content(cache.toList())
         }

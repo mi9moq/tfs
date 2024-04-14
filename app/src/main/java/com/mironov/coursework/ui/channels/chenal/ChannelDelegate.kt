@@ -3,11 +3,12 @@ package com.mironov.coursework.ui.channels.chenal
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mironov.coursework.databinding.ChannelItemBinding
+import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
 
 class ChannelDelegate(
-    private val showTopics: (Int) -> Unit,
+    private val showTopics: (Channel) -> Unit,
     private val hideTopics: (Int) -> Unit,
 ) : ListItemAdapterDelegate<ChannelDelegateItem, DelegateItem, ChannelViewHolder>() {
 

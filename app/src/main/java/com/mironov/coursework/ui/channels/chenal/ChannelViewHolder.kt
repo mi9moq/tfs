@@ -7,7 +7,7 @@ import com.mironov.coursework.domain.entity.Channel
 
 class ChannelViewHolder(
     private val binding: ChannelItemBinding,
-    private val showTopics: (Int) -> Unit,
+    private val showTopics: (Channel) -> Unit,
     private val hideTopics: (Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -23,7 +23,7 @@ class ChannelViewHolder(
             if (channel.isOpen) {
                 hideTopics(channel.id)
             } else {
-                showTopics(channel.id)
+                showTopics(channel)
             }
         }
     }
