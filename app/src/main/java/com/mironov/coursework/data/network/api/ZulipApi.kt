@@ -3,6 +3,7 @@ package com.mironov.coursework.data.network.api
 import com.mironov.coursework.data.network.model.message.MessageResponse
 import com.mironov.coursework.data.network.model.streams.StreamResponse
 import com.mironov.coursework.data.network.model.streams.SubscribedStreamsResponse
+import com.mironov.coursework.data.network.model.topic.TopicResponse
 import com.mironov.coursework.data.network.user.AllUsersResponse
 import com.mironov.coursework.data.network.user.UserDto
 import com.mironov.coursework.data.network.user.UserResponse
@@ -21,8 +22,8 @@ interface ZulipApi {
 
     @GET("users/me/{stream_id}/topics")
     suspend fun getTopics(
-        @Path("stream_id") streamId: Long
-    )
+        @Path("stream_id") streamId: Int
+    ): TopicResponse
 
     @GET("messages")
     suspend fun getMessages(

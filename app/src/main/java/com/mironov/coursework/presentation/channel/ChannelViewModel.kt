@@ -2,14 +2,14 @@ package com.mironov.coursework.presentation.channel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mironov.coursework.data.mapper.toListChannel
+import com.mironov.coursework.data.mapper.toListTopic
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.navigation.router.ChannelRouter
-import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
 import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,84 +20,58 @@ class ChannelViewModel @Inject constructor(
     private val api: ZulipApi
 ) : ViewModel() {
 
-    private val channelList = mutableListOf(
-        Channel(
-            id = 1,
-            name = "General"
-        ),
-        Channel(
-            id = 2,
-            name = "Design"
-        ),
-        Channel(
-            id = 3,
-            name = "Development"
-        ),
-        Channel(
-            id = 4,
-            name = "PR"
-        ),
-    )
-
-    private val delegateList: MutableList<DelegateItem> =
-        channelList.channelListToDelegateList().toMutableList()
-
-    private val topicList = listOf(
-        Topic(
-            id = 1,
-            name = "Test",
-            messageCount = 243,
-        ),
-        Topic(
-            id = 2,
-            name = "Bruh",
-            messageCount = 64,
-        ),
-    )
-
     private val _state = MutableStateFlow<ChannelState>(ChannelState.Initial)
     val state = _state.asStateFlow()
 
-    init {
+    fun loadAllChannel() {
         viewModelScope.launch {
-            api.getMessages()
             _state.value = ChannelState.Loading
-            delay(800)
-            _state.value = ChannelState.Content(delegateList.toList())
+            val channels = api.getAllStreams().streams.toListChannel().channelListToDelegateList()
+            _state.value = ChannelState.Content(channels)
         }
     }
 
-    fun loadChannel(queryItem: QueryItem, isAllChannels: Boolean) {
+    fun loadSubscribedChannel() {
         viewModelScope.launch {
-            val query = queryItem.query
-            val newList = delegateList.filter {
-                it is ChannelDelegateItem && it.content().name.startsWith(query)
-            }
-            _state.value = ChannelState.Content(newList)
+            _state.value = ChannelState.Loading
+            val channels = api
+                .getSubscribedStreams()
+                .streams
+                .toListChannel()
+                .channelListToDelegateList()
+            _state.value = ChannelState.Content(channels)
         }
     }
+
 
     fun showTopics(channelId: Int) {
         viewModelScope.launch {
-            val ind = delegateList.indexOfFirst {
+            val cache = (_state.value as ChannelState.Content).data.toMutableList()
+            val ind = cache.indexOfFirst {
                 it is ChannelDelegateItem && it.id() == channelId
             }
-            val a = (delegateList[ind].content() as Channel).copy(isOpen = true)
-            delegateList[ind] = ChannelDelegateItem(a)
-            delegateList.addAll(ind + 1, topicList.topicListToListDelegate())
-            _state.value = ChannelState.Content(delegateList.toList())
+            val openChannel = (cache[ind].content() as Channel).copy(isOpen = true)
+            cache[ind] = ChannelDelegateItem(openChannel)
+            val topics = api.getTopics(channelId).toListTopic()
+            cache.addAll(ind + 1, topics.topicListToListDelegate())
+            _state.value = ChannelState.Content(cache.toList())
         }
     }
 
     fun hideTopics(channelId: Int) {
-        val ind = delegateList.indexOfFirst {
-            it is ChannelDelegateItem && it.id() == channelId
+        viewModelScope.launch {
+            val topicsCount = api.getTopics(channelId).topics.size
+            val cache = (_state.value as ChannelState.Content).data.toMutableList()
+            val ind = cache.indexOfFirst {
+                it is ChannelDelegateItem && it.id() == channelId
+            }
+            val closeChannel = (cache[ind].content() as Channel).copy(isOpen = false)
+            cache[ind] = ChannelDelegateItem(closeChannel)
+            repeat(topicsCount) {
+                cache.removeAt(ind + 1)
+            }
+            _state.value = ChannelState.Content(cache.toList())
         }
-        val a = (delegateList[ind].content() as Channel).copy(isOpen = false)
-        delegateList[ind] = ChannelDelegateItem(a)
-        delegateList.removeAt(ind + 1)
-        delegateList.removeAt(ind + 1)
-        _state.value = ChannelState.Content(delegateList.toList())
     }
 
     fun openChat(chatId: Int) {

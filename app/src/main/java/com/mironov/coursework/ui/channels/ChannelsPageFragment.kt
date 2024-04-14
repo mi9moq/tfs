@@ -123,13 +123,14 @@ class ChannelsPageFragment : Fragment() {
         when (state) {
             SharedChannelState.Initial -> Unit
             is SharedChannelState.Content -> {
-                viewModel.loadChannel(state.data, isAllChannels)
+                //viewModel.loadChannel(state.data)
             }
         }
     }
 
     private fun parseArguments() {
         isAllChannels = arguments?.getBoolean(IS_ALL_CHANNELS_KEY) ?: false
+        if (isAllChannels) viewModel.loadAllChannel() else viewModel.loadSubscribedChannel()
     }
 
     override fun onDestroyView() {

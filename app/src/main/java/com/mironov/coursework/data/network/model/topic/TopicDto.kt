@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TopicDto(
-    @SerialName("max_id") val maxId: Long,
+    @SerialName("max_id") val maxId: Int,
     @SerialName("name") val name: String,
 )

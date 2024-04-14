@@ -2,10 +2,15 @@ package com.mironov.coursework.data.mapper
 
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
+import com.mironov.coursework.data.network.model.streams.StreamDto
+import com.mironov.coursework.data.network.model.topic.TopicDto
+import com.mironov.coursework.data.network.model.topic.TopicResponse
 import com.mironov.coursework.data.network.user.UserDto
+import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.domain.entity.ReactionCondition
+import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.domain.entity.User
 import java.time.Instant
 import java.time.LocalDate
@@ -56,5 +61,13 @@ fun UserDto.toEntity() = User(
 )
 
 fun List<UserDto>.toListEntity(): List<User> = map { it.toEntity() }
+
+fun StreamDto.toChannel(): Channel = Channel(id = streamId, name = name)
+
+fun List<StreamDto>.toListChannel(): List<Channel> = map { it.toChannel() }
+
+fun TopicDto.toTopic(): Topic = Topic(id = maxId, name = name, messageCount = 0)
+
+fun TopicResponse.toListTopic(): List<Topic> = topics.map { it.toTopic() }
 
 const val MY_ID = 708832
