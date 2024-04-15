@@ -2,7 +2,6 @@ package com.mironov.coursework.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -129,11 +128,11 @@ class FlexboxLayout @JvmOverloads constructor(
         }
     }
 
-    fun setOnReactionsClickListeners(listener: (Int) -> Unit) {
+    fun setOnReactionsClickListeners(listener: (String) -> Unit) {
         children.forEach { child ->
             if (child is EmojiView) {
                 child.setOnClickListener {
-                    listener(child.emoji)
+                    listener(child.name)
                 }
             }
         }

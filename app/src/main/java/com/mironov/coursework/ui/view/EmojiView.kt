@@ -44,6 +44,14 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
+    var name: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                requestLayout()
+            }
+        }
+
     var emojiTextSize = DEFAULT_TEST_SIZE
         set(value) {
             if (field != value) {

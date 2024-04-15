@@ -39,14 +39,23 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    fun changeReaction(messageId: Long, emojiName: String, isSelected: Boolean) {
+        if (isSelected) {
+            removeReaction(messageId, emojiName)
+        } else {
+            addReaction(messageId, emojiName)
+        }
+    }
+
     fun addReaction(messageId: Long, emojiName: String) {
         viewModelScope.launch {
             api.addReaction(messageId, emojiName)
         }
     }
 
-    fun changeReaction(messageId: Long, emojiUnicode: Int) {
+    private fun removeReaction(messageId: Long, emojiName: String) {
         viewModelScope.launch {
+            api.removeReaction(messageId, emojiName)
         }
     }
 

@@ -180,6 +180,7 @@ class MessageViewGroup @JvmOverloads constructor(
             this.emoji = reaction.emojiUnicode
             this.reactionsCount = condition.count
             this.isSelected = condition.isSelected
+            this.name = reaction.emojiName
             setBackgroundResource(R.drawable.emoji_bg)
         }
         reactions.addView(emojiView)
@@ -194,7 +195,7 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     fun setAvatar(avatarUrl: String?) {
-        avatar.load(avatarUrl){
+        avatar.load(avatarUrl) {
             transformations(CircleCropTransformation())
             error(R.drawable.ic_avatar)
         }
@@ -241,11 +242,11 @@ class MessageViewGroup @JvmOverloads constructor(
         }
     }
 
-    fun setOnReactionsClickListeners(listener: (id: Long, emoji: Int) -> Unit) {
+    fun setOnReactionsClickListeners(listener: (id: Long, emoji: String, isSelected: Boolean) -> Unit) {
         reactions.children.forEach { child ->
             if (child is EmojiView) {
                 child.setOnClickListener {
-                    listener(messageId, child.emoji)
+                    listener(messageId, child.name, it.isSelected)
                 }
             }
         }

@@ -70,23 +70,21 @@ class ChooseReactionDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setClickListener() {
-        binding.flexBox.setOnReactionsClickListeners {code->
-            val emoji = reactionList.find {
-                it.emojiUnicode == code
-            }
-            onEmojiClickedCallback?.invoke(messageId, emoji?.emojiName ?: "")
+        binding.flexBox.setOnReactionsClickListeners {
+            onEmojiClickedCallback?.invoke(messageId, it)
             dismiss()
         }
     }
 
     private fun setupScreen() {
         binding.flexBox.iconAdd.visibility = View.INVISIBLE
-        reactionList.forEach { reaction ->
+        reactionList.forEach { (key, value) ->
             val emojiView = EmojiView(requireContext()).apply {
-                emoji = reaction.emojiUnicode
+                emoji = key
                 reactionsCount = 0
                 isSelected = false
                 emojiTextSize = 40f
+                name = value
             }
             binding.flexBox.addView(emojiView)
         }
