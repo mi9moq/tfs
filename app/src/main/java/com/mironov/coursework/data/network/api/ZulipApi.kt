@@ -4,9 +4,9 @@ import com.mironov.coursework.data.network.model.message.MessageResponse
 import com.mironov.coursework.data.network.model.streams.StreamResponse
 import com.mironov.coursework.data.network.model.streams.SubscribedStreamsResponse
 import com.mironov.coursework.data.network.model.topic.TopicResponse
-import com.mironov.coursework.data.network.user.AllUsersResponse
-import com.mironov.coursework.data.network.user.UserDto
-import com.mironov.coursework.data.network.user.UserResponse
+import com.mironov.coursework.data.network.model.user.AllUsersResponse
+import com.mironov.coursework.data.network.model.user.UserDto
+import com.mironov.coursework.data.network.model.user.UserResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path

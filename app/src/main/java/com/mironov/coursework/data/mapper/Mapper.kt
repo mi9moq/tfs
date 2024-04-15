@@ -5,7 +5,7 @@ import com.mironov.coursework.data.network.model.message.ReactionDto
 import com.mironov.coursework.data.network.model.streams.StreamDto
 import com.mironov.coursework.data.network.model.topic.TopicDto
 import com.mironov.coursework.data.network.model.topic.TopicResponse
-import com.mironov.coursework.data.network.user.UserDto
+import com.mironov.coursework.data.network.model.user.UserDto
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.Reaction

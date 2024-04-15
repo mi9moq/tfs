@@ -1,4 +1,4 @@
-package com.mironov.coursework.data.network.user
+package com.mironov.coursework.data.network.model.user
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
