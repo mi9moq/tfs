@@ -22,14 +22,14 @@ interface ZulipApi {
     @GET("users/me/subscriptions")
     suspend fun getSubscribedStreams(): SubscribedStreamsResponse
 
-    @GET("users/me/{stream_id}/topics")
+    @GET("users/me/{$PATH_STREAM_ID}/topics")
     suspend fun getTopics(
-        @Path("stream_id") streamId: Int
+        @Path(PATH_STREAM_ID) streamId: Int
     ): TopicResponse
 
     @GET("messages")
     suspend fun getMessages(
-        @Query("anchor") anchor: String = "newest",
+        @Query("anchor") anchor: String = MESSAGES_ANCHOR_NEWEST,
         @Query("num_before") numBefore: Int = 15,
         @Query("num_after") numAfter: Int = 0,
         @Query("narrow") narrow: String,
@@ -42,39 +42,51 @@ interface ZulipApi {
     @GET("users")
     suspend fun getAllUsersProfile(): AllUsersResponse
 
-    @GET("users/{user_id}")
+    @GET("users/{$PATH_USER_ID}")
     suspend fun getUserById(
-        @Path("user_id") id: Int
+        @Path(PATH_USER_ID) id: Int
     ): UserResponse
 
     @POST("messages")
     suspend fun sendMessage(
-        @Query("type") type: String = "stream",
+        @Query("type") type: String = SEND_MESSAGE_TYPE,
         @Query("to") to: String,
         @Query("topic") topic: String,
         @Query("content") content: String
     )
 
-    @POST("messages/{message_id}/reactions")
+    @POST("messages/{$PATH_MESSAGE_ID}/reactions")
     suspend fun addReaction(
-        @Path("message_id") messageId: Long,
-        @Query("emoji_name") emojiName: String
+        @Path(PATH_MESSAGE_ID) messageId: Long,
+        @Query(QUERY_EMOJI_NAME) emojiName: String
     )
 
-    @POST("messages/{message_id}/reactions")
+    @POST("messages/{$PATH_MESSAGE_ID}/reactions")
     suspend fun removeReaction(
-        @Path("message_id") messageId: Long,
-        @Query("emoji_name") emojiName: String
+        @Path(PATH_MESSAGE_ID) messageId: Long,
+        @Query(QUERY_EMOJI_NAME) emojiName: String
     )
 
     @GET("realm/presence")
     suspend fun getAllUserStatus(): AllUserPresencesResponse
 
-    @GET("users/{user_id}/presence")
+    @GET("users/{$PATH_USER_ID}/presence")
     suspend fun getUserStatusById(
-        @Path("user_id") userId: Int
+        @Path(PATH_USER_ID) userId: Int
     ): PresencesResponse
 
     @POST("users/me/presence?status=active")
     suspend fun setOwnStatusActive()
+
+    companion object {
+
+        private const val PATH_STREAM_ID = "stream_id"
+        private const val PATH_USER_ID = "user_id"
+        private const val PATH_MESSAGE_ID = "message_id"
+
+        private const val QUERY_EMOJI_NAME = "emoji_name"
+
+        private const val MESSAGES_ANCHOR_NEWEST = "newest"
+        private const val SEND_MESSAGE_TYPE = "stream"
+    }
 }
