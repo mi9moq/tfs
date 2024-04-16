@@ -102,7 +102,8 @@ class ContactsFragment : Fragment() {
     private fun applyContentState(contactList: List<User>) {
         binding.shimmer.hide()
         binding.contacts.isVisible = true
-        binding.contacts.isVisible = false
+        binding.errorMessage.isVisible = false
+        binding.tryAgain.isVisible = false
         binding.contacts.adapter = adapter
         adapter.submitList(contactList)
     }
@@ -117,6 +118,7 @@ class ContactsFragment : Fragment() {
 
     private fun applyErrorState() {
         binding.shimmer.hide()
+        binding.contacts.isVisible = false
         binding.tryAgain.isVisible = true
         binding.errorMessage.isVisible = true
     }
