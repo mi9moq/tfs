@@ -8,5 +8,7 @@ sealed interface ChannelState {
 
     data object Loading : ChannelState
 
+    data object Error : ChannelState
+
     data class Content(val data: List<DelegateItem>) : ChannelState
 }

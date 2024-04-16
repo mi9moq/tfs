@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
 import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.channel.ChannelShareViewModel
@@ -91,7 +92,17 @@ class ChannelsPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addClickListeners()
         observeState()
+    }
+
+    private fun addClickListeners() {
+        binding.tryAgain.setOnClickListener {
+            if (isAllChannels)
+                viewModel.loadAllChannel()
+            else
+                viewModel.loadSubscribedChannel()
+        }
     }
 
     private fun observeState() {
@@ -103,20 +114,39 @@ class ChannelsPageFragment : Fragment() {
         when (state) {
             ChannelState.Initial -> Unit
             ChannelState.Loading -> applyLoadingState()
+            ChannelState.Error -> applyErrorState()
             is ChannelState.Content -> applyContentState(state.data)
         }
     }
 
     private fun applyContentState(delegateItemList: List<DelegateItem>) {
-        binding.shimmer.hide()
-        binding.channels.isVisible = true
-        binding.channels.adapter = adapter
+        with(binding) {
+            shimmer.hide()
+            tryAgain.isVisible = false
+            channels.isVisible = false
+            channels.isVisible = true
+            channels.adapter = adapter
+        }
         adapter.submitList(delegateItemList)
     }
 
     private fun applyLoadingState() {
-        binding.channels.isVisible = false
-        binding.shimmer.show()
+        with(binding) {
+            errorMessage.isVisible = false
+            tryAgain.isVisible = false
+            channels.isVisible = false
+            shimmer.show()
+        }
+    }
+
+    private fun applyErrorState() {
+        with(binding) {
+            shimmer.hide()
+            errorMessage.isVisible = true
+            errorMessage.text = getString(R.string.error_loading)
+            tryAgain.isVisible = true
+            channels.isVisible = false
+        }
     }
 
     private fun applySharedState(state: SharedChannelState) {
