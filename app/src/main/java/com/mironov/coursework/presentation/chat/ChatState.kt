@@ -12,6 +12,8 @@ sealed interface ChatState {
 
         data class SendingError(val cache: List<DelegateItem>) : Error
 
+        data class ChangeRationError(val cache: List<DelegateItem>) : Error
+
         data object LoadingError : Error
     }
 

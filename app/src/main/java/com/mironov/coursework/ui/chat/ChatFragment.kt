@@ -138,7 +138,8 @@ class ChatFragment : Fragment() {
             is ChatState.Content -> applyContentState(state.data)
             ChatState.Error.LoadingError -> applyErrorLoadingState()
 
-            is ChatState.Error.SendingError -> applyErrorSendingError(state.cache)
+            is ChatState.Error.SendingError -> applySendingError(state.cache)
+            is ChatState.Error.ChangeRationError -> applyChangeReactionError(state.cache)
         }
     }
 
@@ -174,7 +175,7 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun applyErrorSendingError(delegates: List<DelegateItem>) {
+    private fun applySendingError(delegates: List<DelegateItem>) {
         with(binding) {
             shimmer.hide()
             errorMessage.isVisible = false
@@ -185,6 +186,19 @@ class ChatFragment : Fragment() {
             binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
         showErrorSnackBar(getString(R.string.error_sending_message))
+    }
+
+    private fun applyChangeReactionError(delegates: List<DelegateItem>) {
+        with(binding) {
+            shimmer.hide()
+            errorMessage.isVisible = false
+            tryAgain.isVisible = false
+            messages.isVisible = true
+        }
+        adapter.submitList(delegates) {
+            binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
+        }
+        showErrorSnackBar(getString(R.string.error_change_reaction))
     }
 
     private fun sendMessage() {

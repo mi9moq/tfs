@@ -15,6 +15,7 @@
     <string name="try_again">try again</string>
     <string name="error_loading_messages">failed to load messages</string>
     <string name="error_sending_message">failed to send message</string>
+    <string name="error_change_reaction">failed to change reaction</string>
     <string name="error_loading_contacts">failed to load contacts</string>
     <string name="open_close_topics">open / close topics</string>
     <string name="avatar">avatar</string>
