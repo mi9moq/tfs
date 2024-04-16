@@ -2,6 +2,7 @@ package com.mironov.coursework.presentation.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mironov.coursework.data.mapper.MY_ID
 import com.mironov.coursework.data.mapper.toListEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.navigation.router.ChatRouter
@@ -24,11 +25,12 @@ class ChatViewModel @Inject constructor(
     fun loadMessages(channelName: String, topicName: String) {
         viewModelScope.launch {
             val narrow = mutableListOf<Narrow>()
-            narrow.add(Narrow("stream", channelName))
-            narrow.add(Narrow("topic", topicName))
+            narrow.add(Narrow(Narrow.STREAM, channelName))
+            narrow.add(Narrow(Narrow.TOPIC, topicName))
 
-            val messages =
-                api.getMessages(narrow = Json.encodeToString(narrow)).messages.toListEntity(708832)
+            val messages = api
+                .getMessages(narrow = Json.encodeToString(narrow))
+                .messages.toListEntity(MY_ID)
             _state.value = ChatState.Content(messages.groupByDate())
         }
     }

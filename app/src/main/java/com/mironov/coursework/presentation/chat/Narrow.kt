@@ -7,4 +7,10 @@ import kotlinx.serialization.Serializable
 data class Narrow(
     @SerialName("operator") val operator: String,
     @SerialName("operand") val operand: String,
-)
+) {
+
+    companion object {
+        const val STREAM = "stream"
+        const val TOPIC = "topic"
+    }
+}
