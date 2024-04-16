@@ -5,6 +5,11 @@ data class User(
     val userName: String,
     val email: String,
     val avatarUrl: String,
-    val isOnline: Boolean,
-    val status: String
-)
+    val presence: Presence,
+){
+    enum class Presence {
+        ACTIVE,
+        IDLE,
+        OFFLINE;
+    }
+}

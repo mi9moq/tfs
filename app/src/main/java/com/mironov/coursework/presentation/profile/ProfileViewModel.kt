@@ -2,6 +2,7 @@ package com.mironov.coursework.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mironov.coursework.data.mapper.MY_ID
 import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.navigation.router.ProfileRouter
@@ -21,14 +22,18 @@ class ProfileViewModel @Inject constructor(
     fun loadUser(userId: Int) {
         viewModelScope.launch {
             _state.value = ProfileState.Loading
-            _state.value = ProfileState.Content(api.getUserById(userId).user.toEntity())
+            val presence = api.getUserStatusById(userId).presences.toEntity()
+            val profile = api.getUserById(userId).user.toEntity(presence)
+            _state.value = ProfileState.Content(profile)
         }
     }
 
     fun loadOwnProfile() {
         viewModelScope.launch {
             _state.value = ProfileState.Loading
-            _state.value = ProfileState.Content(api.getMyProfile().toEntity())
+            val presence = api.getUserStatusById(MY_ID).presences.toEntity()
+            val profile = api.getMyProfile().toEntity(presence)
+            _state.value = ProfileState.Content(profile)
         }
     }
 

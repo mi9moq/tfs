@@ -22,9 +22,14 @@ class ContactViewHolder(
         with(binding) {
             userName.text = contact.userName
             email.text = contact.email
-            avatar.load(contact.avatarUrl){
+            avatar.load(contact.avatarUrl) {
                 transformations(CircleCropTransformation())
                 error(R.drawable.ic_avatar)
+            }
+            when (contact.presence) {
+                User.Presence.ACTIVE ->presence.setBackgroundResource(R.drawable.online_shape)
+                User.Presence.IDLE -> presence.setBackgroundResource(R.drawable.idle_shape)
+                User.Presence.OFFLINE -> presence.setBackgroundResource(R.drawable.offline_shape)
             }
         }
 

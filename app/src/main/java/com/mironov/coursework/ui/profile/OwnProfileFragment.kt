@@ -17,6 +17,7 @@ import com.mironov.coursework.presentation.ViewModelFactory
 import com.mironov.coursework.presentation.profile.ProfileState
 import com.mironov.coursework.presentation.profile.ProfileViewModel
 import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.utils.applyPresence
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
@@ -106,8 +107,7 @@ class OwnProfileFragment : Fragment() {
                 error(R.drawable.ic_avatar)
             }
             userName.text = user.userName
-            status.text = user.status
-            online.text = getString(R.string.online)
+            presence.applyPresence(user.presence, requireContext())
             toolbar.visibility = View.GONE
             errorMessage.isVisible = false
             tryAgain.isVisible = false

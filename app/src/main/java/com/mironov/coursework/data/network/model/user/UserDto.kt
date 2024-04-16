@@ -8,5 +8,6 @@ data class UserDto(
     @SerialName("avatar_url") val avatarUrl: String?,
     @SerialName("full_name") val userName: String,
     @SerialName("email") val email: String,
-    @SerialName("user_id") val userId: Int
+    @SerialName("user_id") val userId: Int,
+    @SerialName("is_bot") val isBot: Boolean,
 )

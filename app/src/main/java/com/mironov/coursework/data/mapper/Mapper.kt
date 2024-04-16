@@ -2,6 +2,7 @@ package com.mironov.coursework.data.mapper
 
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
+import com.mironov.coursework.data.network.model.presences.PresencesDto
 import com.mironov.coursework.data.network.model.streams.StreamDto
 import com.mironov.coursework.data.network.model.topic.TopicDto
 import com.mironov.coursework.data.network.model.topic.TopicResponse
@@ -51,16 +52,13 @@ fun Long.toLocalDate(): LocalDate {
     return Instant.ofEpochSecond(this).atZone(zoneId).toLocalDate()
 }
 
-fun UserDto.toEntity() = User(
+fun UserDto.toEntity(presence: User.Presence) = User(
     id = userId,
     userName = userName,
     avatarUrl = avatarUrl ?: "",
     email = email,
-    isOnline = false,
-    status = ""
+    presence = presence,
 )
-
-fun List<UserDto>.toListEntity(): List<User> = map { it.toEntity() }
 
 fun StreamDto.toChannel(): Channel = Channel(id = streamId, name = name)
 
@@ -75,6 +73,16 @@ fun TopicDto.toTopic(parentChannelName: String): Topic = Topic(
 
 fun TopicResponse.toListTopic(parentChannelName: String): List<Topic> = topics.map {
     it.toTopic(parentChannelName)
+}
+
+fun PresencesDto.toEntity(): User.Presence = when {
+    aggregated.status == "active" || website.status == "active" -> User.Presence.ACTIVE
+    aggregated.status == "idle" && website.status == "idle" -> {
+        val timesLeft = System.currentTimeMillis() / 1000 - aggregated.timestamp
+        if (timesLeft > 3600) User.Presence.OFFLINE else User.Presence.IDLE
+    }
+
+    else -> User.Presence.OFFLINE
 }
 
 const val MY_ID = 708832

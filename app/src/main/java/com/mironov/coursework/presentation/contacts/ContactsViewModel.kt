@@ -2,8 +2,9 @@ package com.mironov.coursework.presentation.contacts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mironov.coursework.data.mapper.toListEntity
+import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.network.api.ZulipApi
+import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.navigation.router.ContactsRouter
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,11 @@ class ContactsViewModel @Inject constructor(
         //listenSearchQuery()
         viewModelScope.launch {
             _state.value = ContactsState.Loading
-            val users = api.getAllUsersProfile().users.toListEntity()
+            val presences = api.getAllUserStatus().presences
+            val users = api.getAllUsersProfile().users.filter { !it.isBot }.map {
+                val currentPresence = presences[it.email]?.toEntity() ?: User.Presence.OFFLINE
+                it.toEntity(currentPresence)
+            }
             _state.value = ContactsState.Content(users)
         }
     }
