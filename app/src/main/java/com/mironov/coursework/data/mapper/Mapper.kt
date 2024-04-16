@@ -21,11 +21,9 @@ fun List<MessageDto>.toListEntity(userId: Int): List<Message> = map {
     it.toEntity(userId)
 }
 
-val regex = Regex("<[^>]*>")
-
 fun MessageDto.toEntity(userId: Int) = Message(
     avatarUrl = avatarUrl,
-    content = content.replace(regex, ""),
+    content = content,
     id = id,
     isMeMessage = senderId == userId,
     senderName = senderName,

@@ -32,7 +32,8 @@ interface ZulipApi {
         @Query("anchor") anchor: String = "newest",
         @Query("num_before") numBefore: Int = 15,
         @Query("num_after") numAfter: Int = 0,
-        @Query("narrow") narrow: String
+        @Query("narrow") narrow: String,
+        @Query("apply_markdown")  applyMarkdown: Boolean = false,
     ): MessageResponse
 
     @GET("users/me")
