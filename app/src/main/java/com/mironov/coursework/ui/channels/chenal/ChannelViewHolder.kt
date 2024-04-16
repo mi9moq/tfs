@@ -12,7 +12,8 @@ class ChannelViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(channel: Channel) {
-        binding.channel.text = channel.name
+        binding.channel.text = String
+            .format(itemView.context.getString(R.string.channel_name), channel.name)
         if (channel.isOpen) {
             binding.arrow.setImageResource(R.drawable.ic_arrow_up)
         } else {

@@ -19,4 +19,5 @@
     <string name="avatar">avatar</string>
     <string name="error_loading_profile">failed to load profile</string>
     <string name="idle">Idle</string>
+    <string name="channel_name">#%s</string>
 </resources>
