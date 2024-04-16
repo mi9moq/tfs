@@ -88,7 +88,6 @@ class UserProfileFragment : Fragment() {
     private fun initStatusBar() {
         requireActivity().window.statusBarColor = requireContext()
             .getColor(R.color.common_300)
-        binding.logOut.isVisible = false
         binding.toolbar.setNavigationOnClickListener {
             viewModel.back()
         }

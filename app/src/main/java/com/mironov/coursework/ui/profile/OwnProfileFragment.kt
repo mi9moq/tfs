@@ -77,9 +77,6 @@ class OwnProfileFragment : Fragment() {
     }
 
     private fun addClickListeners() {
-        binding.logOut.setOnClickListener {
-            //TODO
-        }
         binding.tryAgain.setOnClickListener {
             viewModel.loadOwnProfile()
         }
@@ -101,7 +98,6 @@ class OwnProfileFragment : Fragment() {
     private fun applyContentState(user: User) {
         with(binding) {
             shimmer.hide()
-            logOut.isVisible = true
             avatar.load(user.avatarUrl) {
                 transformations(RoundedCornersTransformation(16f))
                 error(R.drawable.ic_avatar)
