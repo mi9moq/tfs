@@ -103,20 +103,20 @@ class ContactsFragment : Fragment() {
         binding.shimmer.hide()
         binding.contacts.isVisible = true
         binding.contacts.isVisible = false
-        binding.tryAgain.isVisible = false
         binding.contacts.adapter = adapter
         adapter.submitList(contactList)
     }
 
     private fun applyLoadingState() {
         binding.shimmer.show()
+        binding.contacts.isVisible = false
         binding.errorMessage.isVisible = false
+        binding.tryAgain.isVisible = false
     }
 
 
     private fun applyErrorState() {
         binding.shimmer.hide()
-        binding.contacts.isVisible = false
         binding.tryAgain.isVisible = true
         binding.errorMessage.isVisible = true
     }
