@@ -41,7 +41,7 @@
         tools:text="darrel@company.com" />
 
     <View
-        android:id="@+id/online"
+        android:id="@+id/presence"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="@drawable/online_shape"

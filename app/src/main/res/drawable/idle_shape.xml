@@ -6,7 +6,7 @@
         android:width="20dp"
         android:height="20dp"/>
 
-    <solid android:color="@color/online"/>
+    <solid android:color="#FF5722"/>
 
     <stroke
         android:width="2dp"

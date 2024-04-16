@@ -42,7 +42,6 @@
     <declare-styleable name="profile">
         <attr name="profile_name_text_color" format="color" />
         <attr name="profile_status_text_color" format="color" />
-        <attr name="profile_online_text_color" format="color" />
         <attr name="profile_log_out_text_color" format="color" />
         <attr name="profile_log_out_background_color" format="color" />
     </declare-styleable>

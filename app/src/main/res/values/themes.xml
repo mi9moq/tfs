@@ -19,7 +19,6 @@
         <item name="profile_log_out_text_color">@color/text_common_100</item>
         <item name="profile_log_out_background_color">@color/log_out_background</item>
         <item name="profile_status_text_color">@color/text_common_500</item>
-        <item name="profile_online_text_color">@color/user_online</item>
         
         <item name="background_100">@color/common_100</item>
         <item name="background_200">@color/common_200</item>
