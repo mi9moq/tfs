@@ -6,6 +6,7 @@ import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.navigation.router.ContactsRouter
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -33,17 +34,27 @@ class ContactsViewModel @Inject constructor(
     private val cache = mutableListOf<User>()
 
     init {
+        loadContacts()
+        listenSearchQuery()
+    }
+
+    fun loadContacts() {
         viewModelScope.launch {
             _state.value = ContactsState.Loading
-            val presences = api.getAllUserStatus().presences
-            val users = api.getAllUsersProfile().users.filter { !it.isBot }.map {
-                val currentPresence = presences[it.email]?.toEntity() ?: User.Presence.OFFLINE
-                it.toEntity(currentPresence)
+            try {
+                val presences = api.getAllUserStatus().presences
+                val users = api.getAllUsersProfile().users.filter { !it.isBot }.map {
+                    val currentPresence = presences[it.email]?.toEntity() ?: User.Presence.OFFLINE
+                    it.toEntity(currentPresence)
+                }
+                cache.addAll(users)
+                _state.value = ContactsState.Content(users)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _state.value = ContactsState.Error
             }
-            cache.addAll(users)
-            _state.value = ContactsState.Content(users)
         }
-        listenSearchQuery()
     }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -61,7 +72,9 @@ class ContactsViewModel @Inject constructor(
 
     private suspend fun search(query: String): ContactsState {
         return viewModelScope.async {
-            if (query.isBlank()) {
+            if (_state.value !is ContactsState.Content) {
+                _state.value
+            } else if (query.isBlank()) {
                 ContactsState.Content(cache)
             } else {
                 val newList = cache.filter {

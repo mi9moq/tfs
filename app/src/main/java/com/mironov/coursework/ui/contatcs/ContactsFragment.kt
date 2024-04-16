@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -64,6 +65,7 @@ class ContactsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initStatusBar()
         addTextChangeListener()
+        addClickListeners()
         observeViewModel()
     }
 
@@ -78,6 +80,12 @@ class ContactsFragment : Fragment() {
         }
     }
 
+    private fun addClickListeners() {
+        binding.tryAgain.setOnClickListener {
+            viewModel.loadContacts()
+        }
+    }
+
     private fun observeViewModel() {
         collectStateFlow(viewModel.state, ::applyState)
     }
@@ -86,19 +94,31 @@ class ContactsFragment : Fragment() {
         when (state) {
             ContactsState.Initial -> Unit
             ContactsState.Loading -> applyLoadingState()
-            ContactsState.Error -> Unit
+            ContactsState.Error -> applyErrorState()
             is ContactsState.Content -> applyContentState(state.data)
         }
     }
 
     private fun applyContentState(contactList: List<User>) {
         binding.shimmer.hide()
+        binding.contacts.isVisible = true
         binding.contacts.adapter = adapter
         adapter.submitList(contactList)
     }
 
     private fun applyLoadingState() {
         binding.shimmer.show()
+        binding.contacts.isVisible = false
+        binding.tryAgain.isVisible = false
+        binding.errorMessage.isVisible = false
+    }
+
+
+    private fun applyErrorState() {
+        binding.shimmer.hide()
+        binding.contacts.isVisible = false
+        binding.tryAgain.isVisible = true
+        binding.errorMessage.isVisible = true
     }
 
     override fun onDestroyView() {
