@@ -3,6 +3,7 @@ package com.mironov.coursework.data.mapper
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
 import com.mironov.coursework.data.network.model.presences.PresencesDto
+import com.mironov.coursework.data.network.model.presences.PresencesType
 import com.mironov.coursework.data.network.model.streams.StreamDto
 import com.mironov.coursework.data.network.model.topic.TopicDto
 import com.mironov.coursework.data.network.model.topic.TopicResponse
@@ -74,13 +75,18 @@ fun TopicResponse.toListTopic(parentChannelName: String): List<Topic> = topics.m
 }
 
 fun PresencesDto.toEntity(): User.Presence = when {
-    aggregated.status == "active" || website.status == "active" -> User.Presence.ACTIVE
-    aggregated.status == "idle" && website.status == "idle" -> {
-        val timesLeft = System.currentTimeMillis() / 1000 - aggregated.timestamp
-        if (timesLeft > 3600) User.Presence.OFFLINE else User.Presence.IDLE
+    aggregated.status == PresencesType.ACTIVE.value
+            || website.status == PresencesType.ACTIVE.value -> User.Presence.ACTIVE
+
+    aggregated.status == PresencesType.IDLE.value && website.status == PresencesType.IDLE.value -> {
+        val timesLeft = System.currentTimeMillis() / MILLIS_IN_SECONDS - aggregated.timestamp
+        if (timesLeft > HOUR_IN_SECONDS) User.Presence.OFFLINE else User.Presence.IDLE
     }
 
     else -> User.Presence.OFFLINE
 }
 
 const val MY_ID = 708832
+
+private const val HOUR_IN_SECONDS = 3600
+private const val MILLIS_IN_SECONDS = 1000
