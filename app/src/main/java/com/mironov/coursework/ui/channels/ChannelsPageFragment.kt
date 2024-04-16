@@ -30,7 +30,7 @@ class ChannelsPageFragment : Fragment() {
     companion object {
 
         fun newInstance(isAllChannels: Boolean) = ChannelsPageFragment().apply {
-            Bundle().apply {
+            arguments = Bundle().apply {
                 putBoolean(IS_ALL_CHANNELS_KEY, isAllChannels)
             }
         }
@@ -129,7 +129,8 @@ class ChannelsPageFragment : Fragment() {
     }
 
     private fun parseArguments() {
-        isAllChannels = arguments?.getBoolean(IS_ALL_CHANNELS_KEY) ?: false
+        val args = requireArguments()
+        isAllChannels = args.getBoolean(IS_ALL_CHANNELS_KEY)
         if (isAllChannels) viewModel.loadAllChannel() else viewModel.loadSubscribedChannel()
     }
 
