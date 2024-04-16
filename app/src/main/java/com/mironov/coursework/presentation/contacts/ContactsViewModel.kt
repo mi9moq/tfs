@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
@@ -50,7 +49,6 @@ class ContactsViewModel @Inject constructor(
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun listenSearchQuery() {
         searchQuery
-            .distinctUntilChanged()
             .debounce(SEARCH_DURATION_MILLIS)
             .mapLatest(::search)
             .flowOn(Dispatchers.Default)
@@ -63,7 +61,7 @@ class ContactsViewModel @Inject constructor(
 
     private suspend fun search(query: String): ContactsState {
         return viewModelScope.async {
-            if (query.isBlank()){
+            if (query.isBlank()) {
                 ContactsState.Content(cache)
             } else {
                 val newList = cache.filter {
