@@ -3,15 +3,11 @@ package com.mironov.coursework.presentation.channel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,12 +23,10 @@ class ChannelShareViewModel : ViewModel() {
         listenSearchQuery()
     }
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    @OptIn(FlowPreview::class)
     private fun listenSearchQuery() {
         searchQuery
-            .distinctUntilChanged()
             .debounce(SEARCH_DURATION_MILLIS)
-            .flatMapLatest { flow { emit(it) } }
             .onEach {
                 _state.value = SharedChannelState.Content(it)
             }
