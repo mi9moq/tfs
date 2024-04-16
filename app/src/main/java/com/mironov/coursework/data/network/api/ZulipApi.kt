@@ -1,6 +1,8 @@
 package com.mironov.coursework.data.network.api
 
 import com.mironov.coursework.data.network.model.message.MessageResponse
+import com.mironov.coursework.data.network.model.presences.AllUserPresencesResponse
+import com.mironov.coursework.data.network.model.presences.PresencesResponse
 import com.mironov.coursework.data.network.model.streams.StreamResponse
 import com.mironov.coursework.data.network.model.streams.SubscribedStreamsResponse
 import com.mironov.coursework.data.network.model.topic.TopicResponse
@@ -63,4 +65,15 @@ interface ZulipApi {
         @Path("message_id") messageId: Long,
         @Query("emoji_name") emojiName: String
     )
+
+    @GET("realm/presence")
+    suspend fun getAllUserStatus(): AllUserPresencesResponse
+
+    @GET("users/{user_id}/presence")
+    suspend fun getUserStatusById(
+        @Path("user_id") userId: Int
+    ): PresencesResponse
+
+    @POST("users/me/presence?status=active")
+    suspend fun setOwnStatusActive()
 }
