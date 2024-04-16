@@ -78,15 +78,19 @@ class ChannelViewModel @Inject constructor(
     }
 
     fun filterChannels(queryItem: QueryItem) {
-        if (queryItem.query.isBlank()) return
-        val channels = channelCache.filter {
-            it.name.startsWith(queryItem.query)
+        if (_state.value is ChannelState.Loading) return
+        if (queryItem.query.isBlank())
+            _state.value = ChannelState.Content(channelCache.channelListToDelegateList())
+        else {
+            val channels = channelCache.filter {
+                it.name.startsWith(queryItem.query)
+            }
+            _state.value = ChannelState.Content(channels.channelListToDelegateList())
         }
-        _state.value = ChannelState.Content(channels.channelListToDelegateList())
     }
 
     fun openChat(topic: Topic) {
-        router.openChat(topic.parentChannelName,topic.name)
+        router.openChat(topic.parentChannelName, topic.name)
     }
 
     private fun Topic.toDelegate() = TopicDelegateItem(this)
