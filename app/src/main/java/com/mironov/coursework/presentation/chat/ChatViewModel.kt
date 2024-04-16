@@ -31,6 +31,7 @@ class ChatViewModel @Inject constructor(
             val narrow = mutableListOf<Narrow>()
             narrow.add(Narrow(Narrow.STREAM, channelName))
             narrow.add(Narrow(Narrow.TOPIC, topicName))
+            cache.clear()
 
             try {
                 val messages = api
@@ -50,6 +51,14 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 api.sendMessage(to = channelName, topic = topicName, content = messageText)
+                val narrow = mutableListOf<Narrow>()
+                narrow.add(Narrow(Narrow.STREAM, channelName))
+                narrow.add(Narrow(Narrow.TOPIC, topicName))
+                val messages = api
+                    .getMessages(narrow = Json.encodeToString(narrow))
+                    .messages.toListEntity(MY_ID).groupByDate()
+                cache.addAll(messages)
+                _state.value = ChatState.Content(messages)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
