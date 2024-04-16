@@ -13,8 +13,6 @@ import android.widget.TextView
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import coil.load
-import coil.transform.CircleCropTransformation
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.MessageViewgroupBinding
 import com.mironov.coursework.domain.entity.Message
@@ -23,6 +21,7 @@ import com.mironov.coursework.domain.entity.ReactionCondition
 import com.mironov.coursework.ui.utils.layoutWithMargins
 import com.mironov.coursework.ui.utils.measureHeightWithMargins
 import com.mironov.coursework.ui.utils.measureWidthWithMargins
+import com.mironov.coursework.ui.utils.setCircleAvatar
 
 class MessageViewGroup @JvmOverloads constructor(
     context: Context,
@@ -195,10 +194,7 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     fun setAvatar(avatarUrl: String?) {
-        avatar.load(avatarUrl) {
-            transformations(CircleCropTransformation())
-            error(R.drawable.ic_avatar)
-        }
+        avatar.setCircleAvatar(avatarUrl)
         requestLayout()
     }
 
