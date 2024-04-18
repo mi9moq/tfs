@@ -38,7 +38,7 @@ interface ZulipApi {
     ): MessageResponse
 
     @GET("users/me")
-    suspend fun getMyProfile(): UserDto
+    suspend fun getOwnProfile(): UserDto
 
     @GET("users")
     suspend fun getAllUsersProfile(): AllUsersResponse

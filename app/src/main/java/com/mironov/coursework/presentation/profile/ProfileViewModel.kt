@@ -2,9 +2,9 @@ package com.mironov.coursework.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mironov.coursework.data.mapper.MY_ID
-import com.mironov.coursework.data.mapper.toEntity
-import com.mironov.coursework.data.network.api.ZulipApi
+import com.mironov.coursework.domain.repository.Result
+import com.mironov.coursework.domain.usecase.GetOwnProfileUseCase
+import com.mironov.coursework.domain.usecase.GetUserByIdUseCase
 import com.mironov.coursework.navigation.router.ProfileRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
     private val router: ProfileRouter,
-    private val api: ZulipApi
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val getOwnProfileUseCase: GetOwnProfileUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Initial)
@@ -22,18 +23,20 @@ class ProfileViewModel @Inject constructor(
     fun loadUser(userId: Int) {
         viewModelScope.launch {
             _state.value = ProfileState.Loading
-            val presence = api.getUserStatusById(userId).presences.toEntity()
-            val profile = api.getUserById(userId).user.toEntity(presence)
-            _state.value = ProfileState.Content(profile)
+            when (val result = getUserByIdUseCase(userId)) {
+                is Result.Success -> _state.value = ProfileState.Content(result.content)
+                is Result.Failure -> _state.value = ProfileState.Error
+            }
         }
     }
 
     fun loadOwnProfile() {
         viewModelScope.launch {
             _state.value = ProfileState.Loading
-            val presence = api.getUserStatusById(MY_ID).presences.toEntity()
-            val profile = api.getMyProfile().toEntity(presence)
-            _state.value = ProfileState.Content(profile)
+            when (val result = getOwnProfileUseCase()) {
+                is Result.Success -> _state.value = ProfileState.Content(result.content)
+                is Result.Failure -> _state.value = ProfileState.Error
+            }
         }
     }
 
