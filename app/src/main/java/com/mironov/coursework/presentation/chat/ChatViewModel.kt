@@ -2,14 +2,14 @@ package com.mironov.coursework.presentation.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.domain.repository.Result
+import com.mironov.coursework.domain.usecase.AddReactionUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
+import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
 import com.mironov.coursework.navigation.router.ChatRouter
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.utils.groupByDate
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +19,8 @@ class ChatViewModel @Inject constructor(
     private val router: ChatRouter,
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
-    private val api: ZulipApi
+    private val addReactionUseCase: AddReactionUseCase,
+    private val removeReactionUseCase: RemoveReactionUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ChatState>(ChatState.Initial)
@@ -45,7 +46,7 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             when (sendMessageUseCase(channelName, topicName, messageText)) {
                 is Result.Success -> Unit
-                is Result.Failure -> _state.value = ChatState.Error.LoadingError
+                is Result.Failure -> _state.value = ChatState.Error.SendingError(cache)
             }
         }
     }
@@ -60,24 +61,18 @@ class ChatViewModel @Inject constructor(
 
     fun addReaction(messageId: Long, emojiName: String) {
         viewModelScope.launch {
-            try {
-                api.addReaction(messageId, emojiName)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _state.value = ChatState.Error.ChangeRationError(cache)
+            when (addReactionUseCase(messageId, emojiName)) {
+                is Result.Success -> Unit
+                is Result.Failure -> _state.value = ChatState.Error.ChangeRationError(cache)
             }
         }
     }
 
     private fun removeReaction(messageId: Long, emojiName: String) {
         viewModelScope.launch {
-            try {
-                api.removeReaction(messageId, emojiName)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _state.value = ChatState.Error.ChangeRationError(cache)
+            when (removeReactionUseCase(messageId, emojiName)) {
+                is Result.Success -> Unit
+                is Result.Failure -> _state.value = ChatState.Error.ChangeRationError(cache)
             }
         }
     }

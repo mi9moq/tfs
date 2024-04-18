@@ -9,6 +9,7 @@ import com.mironov.coursework.data.network.model.topic.TopicResponse
 import com.mironov.coursework.data.network.model.user.AllUsersResponse
 import com.mironov.coursework.data.network.model.user.UserDto
 import com.mironov.coursework.data.network.model.user.UserResponse
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -61,7 +62,7 @@ interface ZulipApi {
         @Query(QUERY_EMOJI_NAME) emojiName: String
     )
 
-    @POST("messages/{$PATH_MESSAGE_ID}/reactions")
+    @DELETE("messages/{$PATH_MESSAGE_ID}/reactions")
     suspend fun removeReaction(
         @Path(PATH_MESSAGE_ID) messageId: Long,
         @Query(QUERY_EMOJI_NAME) emojiName: String
