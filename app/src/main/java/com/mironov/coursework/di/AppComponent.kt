@@ -1,5 +1,7 @@
 package com.mironov.coursework.di
 
+import com.mironov.coursework.di.module.ChatModule
+import com.mironov.coursework.di.module.DispatcherModule
 import com.mironov.coursework.ui.channels.ChannelsPageFragment
 import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
@@ -15,6 +17,8 @@ import dagger.Component
         NavigationModule::class,
         ViewModelModule::class,
         NetworkModule::class,
+        ChatModule::class,
+        DispatcherModule::class,
     ]
 )
 interface AppComponent {

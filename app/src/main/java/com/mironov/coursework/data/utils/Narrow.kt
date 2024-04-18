@@ -1,4 +1,4 @@
-package com.mironov.coursework.presentation.chat
+package com.mironov.coursework.data.utils
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
