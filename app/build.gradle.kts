@@ -64,4 +64,7 @@ dependencies {
     implementation(libs.bundles.retrofit)
     implementation(libs.coil)
     implementation(libs.loggin.interceptor)
+
+    implementation(libs.elmslie.core)
+    implementation(libs.elmslie.android)
 }

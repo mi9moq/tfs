@@ -17,6 +17,7 @@ retrofit-serialization = "1.0.0"
 kotlinx-serialization-json = "1.6.3"
 coil = "2.6.0"
 okhttp = "4.12.0"
+elmslie = "3.0.0-alpha10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,9 @@ retorfit-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kot
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 loggin-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+elmslie-android = { module = "com.github.vivid-money.elmslie:elmslie-android", version.ref = "elmslie" }
+elmslie-core = { module = "com.github.vivid-money.elmslie:elmslie-core", version.ref = "elmslie" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
