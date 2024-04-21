@@ -7,25 +7,45 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentContactsBinding
 import com.mironov.coursework.domain.entity.User
-import com.mironov.coursework.presentation.ViewModelFactory
+import com.mironov.coursework.presentation.contacts.ContactsEffect
+import com.mironov.coursework.presentation.contacts.ContactsEvent
 import com.mironov.coursework.presentation.contacts.ContactsState
-import com.mironov.coursework.presentation.contacts.ContactsViewModel
+import com.mironov.coursework.presentation.contacts.ContactsStoreFactory
 import com.mironov.coursework.ui.main.MainActivity
-import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, ContactsEvent>() {
 
     companion object {
 
         fun newInstance() = ContactsFragment()
+    }
+
+    override fun render(state: ContactsState) {
+        if (state.isLoading) {
+            applyLoadingState()
+        }
+
+        state.users?.let {
+            applyContentState(it)
+        }
+    }
+
+    @Inject
+    lateinit var contactsStoreFactory: ContactsStoreFactory
+
+    override val store: Store<ContactsEvent, ContactsEffect, ContactsState> by elmStoreWithRenderer(
+        elmRenderer = this
+    ) {
+        contactsStoreFactory.create()
     }
 
     private val component by lazy {
@@ -36,15 +56,8 @@ class ContactsFragment : Fragment() {
     private val binding: FragmentContactsBinding
         get() = _binding!!
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[ContactsViewModel::class.java]
-    }
-
     private val adapter by lazy {
-        ContactsAdapter(viewModel::openProfile)
+        ContactsAdapter(::openUserProfile)
     }
 
     override fun onAttach(context: Context) {
@@ -63,10 +76,14 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        store.accept(ContactsEvent.Ui.Initial)
         initStatusBar()
-        addTextChangeListener()
         addClickListeners()
-        observeViewModel()
+        addTextChangeListener()
+    }
+
+    override fun handleEffect(effect: ContactsEffect): Unit = when (effect) {
+        ContactsEffect.Error -> applyErrorState()
     }
 
     private fun initStatusBar() {
@@ -76,27 +93,18 @@ class ContactsFragment : Fragment() {
 
     private fun addTextChangeListener() {
         binding.search.doOnTextChanged { text, _, _, _ ->
-            viewModel.searchQuery.tryEmit(text.toString())
+            //TODO
         }
     }
 
     private fun addClickListeners() {
         binding.tryAgain.setOnClickListener {
-            viewModel.loadContacts()
+            store.accept(ContactsEvent.Ui.Refresh)
         }
     }
 
-    private fun observeViewModel() {
-        collectStateFlow(viewModel.state, ::applyState)
-    }
-
-    private fun applyState(state: ContactsState) {
-        when (state) {
-            ContactsState.Initial -> Unit
-            ContactsState.Loading -> applyLoadingState()
-            ContactsState.Error -> applyErrorState()
-            is ContactsState.Content -> applyContentState(state.data)
-        }
+    private fun openUserProfile(id: Int) {
+        store.accept(ContactsEvent.Ui.OpenUserProfile(id))
     }
 
     private fun applyContentState(contactList: List<User>) {
