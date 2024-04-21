@@ -40,10 +40,6 @@ interface NavigationModule {
 
     @AppScope
     @Binds
-    fun bindContactsRouter(impl: ContactsRouterImpl): ContactsRouter
-
-    @AppScope
-    @Binds
     fun bindProfileRouter(impl: ProfileRouterImpl): ProfileRouter
 
     @AppScope
