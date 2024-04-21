@@ -14,7 +14,6 @@ import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.presentation.contacts.ContactsEffect
 import com.mironov.coursework.presentation.contacts.ContactsEvent
 import com.mironov.coursework.presentation.contacts.ContactsState
-import com.mironov.coursework.presentation.contacts.ContactsStoreFactory
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
@@ -40,12 +39,12 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
     }
 
     @Inject
-    lateinit var contactsStoreFactory: ContactsStoreFactory
+    lateinit var contactStore: Store<ContactsEvent, ContactsEffect, ContactsState>
 
     override val store: Store<ContactsEvent, ContactsEffect, ContactsState> by elmStoreWithRenderer(
         elmRenderer = this
     ) {
-        contactsStoreFactory.create()
+        contactStore
     }
 
     private val component by lazy {
