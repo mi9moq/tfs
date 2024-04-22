@@ -6,24 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentProfileBinding
 import com.mironov.coursework.domain.entity.User
-import com.mironov.coursework.presentation.ViewModelFactory
+import com.mironov.coursework.presentation.profile.ProfileEffect
+import com.mironov.coursework.presentation.profile.ProfileEvent
 import com.mironov.coursework.presentation.profile.ProfileState
-import com.mironov.coursework.presentation.profile.ProfileViewModel
+import com.mironov.coursework.presentation.profile.ProfileStoreFactory
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.applyPresence
-import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
-class OwnProfileFragment : Fragment() {
+class OwnProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, ProfileEvent>() {
 
     companion object {
         fun newInstance() = OwnProfileFragment()
@@ -38,10 +39,12 @@ class OwnProfileFragment : Fragment() {
         get() = _binding!!
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var profileStoreFactory: ProfileStoreFactory
 
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[ProfileViewModel::class.java]
+    override val store: Store<ProfileEvent, ProfileEffect, ProfileState> by elmStoreWithRenderer(
+        elmRenderer = this
+    ) {
+        profileStoreFactory.create()
     }
 
     override fun onAttach(context: Context) {
@@ -58,16 +61,25 @@ class OwnProfileFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.loadOwnProfile()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        store.accept(ProfileEvent.Ui.LoadOwnProfile)
         initStatusBar()
         addClickListeners()
-        observeState()
+    }
+
+    override fun handleEffect(effect: ProfileEffect): Unit = when (effect) {
+        ProfileEffect.Error -> applyErrorState()
+    }
+
+    override fun render(state: ProfileState) {
+        if (state.isLoading) {
+            applyLoadingState()
+        }
+
+        state.user?.let {
+            applyContentState(it)
+        }
     }
 
     private fun initStatusBar() {
@@ -78,20 +90,7 @@ class OwnProfileFragment : Fragment() {
 
     private fun addClickListeners() {
         binding.tryAgain.setOnClickListener {
-            viewModel.loadOwnProfile()
-        }
-    }
-
-    private fun observeState() {
-        collectStateFlow(viewModel.state, ::applyState)
-    }
-
-    private fun applyState(state: ProfileState) {
-        when (state) {
-            ProfileState.Initial -> Unit
-            ProfileState.Loading -> applyLoadingState()
-            ProfileState.Error -> applyErrorState()
-            is ProfileState.Content -> applyContentState(state.data)
+            store.accept(ProfileEvent.Ui.LoadOwnProfile)
         }
     }
 

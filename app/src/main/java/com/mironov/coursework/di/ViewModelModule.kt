@@ -4,18 +4,12 @@ import androidx.lifecycle.ViewModel
 import com.mironov.coursework.presentation.channel.ChannelViewModel
 import com.mironov.coursework.presentation.chat.ChatViewModel
 import com.mironov.coursework.presentation.main.NavigationViewModel
-import com.mironov.coursework.presentation.profile.ProfileViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
 interface ViewModelModule {
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProfileViewModel::class)
-    fun bindProfileViewModel(impl: ProfileViewModel): ViewModel
 
     @Binds
     @IntoMap
