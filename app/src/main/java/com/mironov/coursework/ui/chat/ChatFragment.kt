@@ -2,18 +2,19 @@ package com.mironov.coursework.ui.chat
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
-import com.mironov.coursework.presentation.ViewModelFactory
+import com.mironov.coursework.presentation.chat.ChatEffect
+import com.mironov.coursework.presentation.chat.ChatEvent
 import com.mironov.coursework.presentation.chat.ChatState
-import com.mironov.coursework.presentation.chat.ChatViewModel
+import com.mironov.coursework.presentation.chat.ChatStoreFactory
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.chat.date.DateDelegate
@@ -21,13 +22,14 @@ import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
-import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import com.mironov.coursework.ui.utils.showErrorSnackBar
+import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
-class ChatFragment : Fragment() {
+class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     companion object {
         fun newInstance(channelName: String, topicName: String) = ChatFragment().apply {
@@ -52,19 +54,21 @@ class ChatFragment : Fragment() {
     private val binding: FragmentChatBinding
         get() = _binding!!
 
+    @Inject
+    lateinit var chatStoreFactory: ChatStoreFactory
+
+    override val store: Store<ChatEvent, ChatEffect, ChatState> by elmStoreWithRenderer(
+        elmRenderer = this
+    ) {
+        chatStoreFactory.create()
+    }
+
     val adapter by lazy {
         MainAdapter().apply {
             addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate(::chooseReaction, viewModel::changeReaction))
-            addDelegate(SentDelegate(::chooseReaction, viewModel::changeReaction))
+            addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
+            addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
         }
-    }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel: ChatViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[ChatViewModel::class.java]
     }
 
     override fun onAttach(context: Context) {
@@ -75,7 +79,6 @@ class ChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArguments()
-        viewModel.loadMessages(channelName, topicName)
     }
 
     override fun onCreateView(
@@ -89,10 +92,34 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        store.accept(ChatEvent.Ui.Load(channelName, topicName))
         initStatusBar()
         addClickListeners()
         addTextWatcher()
-        observeViewModel()
+    }
+
+    override fun render(state: ChatState) {
+        if (state.isLoading) {
+            applyLoadingState()
+        }
+
+        state.content?.let {
+            applyContentState(it)
+        }
+    }
+
+    override fun handleEffect(effect: ChatEffect): Unit = when (effect) {
+        ChatEffect.ErrorLoadingMessages -> {
+            applyErrorLoadingState()
+        }
+
+        is ChatEffect.ErrorSendingMessage -> {
+            applySendingError(effect.messages)
+        }
+
+        is ChatEffect.ErrorChangeReaction -> {
+            applyChangeReactionError(effect.messages)
+        }
     }
 
     private fun initStatusBar() {
@@ -111,10 +138,6 @@ class ChatFragment : Fragment() {
         binding.messageInput.doOnTextChanged { text, _, _, _ ->
             changeButtonIcon(text?.trim().isNullOrEmpty())
         }
-
-        binding.tryAgain.setOnClickListener {
-            viewModel.loadMessages(channelName, topicName)
-        }
     }
 
     private fun addClickListeners() = with(binding) {
@@ -122,25 +145,17 @@ class ChatFragment : Fragment() {
             sendMessage()
         }
         toolbar.setNavigationOnClickListener {
-            viewModel.back()
+            store.accept(ChatEvent.Ui.OnBackClicked)
+        }
+
+        binding.tryAgain.setOnClickListener {
+            store.accept(ChatEvent.Ui.Load(channelName, topicName))
         }
     }
 
-    private fun observeViewModel() {
-        collectStateFlow(viewModel.state, ::applyState)
-    }
-
-    private fun applyState(state: ChatState) {
-        when (state) {
-            ChatState.Initial -> Unit
-            ChatState.Loading -> applyLoadingState()
-
-            is ChatState.Content -> applyContentState(state.data)
-            ChatState.Error.LoadingError -> applyErrorLoadingState()
-
-            is ChatState.Error.SendingError -> applySendingError(state.cache)
-            is ChatState.Error.ChangeRationError -> applyChangeReactionError(state.cache)
-        }
+    fun changeReaction(messageId: Long, emojiName: String, isSelected: Boolean) {
+        Log.e("changeReaction", isSelected.toString())
+        store.accept(ChatEvent.Ui.ChangeReaction(messageId, emojiName, isSelected))
     }
 
     private fun applyContentState(delegateList: List<DelegateItem>) {
@@ -204,7 +219,7 @@ class ChatFragment : Fragment() {
     private fun sendMessage() {
         val text = binding.messageInput.text.toString()
         if (text.trim().isNotEmpty()) {
-            viewModel.sendMessage(channelName, topicName, text)
+            store.accept(ChatEvent.Ui.SendMessage(channelName, topicName, text))
             binding.messageInput.text?.clear()
         }
     }
@@ -227,6 +242,6 @@ class ChatFragment : Fragment() {
     private fun chooseReaction(messageId: Long) {
         val dialog = ChooseReactionDialogFragment.newInstance(messageId)
         dialog.show(requireActivity().supportFragmentManager, ChooseReactionDialogFragment.TAG)
-        dialog.onEmojiClickedCallback = viewModel::addReaction
+        //TODO обработать выбор реакции
     }
 }
