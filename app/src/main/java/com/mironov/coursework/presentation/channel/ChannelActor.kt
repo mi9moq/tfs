@@ -86,6 +86,6 @@ class ChannelActor @Inject constructor(
             val channels = cacheChannel.filter { channel ->
                 channel.name.startsWith(queryItem.query)
             }
-            ChannelEvent.Domain.FilterSuccess(channels.toDelegates())
+            ChannelEvent.Domain.FilterSuccess(channels.toDelegates(), queryItem.query)
         }
 }

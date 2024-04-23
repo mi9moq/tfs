@@ -52,7 +52,7 @@ class ChannelReducer @Inject constructor(
 
         is ChannelEvent.Domain.FilterSuccess -> {
             state {
-                if (event.content.isEmpty())
+                if (event.content.isEmpty() && event.query.isEmpty())
                     copy(isLoading = true)
                 else
                     copy(isLoading = false, content = event.content)

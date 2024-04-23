@@ -33,6 +33,9 @@ sealed interface ChannelEvent {
 
         data class HideTopicSuccess(val content: List<DelegateItem>) : Domain
 
-        data class FilterSuccess(val content: List<DelegateItem>): Domain
+        data class FilterSuccess(
+            val content: List<DelegateItem>,
+            val query: String
+        ): Domain
     }
 }
