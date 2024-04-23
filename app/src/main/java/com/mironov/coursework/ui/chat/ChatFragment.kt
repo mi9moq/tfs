@@ -236,6 +236,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun chooseReaction(messageId: Long) {
         val dialog = ChooseReactionDialogFragment.newInstance(messageId)
         dialog.show(requireActivity().supportFragmentManager, ChooseReactionDialogFragment.TAG)
-        //TODO обработать выбор реакции
+        dialog.onEmojiClickedCallback = ::acceptChooseReaction
+    }
+
+    private fun acceptChooseReaction(messageId: Long, emojiName: String) {
+        store.accept(ChatEvent.Ui.ChooseReaction(messageId, emojiName))
     }
 }

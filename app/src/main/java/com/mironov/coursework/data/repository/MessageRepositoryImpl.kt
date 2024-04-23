@@ -1,6 +1,7 @@
 package com.mironov.coursework.data.repository
 
 import com.mironov.coursework.data.mapper.MY_ID
+import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.mapper.toListEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.data.utils.runCatchingNonCancellation
@@ -45,6 +46,13 @@ class MessageRepositoryImpl @Inject constructor(
         runCatchingNonCancellation {
             api.sendMessage(to = channelName, topic = topicName, content = content)
             Result.Success(true)
+        }
+    }
+
+    override suspend fun getMessagesById(id: Int): Result<Message> = withContext(dispatcher){
+        runCatchingNonCancellation {
+            val message = api.getMessageById(id).message.toEntity(MY_ID)
+            Result.Success(message)
         }
     }
 }

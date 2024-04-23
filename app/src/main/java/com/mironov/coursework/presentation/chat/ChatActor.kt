@@ -2,6 +2,7 @@ package com.mironov.coursework.presentation.chat
 
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
+import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
 import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
@@ -17,6 +18,7 @@ class ChatActor @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
     private val addReactionUseCase: AddReactionUseCase,
     private val removeReactionUseCase: RemoveReactionUseCase,
+    private val getMessageByIdUseCase: GetMessageByIdUseCase,
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private val cache = mutableListOf<DelegateItem>()
@@ -37,6 +39,8 @@ class ChatActor @Inject constructor(
                 else
                     addReaction(command.messageId, command.emojiName)
             }
+
+            is ChatCommand.ChooseReaction -> chooseReaction(command.messageId, command.emojiName)
         }
         emit(event)
     }
@@ -89,6 +93,22 @@ class ChatActor @Inject constructor(
 
             is Result.Success -> {
                 ChatEvent.Domain.ChangeReactionSuccess(cache)
+            }
+        }
+
+    private suspend fun chooseReaction(messageId: Long, emojiName: String): ChatEvent.Domain =
+        when (val result = getMessageByIdUseCase(messageId.toInt())) {
+            is Result.Failure -> ChatEvent.Domain.ChangeReactionFailure(cache)
+            is Result.Success -> {
+                var isSelected = false
+                result.content.reactions.forEach { (key, value) ->
+                    if (key.emojiName == emojiName && value.isSelected)
+                        isSelected = true
+                }
+                if (isSelected)
+                    deleteEmoji(messageId, emojiName)
+                else
+                    addReaction(messageId, emojiName)
             }
         }
 }

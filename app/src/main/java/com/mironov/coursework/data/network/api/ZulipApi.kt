@@ -1,6 +1,7 @@
 package com.mironov.coursework.data.network.api
 
 import com.mironov.coursework.data.network.model.message.MessageResponse
+import com.mironov.coursework.data.network.model.message.SingleMessageResponse
 import com.mironov.coursework.data.network.model.presences.AllUserPresencesResponse
 import com.mironov.coursework.data.network.model.presences.PresencesResponse
 import com.mironov.coursework.data.network.model.streams.StreamResponse
@@ -78,6 +79,11 @@ interface ZulipApi {
 
     @POST("users/me/presence?status=active")
     suspend fun setOwnStatusActive()
+
+    @GET("messages/{message_id}")
+    suspend fun getMessageById(
+        @Path("message_id") messageId: Int
+    ): SingleMessageResponse
 
     companion object {
 

@@ -7,4 +7,6 @@ interface MessageRepository {
     suspend fun getMessages(channelName: String, topicName: String): Result<List<Message>>
 
     suspend fun sendMessages(channelName: String, topicName: String, content: String): Result<Boolean>
+
+    suspend fun getMessagesById(id: Int): Result<Message>
 }

@@ -86,5 +86,11 @@ class ChatReducer @Inject constructor(
                 +ChatCommand.SendMessage(event.channelName, event.topicName, event.content)
             }
         }
+
+        is ChatEvent.Ui.ChooseReaction -> {
+            commands {
+                +ChatCommand.ChooseReaction(event.messageId, event.emojiName)
+            }
+        }
     }
 }

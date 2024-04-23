@@ -18,4 +18,9 @@ sealed interface ChatCommand {
         val emojiName: String,
         val isSelected: Boolean
     ) : ChatCommand
+
+    data class ChooseReaction(
+        val messageId: Long,
+        val emojiName: String,
+    ) : ChatCommand
 }

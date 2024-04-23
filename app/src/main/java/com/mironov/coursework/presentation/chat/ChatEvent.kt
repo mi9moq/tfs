@@ -22,7 +22,12 @@ sealed interface ChatEvent {
             val content: String
         ) : Ui
 
-        data object OnBackClicked: Ui
+        data class ChooseReaction(
+            val messageId: Long,
+            val emojiName: String,
+        ) : Ui
+
+        data object OnBackClicked : Ui
     }
 
     sealed interface Domain : ChatEvent {
