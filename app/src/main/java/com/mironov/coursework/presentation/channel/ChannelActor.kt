@@ -1,12 +1,13 @@
 package com.mironov.coursework.presentation.channel
 
+import com.mironov.coursework.di.annotation.DefaultDispatcher
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.ui.utils.toDelegates
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class ChannelActor @Inject constructor(
     private val getAllChannelsUseCase: GelAllChannelsUseCase,
     private val gelSubscribeChannelsUseCase: GelSubscribeChannelsUseCase,
-    private val getTopicsUseCase: GetTopicsUseCase
+    private val getTopicsUseCase: GetTopicsUseCase,
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : Actor<ChannelCommand, ChannelEvent>() {
 
     private val cacheChannel = mutableListOf<Channel>()
@@ -70,7 +72,7 @@ class ChannelActor @Inject constructor(
         }
 
     private suspend fun hideTopics(channelId: Int): ChannelEvent.Domain =
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             val channelInd = cacheChannel.indexOfFirst {
                 it.id == channelId
             }
@@ -80,7 +82,7 @@ class ChannelActor @Inject constructor(
         }
 
     private suspend fun applyFilter(queryItem: QueryItem): ChannelEvent.Domain =
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             val channels = cacheChannel.filter { channel ->
                 channel.name.startsWith(queryItem.query)
             }
