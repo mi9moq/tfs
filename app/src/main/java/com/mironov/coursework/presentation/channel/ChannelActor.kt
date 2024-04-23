@@ -1,14 +1,11 @@
 package com.mironov.coursework.presentation.channel
 
 import com.mironov.coursework.domain.entity.Channel
-import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsUseCase
-import com.mironov.coursework.ui.adapter.DelegateItem
-import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
-import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
+import com.mironov.coursework.ui.utils.toDelegates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,7 +19,7 @@ class ChannelActor @Inject constructor(
     private val getTopicsUseCase: GetTopicsUseCase
 ) : Actor<ChannelCommand, ChannelEvent>() {
 
-    private val cache = mutableListOf<DelegateItem>()
+    private val cacheChannel = mutableListOf<Channel>()
 
     override fun execute(command: ChannelCommand): Flow<ChannelEvent> = flow {
         val event = when (command) {
@@ -38,10 +35,10 @@ class ChannelActor @Inject constructor(
         when (val result = getAllChannelsUseCase()) {
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
             is Result.Success -> {
-                cache.clear()
-                cache.addAll(result.content.channelListToDelegateList())
+                cacheChannel.clear()
+                cacheChannel.addAll(result.content)
                 ChannelEvent.Domain.LoadChannelsSuccess(
-                    result.content.channelListToDelegateList()
+                    result.content.toDelegates()
                 )
             }
         }
@@ -50,10 +47,10 @@ class ChannelActor @Inject constructor(
         when (val result = gelSubscribeChannelsUseCase()) {
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
             is Result.Success -> {
-                cache.clear()
-                cache.addAll(result.content.channelListToDelegateList())
+                cacheChannel.clear()
+                cacheChannel.addAll(result.content)
                 ChannelEvent.Domain.LoadChannelsSuccess(
-                    result.content.channelListToDelegateList()
+                    result.content.toDelegates()
                 )
             }
         }
@@ -62,39 +59,22 @@ class ChannelActor @Inject constructor(
         when (val result = getTopicsUseCase(channel)) {
             is Result.Failure -> ChannelEvent.Domain.LoadTopicsFailure
             is Result.Success -> {
-                val ind = cache.indexOfFirst {
-                    it is ChannelDelegateItem && it.id() == channel.id
+                val ind = cacheChannel.indexOfFirst {
+                    it.id == channel.id
                 }
-                val openChannel = (cache[ind].content() as Channel).copy(isOpen = true)
-                cache[ind] = ChannelDelegateItem(openChannel)
-                cache.addAll(ind + 1, result.content.topicListToListDelegate())
-                ChannelEvent.Domain.LoadTopicsSuccess(cache.toList())
+                val newChannel = (cacheChannel[ind]).copy(isOpen = true, topics = result.content)
+                cacheChannel[ind] = newChannel
+                ChannelEvent.Domain.LoadTopicsSuccess(cacheChannel.toDelegates())
             }
         }
 
     private suspend fun hideTopics(channelId: Int): ChannelEvent.Domain =
         withContext(Dispatchers.Default) {
-            val channelInd = cache.indexOfFirst {
-                it is ChannelDelegateItem && it.id() == channelId
+            val channelInd = cacheChannel.indexOfFirst {
+                it.id == channelId
             }
-            val closeChannel = (cache[channelInd].content() as Channel).copy(isOpen = false)
-            cache[channelInd] = ChannelDelegateItem(closeChannel)
-            var topicCount = 0
-            var iterator = channelInd + 1
-            while (iterator < cache.size && cache[iterator++] is TopicDelegateItem) {
-                topicCount++
-            }
-            repeat(topicCount) {
-                cache.removeAt(channelInd + 1)
-            }
-            ChannelEvent.Domain.HideTopicSuccess(cache)
+            val newChannel = cacheChannel[channelInd].copy(isOpen = false, topics = emptyList())
+            cacheChannel[channelInd] = newChannel
+            ChannelEvent.Domain.HideTopicSuccess(cacheChannel.toDelegates())
         }
-
-    private fun Topic.toDelegate() = TopicDelegateItem(this)
-
-    private fun List<Topic>.topicListToListDelegate() = map { it.toDelegate() }
-
-    private fun Channel.toDelegate() = ChannelDelegateItem(this)
-
-    private fun List<Channel>.channelListToDelegateList() = map { it.toDelegate() }
 }
