@@ -31,6 +31,12 @@ class ContactsReducer @Inject constructor(
                 copy(isLoading = false, users = event.users)
             }
         }
+
+        is ContactsEvent.Domain.FilterSuccess -> {
+            state {
+                copy(isLoading = false, users = event.users)
+            }
+        }
     }
 
     override fun Result.ui(event: ContactsEvent.Ui): Any = when (event) {
@@ -53,5 +59,11 @@ class ContactsReducer @Inject constructor(
         }
 
         is ContactsEvent.Ui.OpenUserProfile -> router.openProfile(event.id)
+
+        is ContactsEvent.Ui.ChangeFilter -> {
+            commands {
+                +ContactsCommand.ApplyFilter(event.query)
+            }
+        }
     }
 }

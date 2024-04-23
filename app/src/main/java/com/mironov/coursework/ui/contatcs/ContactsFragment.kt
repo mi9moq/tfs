@@ -92,7 +92,7 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
 
     private fun addTextChangeListener() {
         binding.search.doOnTextChanged { text, _, _, _ ->
-            //TODO
+            store.accept(ContactsEvent.Ui.ChangeFilter(text.toString()))
         }
     }
 

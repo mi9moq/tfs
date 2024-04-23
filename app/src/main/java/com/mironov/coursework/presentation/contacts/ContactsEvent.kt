@@ -11,6 +11,8 @@ sealed interface ContactsEvent {
         data object Refresh : Ui
 
         data class OpenUserProfile(val id: Int) : Ui
+
+        data class ChangeFilter(val query: String) : Ui
     }
 
     sealed interface Domain : ContactsEvent {
@@ -18,5 +20,7 @@ sealed interface ContactsEvent {
         data class LoadingSuccess(val users: List<User>) : Domain
 
         data object LoadingFailure : Domain
+
+        data class FilterSuccess(val users: List<User>) : Domain
     }
 }
