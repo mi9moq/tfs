@@ -38,17 +38,6 @@ interface NavigationModule {
         fun provideLocalNavigationHolder(): LocalCiceroneHolder = LocalCiceroneHolder()
     }
 
-    @AppScope
-    @Binds
-    fun bindProfileRouter(impl: ProfileRouterImpl): ProfileRouter
-
-    @AppScope
-    @Binds
-    fun bindChannelRouter(impl: ChannelRouterImpl): ChannelRouter
-
-    @AppScope
-    @Binds
-    fun bindChatRouter(impl: ChatRouterImpl): ChatRouter
 
     @AppScope
     @Binds
