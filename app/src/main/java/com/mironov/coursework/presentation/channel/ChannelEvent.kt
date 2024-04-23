@@ -17,6 +17,8 @@ sealed interface ChannelEvent {
         data class HideTopic(val channelId: Int) : Ui
 
         data class OnTopicClicked(val topic: Topic) : Ui
+
+        data class ChangeFilter(val queryItem: QueryItem): Ui
     }
 
     sealed interface Domain : ChannelEvent {
@@ -30,5 +32,7 @@ sealed interface ChannelEvent {
         data object LoadTopicsFailure : Domain
 
         data class HideTopicSuccess(val content: List<DelegateItem>) : Domain
+
+        data class FilterSuccess(val content: List<DelegateItem>): Domain
     }
 }

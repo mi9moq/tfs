@@ -2,7 +2,6 @@ package com.mironov.coursework.ui.channels
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -172,7 +171,9 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     private fun applySharedState(state: SharedChannelState) {
         when (state) {
             SharedChannelState.Initial -> Unit
-            is SharedChannelState.Content -> Unit
+            is SharedChannelState.Content -> {
+                store.accept(ChannelEvent.Ui.ChangeFilter(state.data))
+            }
         }
     }
 

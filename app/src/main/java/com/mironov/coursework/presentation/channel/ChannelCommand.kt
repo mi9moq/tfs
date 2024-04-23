@@ -11,4 +11,6 @@ sealed interface ChannelCommand {
     data class LoadTopics(val channel: Channel) : ChannelCommand
 
     data class HideTopics(val channelId: Int) : ChannelCommand
+
+    data class ApplyFilter(val queryItem: QueryItem): ChannelCommand
 }

@@ -49,6 +49,15 @@ class ChannelReducer @Inject constructor(
                 copy(isLoading = false, content = event.content)
             }
         }
+
+        is ChannelEvent.Domain.FilterSuccess -> {
+            state {
+                if (event.content.isEmpty())
+                    copy(isLoading = true)
+                else
+                    copy(isLoading = false, content = event.content)
+            }
+        }
     }
 
     override fun Result.ui(event: ChannelEvent.Ui): Any = when (event) {
@@ -79,6 +88,12 @@ class ChannelReducer @Inject constructor(
         is ChannelEvent.Ui.HideTopic -> {
             commands {
                 +ChannelCommand.HideTopics(event.channelId)
+            }
+        }
+
+        is ChannelEvent.Ui.ChangeFilter -> {
+            commands {
+                +ChannelCommand.ApplyFilter(event.queryItem)
             }
         }
 

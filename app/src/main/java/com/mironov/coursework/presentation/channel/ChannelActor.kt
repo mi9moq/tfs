@@ -27,6 +27,7 @@ class ChannelActor @Inject constructor(
             ChannelCommand.LoadSubscribedChannels -> loadSubscribedChannels()
             is ChannelCommand.HideTopics -> hideTopics(command.channelId)
             is ChannelCommand.LoadTopics -> showTopics(command.channel)
+            is ChannelCommand.ApplyFilter -> applyFilter(command.queryItem)
         }
         emit(event)
     }
@@ -76,5 +77,13 @@ class ChannelActor @Inject constructor(
             val newChannel = cacheChannel[channelInd].copy(isOpen = false, topics = emptyList())
             cacheChannel[channelInd] = newChannel
             ChannelEvent.Domain.HideTopicSuccess(cacheChannel.toDelegates())
+        }
+
+    private suspend fun applyFilter(queryItem: QueryItem): ChannelEvent.Domain =
+        withContext(Dispatchers.Default) {
+            val channels = cacheChannel.filter { channel ->
+                channel.name.startsWith(queryItem.query)
+            }
+            ChannelEvent.Domain.FilterSuccess(channels.toDelegates())
         }
 }
