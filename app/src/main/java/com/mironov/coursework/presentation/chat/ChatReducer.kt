@@ -19,7 +19,7 @@ class ChatReducer @Inject constructor(
                 copy(isLoading = false)
             }
             effects {
-                +ChatEffect.ErrorChangeReaction(event.messages)
+                +ChatEffect.ErrorChangeReaction
             }
         }
 
@@ -49,7 +49,7 @@ class ChatReducer @Inject constructor(
                 copy(isLoading = false)
             }
             effects {
-                +ChatEffect.ErrorSendingMessage(event.messages)
+                +ChatEffect.ErrorSendingMessage
             }
         }
 

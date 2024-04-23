@@ -114,11 +114,11 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
 
         is ChatEffect.ErrorSendingMessage -> {
-            applySendingError(effect.messages)
+            applySendingError()
         }
 
         is ChatEffect.ErrorChangeReaction -> {
-            applyChangeReactionError(effect.messages)
+            applyChangeReactionError()
         }
     }
 
@@ -190,28 +190,22 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
     }
 
-    private fun applySendingError(delegates: List<DelegateItem>) {
+    private fun applySendingError() {
         with(binding) {
             shimmer.hide()
             errorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = true
-        }
-        adapter.submitList(delegates) {
-            binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
         showErrorSnackBar(getString(R.string.error_sending_message))
     }
 
-    private fun applyChangeReactionError(delegates: List<DelegateItem>) {
+    private fun applyChangeReactionError() {
         with(binding) {
             shimmer.hide()
             errorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = true
-        }
-        adapter.submitList(delegates) {
-            binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
         }
         showErrorSnackBar(getString(R.string.error_change_reaction))
     }
