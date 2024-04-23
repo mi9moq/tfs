@@ -79,10 +79,12 @@ class ChannelActor @Inject constructor(
             }
             val closeChannel = (cache[channelInd].content() as Channel).copy(isOpen = false)
             cache[channelInd] = ChannelDelegateItem(closeChannel)
-            var lastTopicIndex = channelInd + 1
-            while (cache[lastTopicIndex] is TopicDelegateItem && lastTopicIndex < cache.size - 1)
-                lastTopicIndex++
-            repeat(lastTopicIndex - channelInd) {
+            var topicCount = 0
+            var iterator = channelInd + 1
+            while (iterator < cache.size && cache[iterator++] is TopicDelegateItem) {
+                topicCount++
+            }
+            repeat(topicCount) {
                 cache.removeAt(channelInd + 1)
             }
             ChannelEvent.Domain.HideTopicSuccess(cache)
