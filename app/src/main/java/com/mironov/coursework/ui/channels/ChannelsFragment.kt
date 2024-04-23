@@ -119,12 +119,6 @@ class ChannelsFragment : Fragment() {
         tabLayoutMediator.attach()
     }
 
-    override fun onStop() {
-        super.onStop()
-        tabLayoutMediator.detach()
-        binding.viewPager.adapter = null
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         tabLayoutMediator.detach()
