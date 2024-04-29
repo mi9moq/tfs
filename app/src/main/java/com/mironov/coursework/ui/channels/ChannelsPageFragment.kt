@@ -11,11 +11,11 @@ import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
+import com.mironov.coursework.presentation.channel.ChannelCommand
 import com.mironov.coursework.presentation.channel.ChannelEffect
 import com.mironov.coursework.presentation.channel.ChannelEvent
 import com.mironov.coursework.presentation.channel.ChannelShareViewModel
 import com.mironov.coursework.presentation.channel.ChannelState
-import com.mironov.coursework.presentation.channel.ChannelStoreFactory
 import com.mironov.coursework.presentation.channel.SharedChannelState
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
@@ -27,6 +27,7 @@ import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
@@ -46,7 +47,7 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     private var isAllChannels = false
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component
+        (requireActivity() as MainActivity).component.getChannelComponentFactory().create()
     }
 
 
@@ -55,12 +56,12 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         get() = _binding!!
 
     @Inject
-    lateinit var channelStoreFactory: ChannelStoreFactory
+    lateinit var channelStore: ElmStore<ChannelEvent, ChannelState, ChannelEffect, ChannelCommand>
 
     override val store: Store<ChannelEvent, ChannelEffect, ChannelState> by elmStoreWithRenderer(
         elmRenderer = this
     ) {
-        channelStoreFactory.create()
+        channelStore
     }
 
     private val sharedViewModel by activityViewModels<ChannelShareViewModel>()
