@@ -1,17 +1,22 @@
-package com.mironov.coursework.di.module
+package com.mironov.coursework.di
 
+import com.mironov.coursework.data.repository.ChannelRepositoryImpl
 import com.mironov.coursework.data.repository.MessageRepositoryImpl
 import com.mironov.coursework.data.repository.ReactionRepositoryImpl
-import com.mironov.coursework.di.AppScope
+import com.mironov.coursework.data.repository.UserRepositoryImpl
+import com.mironov.coursework.domain.repository.ChannelRepository
 import com.mironov.coursework.domain.repository.MessageRepository
 import com.mironov.coursework.domain.repository.ReactionRepository
-import com.mironov.coursework.navigation.router.ChatRouter
-import com.mironov.coursework.navigation.router.ChatRouterImpl
+import com.mironov.coursework.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 
 @Module
-interface ChatModule {
+interface RepositoryModule {
+
+    @AppScope
+    @Binds
+    fun bindChannelRepository(impl: ChannelRepositoryImpl): ChannelRepository
 
     @AppScope
     @Binds
@@ -23,5 +28,5 @@ interface ChatModule {
 
     @AppScope
     @Binds
-    fun bindChatRouter(impl: ChatRouterImpl): ChatRouter
+    fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 }

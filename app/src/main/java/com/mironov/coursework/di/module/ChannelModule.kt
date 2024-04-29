@@ -13,9 +13,5 @@ interface ChannelModule {
 
     @AppScope
     @Binds
-    fun bindChannelRepository(impl: ChannelRepositoryImpl): ChannelRepository
-
-    @AppScope
-    @Binds
     fun bindChannelRouter(impl: ChannelRouterImpl): ChannelRouter
 }

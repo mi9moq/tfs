@@ -8,24 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
+import com.mironov.coursework.presentation.chat.ChatCommand
 import com.mironov.coursework.presentation.chat.ChatEffect
 import com.mironov.coursework.presentation.chat.ChatEvent
 import com.mironov.coursework.presentation.chat.ChatState
-import com.mironov.coursework.presentation.chat.ChatStoreFactory
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.chat.date.DateDelegate
 import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
+import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
@@ -44,7 +45,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component
+        (requireActivity() as MainActivity).component.getChatComponentFactory().create()
     }
 
     private var channelName = ""
@@ -55,12 +56,12 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         get() = _binding!!
 
     @Inject
-    lateinit var chatStoreFactory: ChatStoreFactory
+    lateinit var chatStore: ElmStore<ChatEvent, ChatState, ChatEffect, ChatCommand>
 
     override val store: Store<ChatEvent, ChatEffect, ChatState> by elmStoreWithRenderer(
         elmRenderer = this
     ) {
-        chatStoreFactory.create()
+        chatStore
     }
 
     val adapter by lazy {

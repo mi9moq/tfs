@@ -1,7 +1,8 @@
 package com.mironov.coursework.di
 
+import com.mironov.coursework.di.chat.ChatComponent
 import com.mironov.coursework.di.module.ChannelModule
-import com.mironov.coursework.di.module.ChatModule
+import com.mironov.coursework.di.chat.ChatModule
 import com.mironov.coursework.di.module.ContactsModule
 import com.mironov.coursework.di.module.DispatcherModule
 import com.mironov.coursework.di.module.UserModule
@@ -21,10 +22,10 @@ import dagger.Component
         ViewModelModule::class,
         NetworkModule::class,
         DispatcherModule::class,
-        ChatModule::class,
         UserModule::class,
         ContactsModule::class,
         ChannelModule::class,
+        RepositoryModule::class,
     ]
 )
 interface AppComponent {
@@ -39,7 +40,7 @@ interface AppComponent {
 
     fun inject(fragment: ChannelsPageFragment)
 
-    fun inject(fragment: ChatFragment)
-
     fun inject(fragment: NavigationFragment)
+
+    fun getChatComponentFactory(): ChatComponent.Factory
 }

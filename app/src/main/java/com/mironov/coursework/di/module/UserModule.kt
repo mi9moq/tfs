@@ -13,9 +13,5 @@ interface UserModule {
 
     @AppScope
     @Binds
-    fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
-
-    @AppScope
-    @Binds
     fun bindProfileRouter(impl: ProfileRouterImpl): ProfileRouter
 }
