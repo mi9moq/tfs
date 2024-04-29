@@ -1,12 +1,10 @@
 package com.mironov.coursework.di
 
 import com.mironov.coursework.di.channel.ChannelComponent
-import com.mironov.coursework.di.channel.ChannelModule
 import com.mironov.coursework.di.chat.ChatComponent
-import com.mironov.coursework.di.module.ContactsModule
+import com.mironov.coursework.di.contacts.ContactsComponent
 import com.mironov.coursework.di.module.DispatcherModule
 import com.mironov.coursework.di.module.UserModule
-import com.mironov.coursework.ui.contatcs.ContactsFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.main.NavigationFragment
 import com.mironov.coursework.ui.profile.OwnProfileFragment
@@ -21,15 +19,12 @@ import dagger.Component
         NetworkModule::class,
         DispatcherModule::class,
         UserModule::class,
-        ContactsModule::class,
         RepositoryModule::class,
     ]
 )
 interface AppComponent {
 
     fun inject(activity: MainActivity)
-
-    fun inject(fragment: ContactsFragment)
 
     fun inject(fragment: OwnProfileFragment)
 
@@ -40,4 +35,6 @@ interface AppComponent {
     fun getChatComponentFactory(): ChatComponent.Factory
 
     fun getChannelComponentFactory(): ChannelComponent.Factory
+
+    fun geContactsComponentFactory(): ContactsComponent.Factory
 }

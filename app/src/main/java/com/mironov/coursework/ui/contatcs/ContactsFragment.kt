@@ -11,6 +11,7 @@ import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentContactsBinding
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.presentation.contacts.ContactsCommand
 import com.mironov.coursework.presentation.contacts.ContactsEffect
 import com.mironov.coursework.presentation.contacts.ContactsEvent
 import com.mironov.coursework.presentation.contacts.ContactsState
@@ -18,6 +19,7 @@ import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
@@ -39,7 +41,7 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
     }
 
     @Inject
-    lateinit var contactStore: Store<ContactsEvent, ContactsEffect, ContactsState>
+    lateinit var contactStore: ElmStore<ContactsEvent, ContactsState, ContactsEffect, ContactsCommand>
 
     override val store: Store<ContactsEvent, ContactsEffect, ContactsState> by elmStoreWithRenderer(
         elmRenderer = this
@@ -48,7 +50,7 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component
+        (requireActivity() as MainActivity).component.geContactsComponentFactory().create()
     }
 
     private var _binding: FragmentContactsBinding? = null
