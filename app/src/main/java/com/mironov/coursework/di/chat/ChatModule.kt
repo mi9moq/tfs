@@ -8,21 +8,22 @@ import com.mironov.coursework.presentation.chat.ChatEffect
 import com.mironov.coursework.presentation.chat.ChatEvent
 import com.mironov.coursework.presentation.chat.ChatReducer
 import com.mironov.coursework.presentation.chat.ChatState
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import vivid.money.elmslie.core.store.ElmStore
-import vivid.money.elmslie.core.store.Store
 
 @Module
 class ChatModule {
 
+    @ChatScope
     @Provides
     fun providesChatRouter(impl: ChatRouterImpl): ChatRouter = impl
 
+    @ChatScope
     @Provides
     fun providesChatState(): ChatState = ChatState()
 
+    @ChatScope
     @Provides
     fun providesChatStore(
         state: ChatState,

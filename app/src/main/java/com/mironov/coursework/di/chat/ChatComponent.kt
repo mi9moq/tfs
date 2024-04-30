@@ -3,6 +3,7 @@ package com.mironov.coursework.di.chat
 import com.mironov.coursework.ui.chat.ChatFragment
 import dagger.Subcomponent
 
+@ChatScope
 @Subcomponent(
     modules = [
         ChatModule::class
