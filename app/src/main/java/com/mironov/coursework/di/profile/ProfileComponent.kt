@@ -4,6 +4,7 @@ import com.mironov.coursework.ui.profile.OwnProfileFragment
 import com.mironov.coursework.ui.profile.UserProfileFragment
 import dagger.Subcomponent
 
+@ProfileScope
 @Subcomponent(
     modules = [
         ProfileModule::class

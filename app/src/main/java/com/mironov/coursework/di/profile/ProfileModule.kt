@@ -15,9 +15,11 @@ import vivid.money.elmslie.core.store.ElmStore
 @Module
 class ProfileModule {
 
+    @ProfileScope
     @Provides
     fun profileState(): ProfileState = ProfileState()
 
+    @ProfileScope
     @Provides
     fun providesProfileStore(
         state: ProfileState,
@@ -29,6 +31,7 @@ class ProfileModule {
         actor = actor
     )
 
+    @ProfileScope
     @Provides
     fun providesProfileRouter(impl: ProfileRouterImpl): ProfileRouter = impl
 }
