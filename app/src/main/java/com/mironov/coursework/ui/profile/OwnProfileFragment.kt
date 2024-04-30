@@ -8,19 +8,20 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import coil.load
 import coil.transform.RoundedCornersTransformation
-import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentProfileBinding
 import com.mironov.coursework.domain.entity.User
+import com.mironov.coursework.presentation.profile.ProfileCommand
 import com.mironov.coursework.presentation.profile.ProfileEffect
 import com.mironov.coursework.presentation.profile.ProfileEvent
 import com.mironov.coursework.presentation.profile.ProfileState
-import com.mironov.coursework.presentation.profile.ProfileStoreFactory
+import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.utils.applyPresence
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
+import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class OwnProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, ProfileE
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component
+        (requireActivity() as MainActivity).component.geProfileComponentFactory().create()
     }
 
     private var _binding: FragmentProfileBinding? = null
@@ -39,12 +40,12 @@ class OwnProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, ProfileE
         get() = _binding!!
 
     @Inject
-    lateinit var profileStoreFactory: ProfileStoreFactory
+    lateinit var profileStore: ElmStore<ProfileEvent, ProfileState, ProfileEffect, ProfileCommand>
 
     override val store: Store<ProfileEvent, ProfileEffect, ProfileState> by elmStoreWithRenderer(
         elmRenderer = this
     ) {
-        profileStoreFactory.create()
+        profileStore
     }
 
     override fun onAttach(context: Context) {
