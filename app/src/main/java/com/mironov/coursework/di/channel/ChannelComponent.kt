@@ -3,6 +3,7 @@ package com.mironov.coursework.di.channel
 import com.mironov.coursework.ui.channels.ChannelsPageFragment
 import dagger.Subcomponent
 
+@ChannelScope
 @Subcomponent(
     modules = [
         ChannelModule::class

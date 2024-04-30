@@ -15,12 +15,15 @@ import vivid.money.elmslie.core.store.ElmStore
 @Module
 class ChannelModule {
 
+    @ChannelScope
     @Provides
     fun providesChannelRouter(impl: ChannelRouterImpl): ChannelRouter = impl
 
+    @ChannelScope
     @Provides
     fun providersChannelState(): ChannelState = ChannelState()
 
+    @ChannelScope
     @Provides
     fun providesChannelStore(
         state: ChannelState,
