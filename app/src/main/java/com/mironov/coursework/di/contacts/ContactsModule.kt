@@ -15,9 +15,11 @@ import vivid.money.elmslie.core.store.ElmStore
 @Module
 class ContactsModule {
 
+    @ContactsScope
     @Provides
     fun providesContactsState(): ContactsState = ContactsState()
 
+    @ContactsScope
     @Provides
     fun providesContactsStore(
         state: ContactsState,
@@ -29,6 +31,7 @@ class ContactsModule {
         actor = actor
     )
 
+    @ContactsScope
     @Provides
     fun providesContactsRouter(impl: ContactsRouterImpl): ContactsRouter = impl
 }
