@@ -16,7 +16,7 @@ import com.mironov.coursework.presentation.profile.ProfileEffect
 import com.mironov.coursework.presentation.profile.ProfileEvent
 import com.mironov.coursework.presentation.profile.ProfileState
 import com.mironov.coursework.ui.main.ElmBaseFragment
-import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.applyPresence
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
@@ -39,7 +39,7 @@ class UserProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, Profile
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component.geProfileComponentFactory().create()
+        requireContext().appComponent().geProfileComponentFactory().create()
     }
 
     private var id = DEFAULT_ID

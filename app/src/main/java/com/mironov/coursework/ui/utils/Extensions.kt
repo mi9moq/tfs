@@ -18,6 +18,8 @@ import coil.transform.CircleCropTransformation
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.mironov.coursework.R
+import com.mironov.coursework.ZulipApp
+import com.mironov.coursework.di.app.AppComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
@@ -75,3 +77,5 @@ fun ImageView.setCircleAvatar(avatarUrl: String?) {
         error(R.drawable.ic_avatar)
     }
 }
+
+fun Context.appComponent(): AppComponent = (applicationContext as ZulipApp).component

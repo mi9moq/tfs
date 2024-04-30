@@ -20,8 +20,8 @@ import com.mironov.coursework.ui.chat.date.DateDelegate
 import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
-import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
+import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import com.mironov.coursework.ui.utils.showErrorSnackBar
@@ -45,7 +45,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component.getChatComponentFactory().create()
+        requireContext().appComponent().getChatComponentFactory().create()
     }
 
     private var channelName = ""

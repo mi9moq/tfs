@@ -22,7 +22,7 @@ import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
-import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
@@ -47,7 +47,7 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     private var isAllChannels = false
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component.getChannelComponentFactory().create()
+        requireContext().appComponent().getChannelComponentFactory().create()
     }
 
 

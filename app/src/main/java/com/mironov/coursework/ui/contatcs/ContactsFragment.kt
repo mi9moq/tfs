@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentContactsBinding
 import com.mironov.coursework.domain.entity.User
@@ -15,7 +14,8 @@ import com.mironov.coursework.presentation.contacts.ContactsCommand
 import com.mironov.coursework.presentation.contacts.ContactsEffect
 import com.mironov.coursework.presentation.contacts.ContactsEvent
 import com.mironov.coursework.presentation.contacts.ContactsState
-import com.mironov.coursework.ui.main.MainActivity
+import com.mironov.coursework.ui.main.ElmBaseFragment
+import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
@@ -50,7 +50,7 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
     }
 
     private val component by lazy {
-        (requireActivity() as MainActivity).component.geContactsComponentFactory().create()
+        requireContext().appComponent().geContactsComponentFactory().create()
     }
 
     private var _binding: FragmentContactsBinding? = null
