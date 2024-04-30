@@ -1,6 +1,7 @@
-package com.mironov.coursework.di
+package com.mironov.coursework.di.app.module
 
 import androidx.lifecycle.ViewModel
+import com.mironov.coursework.di.app.annotation.ViewModelKey
 import com.mironov.coursework.presentation.main.NavigationViewModel
 import dagger.Binds
 import dagger.Module

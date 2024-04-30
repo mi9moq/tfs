@@ -7,7 +7,7 @@ import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.ActivityMainBinding
-import com.mironov.coursework.di.DaggerAppComponent
+import com.mironov.coursework.di.app.DaggerAppComponent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

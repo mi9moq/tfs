@@ -5,7 +5,7 @@ import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.mapper.toListEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.data.utils.runCatchingNonCancellation
-import com.mironov.coursework.di.annotation.IoDispatcher
+import com.mironov.coursework.di.app.annotation.IoDispatcher
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.repository.MessageRepository
 import com.mironov.coursework.domain.repository.Result

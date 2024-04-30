@@ -4,7 +4,7 @@ import com.mironov.coursework.data.mapper.MY_ID
 import com.mironov.coursework.data.mapper.toEntity
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.data.utils.runCatchingNonCancellation
-import com.mironov.coursework.di.annotation.IoDispatcher
+import com.mironov.coursework.di.app.annotation.IoDispatcher
 import com.mironov.coursework.domain.entity.User
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.repository.UserRepository

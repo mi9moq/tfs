@@ -1,8 +1,9 @@
-package com.mironov.coursework.di
+package com.mironov.coursework.di.app.module
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mironov.coursework.data.network.AuthInterceptor
 import com.mironov.coursework.data.network.api.ZulipApi
+import com.mironov.coursework.di.app.annotation.AppScope
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json

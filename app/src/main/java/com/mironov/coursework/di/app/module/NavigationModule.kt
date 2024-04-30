@@ -1,19 +1,12 @@
-package com.mironov.coursework.di
+package com.mironov.coursework.di.app.module
 
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
+import com.mironov.coursework.di.app.annotation.AppScope
 import com.mironov.coursework.navigation.LocalCiceroneHolder
-import com.mironov.coursework.navigation.router.ChannelRouter
-import com.mironov.coursework.navigation.router.ChannelRouterImpl
-import com.mironov.coursework.navigation.router.ChatRouter
-import com.mironov.coursework.navigation.router.ChatRouterImpl
-import com.mironov.coursework.navigation.router.ContactsRouter
-import com.mironov.coursework.navigation.router.ContactsRouterImpl
 import com.mironov.coursework.navigation.router.MainRouter
 import com.mironov.coursework.navigation.router.MainRouterImpl
-import com.mironov.coursework.navigation.router.ProfileRouter
-import com.mironov.coursework.navigation.router.ProfileRouterImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

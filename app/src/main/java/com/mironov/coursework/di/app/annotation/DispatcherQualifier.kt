@@ -1,4 +1,4 @@
-package com.mironov.coursework.di.annotation
+package com.mironov.coursework.di.app.annotation
 
 import javax.inject.Qualifier
 

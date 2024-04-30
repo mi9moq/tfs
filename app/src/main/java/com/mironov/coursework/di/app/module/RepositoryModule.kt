@@ -1,9 +1,10 @@
-package com.mironov.coursework.di
+package com.mironov.coursework.di.app.module
 
 import com.mironov.coursework.data.repository.ChannelRepositoryImpl
 import com.mironov.coursework.data.repository.MessageRepositoryImpl
 import com.mironov.coursework.data.repository.ReactionRepositoryImpl
 import com.mironov.coursework.data.repository.UserRepositoryImpl
+import com.mironov.coursework.di.app.annotation.AppScope
 import com.mironov.coursework.domain.repository.ChannelRepository
 import com.mironov.coursework.domain.repository.MessageRepository
 import com.mironov.coursework.domain.repository.ReactionRepository

@@ -2,7 +2,7 @@ package com.mironov.coursework.data.repository
 
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.data.utils.runCatchingNonCancellation
-import com.mironov.coursework.di.annotation.IoDispatcher
+import com.mironov.coursework.di.app.annotation.IoDispatcher
 import com.mironov.coursework.domain.repository.ReactionRepository
 import com.mironov.coursework.domain.repository.Result
 import kotlinx.coroutines.CoroutineDispatcher

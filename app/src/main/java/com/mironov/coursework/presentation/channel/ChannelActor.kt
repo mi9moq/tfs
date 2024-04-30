@@ -1,6 +1,6 @@
 package com.mironov.coursework.presentation.channel
 
-import com.mironov.coursework.di.annotation.DefaultDispatcher
+import com.mironov.coursework.di.app.annotation.DefaultDispatcher
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase

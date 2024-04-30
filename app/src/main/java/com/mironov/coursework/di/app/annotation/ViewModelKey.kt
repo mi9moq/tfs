@@ -1,4 +1,4 @@
-package com.mironov.coursework.di
+package com.mironov.coursework.di.app.annotation
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

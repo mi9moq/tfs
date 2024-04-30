@@ -1,6 +1,5 @@
 package com.mironov.coursework.di.contacts
 
-import com.mironov.coursework.di.AppScope
 import com.mironov.coursework.navigation.router.ContactsRouter
 import com.mironov.coursework.navigation.router.ContactsRouterImpl
 import com.mironov.coursework.presentation.contacts.ContactsActor
@@ -9,11 +8,9 @@ import com.mironov.coursework.presentation.contacts.ContactsEffect
 import com.mironov.coursework.presentation.contacts.ContactsEvent
 import com.mironov.coursework.presentation.contacts.ContactsReducer
 import com.mironov.coursework.presentation.contacts.ContactsState
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import vivid.money.elmslie.core.store.ElmStore
-import vivid.money.elmslie.core.store.Store
 
 @Module
 class ContactsModule {
