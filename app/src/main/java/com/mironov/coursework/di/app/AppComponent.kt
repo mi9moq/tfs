@@ -1,5 +1,7 @@
 package com.mironov.coursework.di.app
 
+import android.content.Context
+import com.mironov.coursework.ZulipApp
 import com.mironov.coursework.di.app.annotation.AppScope
 import com.mironov.coursework.di.app.module.NavigationModule
 import com.mironov.coursework.di.app.module.NetworkModule
@@ -12,6 +14,7 @@ import com.mironov.coursework.di.app.module.DispatcherModule
 import com.mironov.coursework.di.profile.ProfileComponent
 import com.mironov.coursework.ui.main.MainActivity
 import com.mironov.coursework.ui.main.NavigationFragment
+import dagger.BindsInstance
 import dagger.Component
 
 @AppScope
@@ -26,6 +29,8 @@ import dagger.Component
 )
 interface AppComponent {
 
+    fun inject(application: ZulipApp)
+
     fun inject(activity: MainActivity)
 
     fun inject(fragment: NavigationFragment)
@@ -37,4 +42,12 @@ interface AppComponent {
     fun geContactsComponentFactory(): ContactsComponent.Factory
 
     fun geProfileComponentFactory(): ProfileComponent.Factory
+
+    @Component.Factory
+    interface Factory {
+
+        fun create(
+            @BindsInstance context: Context
+        ): AppComponent
+    }
 }

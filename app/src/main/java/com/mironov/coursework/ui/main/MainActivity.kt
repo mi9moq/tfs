@@ -6,8 +6,8 @@ import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.mironov.coursework.R
+import com.mironov.coursework.ZulipApp
 import com.mironov.coursework.databinding.ActivityMainBinding
-import com.mironov.coursework.di.app.DaggerAppComponent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     val component by lazy {
-        DaggerAppComponent.create()
+        (application as ZulipApp).component
     }
 
     @Inject
