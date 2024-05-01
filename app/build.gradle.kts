@@ -67,4 +67,7 @@ dependencies {
 
     implementation(libs.elmslie.core)
     implementation(libs.elmslie.android)
+
+    implementation(libs.room)
+    ksp(libs.room.compiler)
 }
