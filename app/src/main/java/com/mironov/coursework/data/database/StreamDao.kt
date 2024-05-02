@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mironov.coursework.data.database.model.StreamDbModel
-import com.mironov.coursework.data.database.model.TopicDbModel
+import com.mironov.coursework.data.database.model.stream.StreamDbModel
+import com.mironov.coursework.data.database.model.stream.TopicDbModel
 
 @Dao
 interface StreamDao {

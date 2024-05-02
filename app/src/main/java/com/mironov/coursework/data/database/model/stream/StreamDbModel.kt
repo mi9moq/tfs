@@ -1,9 +1,9 @@
-package com.mironov.coursework.data.database.model
+package com.mironov.coursework.data.database.model.stream
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mironov.coursework.data.database.model.StreamDbModel.Companion.TABLE_NAME
+import com.mironov.coursework.data.database.model.stream.StreamDbModel.Companion.TABLE_NAME
 
 @Entity(
     tableName = TABLE_NAME
