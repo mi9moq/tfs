@@ -74,7 +74,7 @@ class ChannelRepositoryImpl @Inject constructor(
     override suspend fun gelAllChannelsCache(): Result<List<Channel>> =
         withContext(dispatcher) {
             runCatchingNonCancellation {
-                val channels = localDataSource.getSubscribedStreams().toListChannel()
+                val channels = localDataSource.getAllStreams().toListChannel()
                 Result.Success(channels)
             }
         }
