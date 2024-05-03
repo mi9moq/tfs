@@ -1,5 +1,7 @@
 package com.mironov.coursework.di.app.module
 
+import com.mironov.coursework.data.datasource.message.MessageRemoteDataSource
+import com.mironov.coursework.data.datasource.message.MessageRemoteDataSourceImpl
 import com.mironov.coursework.data.datasource.stream.StreamLocalDataSource
 import com.mironov.coursework.data.datasource.stream.StreamLocalDataSourceImpl
 import com.mironov.coursework.data.datasource.stream.StreamRemoteDataSource
@@ -18,4 +20,8 @@ interface DataSourceModule {
     @AppScope
     @Binds
     fun bindStreamLocalDataSource(impl: StreamLocalDataSourceImpl): StreamLocalDataSource
+
+    @AppScope
+    @Binds
+    fun bindMessageRemoteDataSource(impl: MessageRemoteDataSourceImpl): MessageRemoteDataSource
 }

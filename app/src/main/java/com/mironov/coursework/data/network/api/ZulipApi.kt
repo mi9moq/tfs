@@ -31,11 +31,11 @@ interface ZulipApi {
 
     @GET("messages")
     suspend fun getMessages(
-        @Query("anchor") anchor: String = MESSAGES_ANCHOR_NEWEST,
-        @Query("num_before") numBefore: Int = 15,
-        @Query("num_after") numAfter: Int = 0,
+        @Query("anchor") anchor: String = MESSAGES_ANCHOR_FIRST_UNREAD,
+        @Query("num_before") numBefore: Int = HALF_MESSAGES,
+        @Query("num_after") numAfter: Int = HALF_MESSAGES,
         @Query("narrow") narrow: String,
-        @Query("apply_markdown")  applyMarkdown: Boolean = false,
+        @Query("apply_markdown") applyMarkdown: Boolean = false,
     ): MessageResponse
 
     @GET("users/me")
@@ -93,7 +93,11 @@ interface ZulipApi {
 
         private const val QUERY_EMOJI_NAME = "emoji_name"
 
-        private const val MESSAGES_ANCHOR_NEWEST = "newest"
+        private const val MESSAGES_ANCHOR_FIRST_UNREAD = "first_unread"
         private const val SEND_MESSAGE_TYPE = "stream"
+
+        const val MAX_MESSAGES = 20
+        const val HALF_MESSAGES = 10
+        const val NULL_MESSAGES = 0
     }
 }
