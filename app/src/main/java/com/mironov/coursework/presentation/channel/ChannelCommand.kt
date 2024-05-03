@@ -12,6 +12,8 @@ sealed interface ChannelCommand {
 
     data object LoadSubscribedChannelsCache : ChannelCommand
 
+    data class LoadTopicsCache(val channel: Channel) : ChannelCommand
+
     data class LoadTopics(val channel: Channel) : ChannelCommand
 
     data class HideTopics(val channelId: Int) : ChannelCommand

@@ -89,6 +89,7 @@ class ChannelReducer @Inject constructor(
 
         is ChannelEvent.Ui.ShowTopic -> {
             commands {
+                +ChannelCommand.LoadTopicsCache(event.channel)
                 +ChannelCommand.LoadTopics(event.channel)
             }
         }

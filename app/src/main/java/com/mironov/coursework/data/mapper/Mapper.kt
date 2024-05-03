@@ -8,7 +8,6 @@ import com.mironov.coursework.data.network.model.presences.PresencesDto
 import com.mironov.coursework.data.network.model.presences.PresencesType
 import com.mironov.coursework.data.network.model.streams.StreamDto
 import com.mironov.coursework.data.network.model.topic.TopicDto
-import com.mironov.coursework.data.network.model.topic.TopicResponse
 import com.mironov.coursework.data.network.model.user.UserDto
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Message
@@ -61,17 +60,6 @@ fun UserDto.toEntity(presence: User.Presence) = User(
     presence = presence,
 )
 
-fun TopicDto.toTopic(parentChannelName: String): Topic = Topic(
-    id = maxId,
-    name = name,
-    messageCount = 0,
-    parentChannelName = parentChannelName
-)
-
-fun TopicResponse.toListTopic(parentChannelName: String): List<Topic> = topics.map {
-    it.toTopic(parentChannelName)
-}
-
 fun PresencesDto.toEntity(): User.Presence = when {
     aggregated.status == PresencesType.ACTIVE.value
             || website.status == PresencesType.ACTIVE.value -> User.Presence.ACTIVE
@@ -100,7 +88,6 @@ fun TopicDbModel.toTopic(parentChannelName: String): Topic = Topic(
 )
 
 fun TopicDto.toDbModel(streamId: Int): TopicDbModel = TopicDbModel(
-    id = maxId,
     name = name,
     streamId = streamId
 )

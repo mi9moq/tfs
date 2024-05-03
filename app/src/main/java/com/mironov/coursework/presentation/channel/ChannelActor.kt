@@ -7,6 +7,7 @@ import com.mironov.coursework.domain.usecase.GelAllChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsUseCase
+import com.mironov.coursework.domain.usecase.GetTopicsCacheUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.ui.utils.toDelegates
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,6 +23,7 @@ class ChannelActor @Inject constructor(
     private val gelSubscribeChannelsUseCase: GelSubscribeChannelsUseCase,
     private val gelSubscribeChannelsCacheUseCase: GelSubscribeChannelsCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
+    private val getTopicsCacheUseCase: GetTopicsCacheUseCase,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : Actor<ChannelCommand, ChannelEvent>() {
 
@@ -36,6 +38,7 @@ class ChannelActor @Inject constructor(
             is ChannelCommand.ApplyFilter -> applyFilter(command.queryItem)
             ChannelCommand.LoadAllChannelsCache -> loadAllChannelsCache()
             ChannelCommand.LoadSubscribedChannelsCache -> loadSubscribedChannelsCache()
+            is ChannelCommand.LoadTopicsCache -> showTopicsCache(command.channel)
         }
         emit(event)
     }
@@ -98,6 +101,19 @@ class ChannelActor @Inject constructor(
 
     private suspend fun showTopics(channel: Channel): ChannelEvent.Domain =
         when (val result = getTopicsUseCase(channel)) {
+            is Result.Failure -> ChannelEvent.Domain.LoadTopicsFailure
+            is Result.Success -> {
+                val ind = cacheChannel.indexOfFirst {
+                    it.id == channel.id
+                }
+                val newChannel = (cacheChannel[ind]).copy(isOpen = true, topics = result.content)
+                cacheChannel[ind] = newChannel
+                ChannelEvent.Domain.LoadTopicsSuccess(cacheChannel.toDelegates())
+            }
+        }
+
+    private suspend fun showTopicsCache(channel: Channel): ChannelEvent.Domain =
+        when (val result = getTopicsCacheUseCase(channel)) {
             is Result.Failure -> ChannelEvent.Domain.LoadTopicsFailure
             is Result.Success -> {
                 val ind = cacheChannel.indexOfFirst {
