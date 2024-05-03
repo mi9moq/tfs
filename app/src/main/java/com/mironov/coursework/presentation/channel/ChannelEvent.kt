@@ -37,5 +37,7 @@ sealed interface ChannelEvent {
             val content: List<DelegateItem>,
             val query: String
         ): Domain
+
+        data object EmptyCache: Domain
     }
 }

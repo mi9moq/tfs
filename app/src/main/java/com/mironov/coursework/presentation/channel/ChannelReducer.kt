@@ -58,6 +58,12 @@ class ChannelReducer @Inject constructor(
                     copy(isLoading = false, content = event.content)
             }
         }
+
+        ChannelEvent.Domain.EmptyCache -> {
+            state {
+                copy(isLoading = true, content = null)
+            }
+        }
     }
 
     override fun Result.ui(event: ChannelEvent.Ui): Any = when (event) {
@@ -66,6 +72,7 @@ class ChannelReducer @Inject constructor(
                 copy(isLoading = true)
             }
             commands {
+                +ChannelCommand.LoadAllChannelsCache
                 +ChannelCommand.LoadAllChannels
             }
         }
@@ -75,6 +82,7 @@ class ChannelReducer @Inject constructor(
                 copy(isLoading = true)
             }
             commands {
+                +ChannelCommand.LoadSubscribedChannelsCache
                 +ChannelCommand.LoadSubscribedChannels
             }
         }

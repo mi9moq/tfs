@@ -3,7 +3,9 @@ package com.mironov.coursework.presentation.channel
 import com.mironov.coursework.di.app.annotation.DefaultDispatcher
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.repository.Result
+import com.mironov.coursework.domain.usecase.GelAllChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
+import com.mironov.coursework.domain.usecase.GelSubscribeChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.ui.utils.toDelegates
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 class ChannelActor @Inject constructor(
     private val getAllChannelsUseCase: GelAllChannelsUseCase,
+    private val getAllChannelsCacheUseCase: GelAllChannelsCacheUseCase,
     private val gelSubscribeChannelsUseCase: GelSubscribeChannelsUseCase,
+    private val gelSubscribeChannelsCacheUseCase: GelSubscribeChannelsCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : Actor<ChannelCommand, ChannelEvent>() {
@@ -30,6 +34,8 @@ class ChannelActor @Inject constructor(
             is ChannelCommand.HideTopics -> hideTopics(command.channelId)
             is ChannelCommand.LoadTopics -> showTopics(command.channel)
             is ChannelCommand.ApplyFilter -> applyFilter(command.queryItem)
+            ChannelCommand.LoadAllChannelsCache -> loadAllChannelsCache()
+            ChannelCommand.LoadSubscribedChannelsCache -> loadSubscribedChannelsCache()
         }
         emit(event)
     }
@@ -46,6 +52,22 @@ class ChannelActor @Inject constructor(
             }
         }
 
+    private suspend fun loadAllChannelsCache(): ChannelEvent.Domain =
+        when (val result = getAllChannelsCacheUseCase()) {
+            is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
+            is Result.Success -> {
+                if (result.content.isEmpty()) {
+                    ChannelEvent.Domain.EmptyCache
+                } else {
+                    cacheChannel.clear()
+                    cacheChannel.addAll(result.content)
+                    ChannelEvent.Domain.LoadChannelsSuccess(
+                        result.content.toDelegates()
+                    )
+                }
+            }
+        }
+
     private suspend fun loadSubscribedChannels(): ChannelEvent.Domain =
         when (val result = gelSubscribeChannelsUseCase()) {
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
@@ -55,6 +77,22 @@ class ChannelActor @Inject constructor(
                 ChannelEvent.Domain.LoadChannelsSuccess(
                     result.content.toDelegates()
                 )
+            }
+        }
+
+    private suspend fun loadSubscribedChannelsCache(): ChannelEvent.Domain =
+        when (val result = gelSubscribeChannelsCacheUseCase()) {
+            is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
+            is Result.Success -> {
+                if (result.content.isEmpty()) {
+                    ChannelEvent.Domain.EmptyCache
+                } else {
+                    cacheChannel.clear()
+                    cacheChannel.addAll(result.content)
+                    ChannelEvent.Domain.LoadChannelsSuccess(
+                        result.content.toDelegates()
+                    )
+                }
             }
         }
 
