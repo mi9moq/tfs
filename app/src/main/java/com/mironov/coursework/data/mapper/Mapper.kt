@@ -1,5 +1,6 @@
 package com.mironov.coursework.data.mapper
 
+import com.mironov.coursework.data.database.model.stream.StreamDbModel
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
 import com.mironov.coursework.data.network.model.presences.PresencesDto
@@ -59,10 +60,6 @@ fun UserDto.toEntity(presence: User.Presence) = User(
     presence = presence,
 )
 
-fun StreamDto.toChannel(): Channel = Channel(id = streamId, name = name)
-
-fun List<StreamDto>.toListChannel(): List<Channel> = map { it.toChannel() }
-
 fun TopicDto.toTopic(parentChannelName: String): Topic = Topic(
     id = maxId,
     name = name,
@@ -85,6 +82,16 @@ fun PresencesDto.toEntity(): User.Presence = when {
 
     else -> User.Presence.OFFLINE
 }
+
+fun StreamDto.toDbModel(isSubscribed: Boolean): StreamDbModel = StreamDbModel(
+    id = streamId,
+    name = name,
+    isSubscribed = isSubscribed
+)
+
+fun StreamDbModel.toEntity(): Channel = Channel(id = id, name = name)
+
+fun List<StreamDbModel>.toListChannel(): List<Channel> = map { it.toEntity() }
 
 const val MY_ID = 708832
 

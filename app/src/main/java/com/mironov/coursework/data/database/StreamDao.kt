@@ -16,8 +16,11 @@ interface StreamDao {
     @Query("SELECT * FROM ${StreamDbModel.TABLE_NAME} WHERE is_subscribed = 1")
     suspend fun getSubscribedStreams(): List<StreamDbModel>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertStreams(streams: List<StreamDbModel>)
+
+    @Query("DELETE FROM ${StreamDbModel.TABLE_NAME} WHERE is_subscribed = :isSubscribed")
+    suspend fun removeStreams(isSubscribed: Boolean)
 
     @Query("SELECT * FROM ${TopicDbModel.TABLE_NAME} WHERE stream_id = :streamId")
     suspend fun getTopics(streamId: Int): List<TopicDbModel>
