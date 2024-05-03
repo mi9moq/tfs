@@ -1,6 +1,5 @@
 package com.mironov.coursework.data.repository
 
-import android.util.Log
 import com.mironov.coursework.data.datasource.stream.StreamLocalDataSource
 import com.mironov.coursework.data.datasource.stream.StreamRemoteDataSource
 import com.mironov.coursework.data.mapper.toDbModel
@@ -60,7 +59,6 @@ class ChannelRepositoryImpl @Inject constructor(
                 val topics = localDataSource.getTopics(streamId).map {
                     it.toTopic(channel.name)
                 }
-                Log.e("Topics", "actual: $topics")
                 Result.Success(topics)
             }
         }
@@ -87,7 +85,6 @@ class ChannelRepositoryImpl @Inject constructor(
                 val topics = localDataSource.getTopics(channel.id).map {
                     it.toTopic(channel.name)
                 }
-                Log.e("Topics", "cache: $topics")
                 Result.Success(topics)
             }
         }
