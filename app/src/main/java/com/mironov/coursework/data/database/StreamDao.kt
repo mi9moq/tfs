@@ -27,4 +27,7 @@ interface StreamDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTopics(streams: List<TopicDbModel>)
+
+    @Query("DELETE FROM ${TopicDbModel.TABLE_NAME} WHERE stream_id = :streamId")
+    fun removeTopics(streamId: Int)
 }

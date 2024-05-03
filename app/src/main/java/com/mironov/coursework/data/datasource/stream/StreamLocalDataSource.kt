@@ -14,4 +14,8 @@ interface StreamLocalDataSource {
     suspend fun insertStreams(streams: List<StreamDbModel>)
 
     suspend fun removeStreams(isSubscribed: Boolean)
+
+    suspend fun insertTopics(topics: List<TopicDbModel>)
+
+    suspend fun removeTopics(streamId: Int)
 }

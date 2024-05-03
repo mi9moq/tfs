@@ -23,4 +23,10 @@ class StreamLocalDataSourceImpl @Inject constructor(
 
     override suspend fun removeStreams(isSubscribed: Boolean) =
         dao.removeStreams(isSubscribed)
+
+    override suspend fun removeTopics(streamId: Int) =
+        dao.removeTopics(streamId)
+
+    override suspend fun insertTopics(topics: List<TopicDbModel>) =
+        dao.insertTopics(topics)
 }

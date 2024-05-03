@@ -1,6 +1,7 @@
 package com.mironov.coursework.data.mapper
 
 import com.mironov.coursework.data.database.model.stream.StreamDbModel
+import com.mironov.coursework.data.database.model.stream.TopicDbModel
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
 import com.mironov.coursework.data.network.model.presences.PresencesDto
@@ -90,6 +91,19 @@ fun StreamDto.toDbModel(isSubscribed: Boolean): StreamDbModel = StreamDbModel(
 )
 
 fun StreamDbModel.toEntity(): Channel = Channel(id = id, name = name)
+
+fun TopicDbModel.toTopic(parentChannelName: String): Topic = Topic(
+    id = id,
+    name = name,
+    messageCount = 0,
+    parentChannelName = parentChannelName
+)
+
+fun TopicDto.toDbModel(streamId: Int): TopicDbModel = TopicDbModel(
+    id = maxId,
+    name = name,
+    streamId = streamId
+)
 
 fun List<StreamDbModel>.toListChannel(): List<Channel> = map { it.toEntity() }
 
