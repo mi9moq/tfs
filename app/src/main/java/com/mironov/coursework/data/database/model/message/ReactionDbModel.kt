@@ -11,18 +11,20 @@ import com.mironov.coursework.data.database.model.message.ReactionDbModel.Compan
     foreignKeys = [ForeignKey(
         entity = MessageInfoDbModel::class,
         parentColumns = [MessageInfoDbModel.COLUMN_ID],
-        childColumns = [ReactionDbModel.COLUMN_MESSAGE_ID]
+        childColumns = [ReactionDbModel.COLUMN_MESSAGE_ID],
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE,
     )]
 )
 data class ReactionDbModel(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     @ColumnInfo(COLUMN_EMOJI_CODE)
     val emojiCode: String,
     @ColumnInfo(COLUMN_EMOJI_NAME)
     val emojiName: String,
     @ColumnInfo(COLUMN_USER_ID)
-    val userId: String,
+    val userId: Int,
     @ColumnInfo(COLUMN_MESSAGE_ID)
     val messageId: Long
 ) {

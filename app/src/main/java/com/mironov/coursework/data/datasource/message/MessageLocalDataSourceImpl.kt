@@ -13,15 +13,8 @@ class MessageLocalDataSourceImpl @Inject constructor(
         private const val MESSAGE_CACHE_LIMIT = 50
     }
 
-    override suspend fun getMessages(channelName: String, topicName: String): List<MessageDbModel> {
-        val messages = dao.getMessages(channelName, topicName)
-//        Log.e("MESSAGES", "size = ${messages.size}")
-//        messages.forEach {
-//            Log.e("MESSAGES", it.message.toString())
-//        }
-
-        return messages
-    }
+    override suspend fun getMessages(channelName: String, topicName: String): List<MessageDbModel> =
+        dao.getMessages(channelName, topicName)
 
     override suspend fun insertMessages(
         messages: List<MessageDbModel>,
