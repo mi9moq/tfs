@@ -27,7 +27,7 @@ interface MessageRemoteDataSource {
         content: String
     )
 
-    suspend fun getMessagesById(id: Int): MessageDto
+    suspend fun getMessageById(id: Long): MessageDto
 
     suspend fun addReaction(messageId: Long, emojiName: String)
 

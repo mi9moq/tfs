@@ -56,7 +56,7 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     override suspend fun sendMessage(channelName: String, topicName: String, content: String) =
         api.sendMessage(to = channelName, topic = topicName, content = content)
 
-    override suspend fun getMessagesById(id: Int): MessageDto =
+    override suspend fun getMessageById(id: Long): MessageDto =
         api.getMessageById(id).message
 
     override suspend fun addReaction(messageId: Long, emojiName: String) =
