@@ -1,24 +1,23 @@
 package com.mironov.coursework.data.repository
 
+import com.mironov.coursework.data.datasource.message.MessageLocalDataSource
+import com.mironov.coursework.data.datasource.message.MessageRemoteDataSource
 import com.mironov.coursework.data.mapper.MY_ID
+import com.mironov.coursework.data.mapper.toDbModel
 import com.mironov.coursework.data.mapper.toEntity
-import com.mironov.coursework.data.mapper.toListEntity
-import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.data.utils.runCatchingNonCancellation
 import com.mironov.coursework.di.app.annotation.IoDispatcher
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.repository.MessageRepository
 import com.mironov.coursework.domain.repository.Result
-import com.mironov.coursework.data.utils.Narrow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class MessageRepositoryImpl @Inject constructor(
-    private val api: ZulipApi,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val remoteDataSource: MessageRemoteDataSource,
+    private val localDataSource: MessageLocalDataSource
 ) : MessageRepository {
 
     override suspend fun getMessages(
@@ -26,13 +25,14 @@ class MessageRepositoryImpl @Inject constructor(
         topicName: String
     ): Result<List<Message>> = withContext(dispatcher) {
         runCatchingNonCancellation {
-            val narrow = mutableListOf<Narrow>().apply {
-                add(Narrow(Narrow.STREAM, channelName))
-                add(Narrow(Narrow.TOPIC, topicName))
-            }
+            val messagesDbModel = remoteDataSource
+                .getMessages(channelName, topicName)
+                .map { it.toDbModel(channelName, topicName, it.id) }
+            localDataSource.insertMessages(messagesDbModel, channelName, topicName)
 
-            val messages = api.getMessages(narrow = Json.encodeToString(narrow))
-                .messages.toListEntity(MY_ID)
+            val messages = localDataSource.getMessages(channelName, topicName).map {
+                it.toEntity(MY_ID)
+            }
 
             Result.Success(messages)
         }
@@ -44,15 +44,63 @@ class MessageRepositoryImpl @Inject constructor(
         content: String
     ): Result<Boolean> = withContext(dispatcher) {
         runCatchingNonCancellation {
-            api.sendMessage(to = channelName, topic = topicName, content = content)
+            remoteDataSource.sendMessage(channelName, topicName, content)
             Result.Success(true)
         }
     }
 
-    override suspend fun getMessagesById(id: Int): Result<Message> = withContext(dispatcher){
+    override suspend fun getMessagesById(id: Long): Result<Message> = withContext(dispatcher) {
         runCatchingNonCancellation {
-            val message = api.getMessageById(id).message.toEntity(MY_ID)
+            val message = remoteDataSource.getMessageById(id).toEntity(MY_ID)
             Result.Success(message)
+        }
+    }
+
+    override suspend fun getMessagesCache(
+        channelName: String,
+        topicName: String
+    ): Result<List<Message>> = withContext(dispatcher) {
+        runCatchingNonCancellation {
+            val messages = localDataSource.getMessages(channelName, topicName).map {
+                it.toEntity(MY_ID)
+            }
+            Result.Success(messages)
+        }
+    }
+
+    override suspend fun getPrevMessages(
+        channelName: String,
+        topicName: String,
+        anchorMessageId: String
+    ): Result<List<Message>> = withContext(dispatcher) {
+        runCatchingNonCancellation {
+            val messagesDbModel = remoteDataSource
+                .getPrevPageMessages(channelName, topicName, anchorMessageId)
+                .map { it.toDbModel(channelName, topicName, it.id) }
+
+            localDataSource.insertOldMessages(messagesDbModel, channelName, topicName)
+            val messages = localDataSource.getMessages(channelName, topicName).map {
+                it.toEntity(MY_ID)
+            }
+            Result.Success(messages)
+        }
+    }
+
+    override suspend fun getNextMessages(
+        channelName: String,
+        topicName: String,
+        anchorMessageId: String
+    ): Result<List<Message>> = withContext(dispatcher) {
+        runCatchingNonCancellation {
+            val messagesDbModel = remoteDataSource
+                .getNextPageMessages(channelName, topicName, anchorMessageId)
+                .map { it.toDbModel(channelName, topicName, it.id) }
+
+            localDataSource.insertNewMessages(messagesDbModel, channelName, topicName)
+            val messages = localDataSource.getMessages(channelName, topicName).map {
+                it.toEntity(MY_ID)
+            }
+            Result.Success(messages)
         }
     }
 }

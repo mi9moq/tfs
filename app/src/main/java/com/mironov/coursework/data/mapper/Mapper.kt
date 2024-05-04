@@ -1,5 +1,8 @@
 package com.mironov.coursework.data.mapper
 
+import com.mironov.coursework.data.database.model.message.MessageDbModel
+import com.mironov.coursework.data.database.model.message.MessageInfoDbModel
+import com.mironov.coursework.data.database.model.message.ReactionDbModel
 import com.mironov.coursework.data.database.model.stream.StreamDbModel
 import com.mironov.coursework.data.database.model.stream.TopicDbModel
 import com.mironov.coursework.data.network.model.message.MessageDto
@@ -19,9 +22,54 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
-fun List<MessageDto>.toListEntity(userId: Int): List<Message> = map {
-    it.toEntity(userId)
-}
+fun MessageDbModel.toEntity(userId: Int) = Message(
+    avatarUrl = message.avatarUrl,
+    content = message.content,
+    id = message.id,
+    isMeMessage = message.senderId == userId,
+    senderName = message.senderName,
+    senderId = message.senderId,
+    sendTime = message.timestamp.toLocalDate(),
+    reactions = reactions.toEntity(userId),
+)
+
+fun List<ReactionDbModel>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
+    associate { reactionDto ->
+        Reaction(
+            emojiUnicode = reactionDto.emojiCode.toIntOrNull(16) ?: 0x1F916,
+            emojiName = reactionDto.emojiName
+        ) to ReactionCondition(
+            isSelected = reactionDto.userId == userId,
+            count = this.count {
+                it.emojiCode == reactionDto.emojiCode
+            }
+        )
+    }
+
+fun MessageDto.toDbModel(channelName: String, topicName: String, messageId: Long): MessageDbModel =
+    MessageDbModel(
+        message = MessageInfoDbModel(
+            id = id,
+            avatarUrl = avatarUrl,
+            senderId = senderId,
+            senderName = senderName,
+            timestamp = timestamp,
+            content = content,
+            channelName = channelName,
+            topicName = topicName
+        ),
+        reactions = reactions.toListDbModel(messageId)
+    )
+
+fun ReactionDto.toDbModel(messageId: Long): ReactionDbModel = ReactionDbModel(
+    emojiCode = emojiCode,
+    emojiName = emojiName,
+    userId = userId,
+    messageId = messageId
+)
+
+fun List<ReactionDto>.toListDbModel(messageId: Long): List<ReactionDbModel> =
+    map { it.toDbModel(messageId) }
 
 fun MessageDto.toEntity(userId: Int) = Message(
     avatarUrl = avatarUrl,
@@ -31,10 +79,10 @@ fun MessageDto.toEntity(userId: Int) = Message(
     senderName = senderName,
     senderId = senderId,
     sendTime = timestamp.toLocalDate(),
-    reactions = reactions.toEntity(userId),
+    reactions = reactions.toMapEntity(userId),
 )
 
-fun List<ReactionDto>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
+fun List<ReactionDto>.toMapEntity(userId: Int): Map<Reaction, ReactionCondition> =
     associate { reactionDto ->
         Reaction(
             emojiUnicode = reactionDto.emojiCode.toIntOrNull(16) ?: 0x1F916,

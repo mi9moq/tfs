@@ -6,7 +6,25 @@ interface MessageRepository {
 
     suspend fun getMessages(channelName: String, topicName: String): Result<List<Message>>
 
-    suspend fun sendMessages(channelName: String, topicName: String, content: String): Result<Boolean>
+    suspend fun sendMessages(
+        channelName: String,
+        topicName: String,
+        content: String
+    ): Result<Boolean>
 
-    suspend fun getMessagesById(id: Int): Result<Message>
+    suspend fun getMessagesById(id: Long): Result<Message>
+
+    suspend fun getMessagesCache(channelName: String, topicName: String): Result<List<Message>>
+
+    suspend fun getPrevMessages(
+        channelName: String,
+        topicName: String,
+        anchorMessageId: String
+    ): Result<List<Message>>
+
+    suspend fun getNextMessages(
+        channelName: String,
+        topicName: String,
+        anchorMessageId: String
+    ): Result<List<Message>>
 }
