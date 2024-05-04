@@ -82,7 +82,7 @@ interface ZulipApi {
 
     @GET("messages/{message_id}")
     suspend fun getMessageById(
-        @Path("message_id") messageId: Int
+        @Path("message_id") messageId: Long
     ): SingleMessageResponse
 
     companion object {
