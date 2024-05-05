@@ -12,13 +12,13 @@ interface MessageRemoteDataSource {
     suspend fun getPrevPageMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): List<MessageDto>
 
     suspend fun getNextPageMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): List<MessageDto>
 
     suspend fun sendMessage(

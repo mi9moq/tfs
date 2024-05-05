@@ -23,4 +23,14 @@ sealed interface ChatCommand {
         val messageId: Long,
         val emojiName: String,
     ) : ChatCommand
+
+    data class LoadNextMessages(
+        val channelName: String,
+        val topicName: String
+    ) : ChatCommand
+
+    data class LoadPrevMessages(
+        val channelName: String,
+        val topicName: String
+    ) : ChatCommand
 }

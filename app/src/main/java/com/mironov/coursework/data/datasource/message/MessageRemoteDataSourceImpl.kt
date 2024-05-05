@@ -22,7 +22,7 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     override suspend fun getPrevPageMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): List<MessageDto> {
         val narrow = mutableListOf<Narrow>().apply {
             add(Narrow(Narrow.STREAM, channelName))
@@ -32,14 +32,14 @@ class MessageRemoteDataSourceImpl @Inject constructor(
             narrow = Json.encodeToString(narrow),
             numBefore = ZulipApi.MAX_MESSAGES,
             numAfter = ZulipApi.NULL_MESSAGES,
-            anchor = anchorMessageId
+            anchor = anchorMessageId.toString()
         ).messages
     }
 
     override suspend fun getNextPageMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): List<MessageDto> {
         val narrow = mutableListOf<Narrow>().apply {
             add(Narrow(Narrow.STREAM, channelName))
@@ -49,7 +49,7 @@ class MessageRemoteDataSourceImpl @Inject constructor(
             narrow = Json.encodeToString(narrow),
             numBefore = ZulipApi.NULL_MESSAGES,
             numAfter = ZulipApi.MAX_MESSAGES,
-            anchor = anchorMessageId
+            anchor = anchorMessageId.toString()
         ).messages
     }
 

@@ -71,7 +71,7 @@ class MessageRepositoryImpl @Inject constructor(
     override suspend fun getPrevMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): Result<List<Message>> = withContext(dispatcher) {
         runCatchingNonCancellation {
             val messagesDbModel = remoteDataSource
@@ -89,7 +89,7 @@ class MessageRepositoryImpl @Inject constructor(
     override suspend fun getNextMessages(
         channelName: String,
         topicName: String,
-        anchorMessageId: String
+        anchorMessageId: Long
     ): Result<List<Message>> = withContext(dispatcher) {
         runCatchingNonCancellation {
             val messagesDbModel = remoteDataSource
