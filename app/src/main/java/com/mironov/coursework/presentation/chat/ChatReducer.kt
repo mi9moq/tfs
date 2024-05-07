@@ -63,14 +63,18 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        ChatEvent.Domain.Empty -> {}
+        ChatEvent.Domain.EmptyCache -> {
+            state{
+                copy(isLoading = true)
+            }
+        }
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
         ChatEvent.Ui.Initial -> {}
         is ChatEvent.Ui.Load -> {
-            state {
-                copy(isLoading = true)
+            commands {
+                +ChatCommand.LoadMessageCache(event.channelName, event.topicName)
             }
             commands {
                 +ChatCommand.LoadMessage(event.channelName, event.topicName)

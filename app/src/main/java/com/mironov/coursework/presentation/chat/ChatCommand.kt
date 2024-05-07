@@ -33,4 +33,9 @@ sealed interface ChatCommand {
         val channelName: String,
         val topicName: String
     ) : ChatCommand
+
+    data class LoadMessageCache(
+        val channelName: String,
+        val topicName: String
+    ) : ChatCommand
 }

@@ -3,6 +3,7 @@ package com.mironov.coursework.presentation.chat
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
 import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
+import com.mironov.coursework.domain.usecase.GetMessagesCacheUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetNextMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetPrevMessagesUseCase
@@ -21,7 +22,8 @@ class ChatActor @Inject constructor(
     private val removeReactionUseCase: RemoveReactionUseCase,
     private val getMessageByIdUseCase: GetMessageByIdUseCase,
     private val getNextMessagesUseCase: GetNextMessagesUseCase,
-    private val getPrevMessagesUseCase: GetPrevMessagesUseCase
+    private val getPrevMessagesUseCase: GetPrevMessagesUseCase,
+    private val getMessagesCacheUseCase: GetMessagesCacheUseCase,
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private var lastMessageId = 0L
@@ -54,6 +56,11 @@ class ChatActor @Inject constructor(
                 command.channelName,
                 command.topicName
             )
+
+            is ChatCommand.LoadMessageCache -> loadMessageCache(
+                command.channelName,
+                command.topicName
+            )
         }
         emit(event)
     }
@@ -69,6 +76,24 @@ class ChatActor @Inject constructor(
                 lastMessageId = result.content.last().id
                 val groupMessages = result.content.groupByDate()
                 ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
+            }
+        }
+
+    private suspend fun loadMessageCache(channelName: String, topicName: String): ChatEvent.Domain =
+        when (val result = getMessagesCacheUseCase(channelName, topicName)) {
+            is Result.Failure -> {
+                ChatEvent.Domain.LoadMessagesFailure
+            }
+
+            is Result.Success -> {
+                if (result.content.isEmpty()){
+                    ChatEvent.Domain.EmptyCache
+                } else {
+                    firstMessageId = result.content.first().id
+                    lastMessageId = result.content.last().id
+                    val groupMessages = result.content.groupByDate()
+                    ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
+                }
             }
         }
 

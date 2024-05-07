@@ -46,7 +46,7 @@ sealed interface ChatEvent {
 
         data object LoadMessagesFailure : Domain
 
-        data object Empty : Domain
+        data object EmptyCache : Domain
 
         data object SendMessageSuccess : Domain
 
