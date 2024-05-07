@@ -35,10 +35,11 @@ interface MessageDao {
     }
 
     @Query(
-        "DELETE FROM ${MessageInfoDbModel.TABLE_NAME} " +
-                "WHERE (channel_name != :channelName AND topic_name != :topicName)AND rowid IN (SELECT rowid FROM ${MessageInfoDbModel.TABLE_NAME} LIMIT :messageCount)"
+        "DELETE FROM ${MessageInfoDbModel.TABLE_NAME} WHERE id IN " +
+                "(SELECT id FROM ${MessageInfoDbModel.TABLE_NAME} " +
+                "WHERE (channel_name != :channelName OR topic_name != :topicName) LIMIT :messageCount)"
     )
-    suspend fun deleteMessagesFromOtherTopics(
+    suspend fun deleteMessagesFromOtherChat(
         channelName: String,
         topicName: String,
         messageCount: Int
