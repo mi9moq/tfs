@@ -2,12 +2,13 @@ package com.mironov.coursework.ui.chat
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
 import com.mironov.coursework.presentation.chat.ChatCommand
@@ -50,6 +51,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private var channelName = ""
     private var topicName = ""
+
+    private var canLoadNextPage = false
 
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
@@ -95,6 +98,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         super.onViewCreated(view, savedInstanceState)
         store.accept(ChatEvent.Ui.Load(channelName, topicName))
         initStatusBar()
+        setupRecyclerView()
         addClickListeners()
         addTextWatcher()
     }
@@ -103,6 +107,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         if (state.isLoading) {
             applyLoadingState()
         }
+
+        canLoadNextPage = !state.isNextPageLoading
 
         state.content?.let {
             applyContentState(it)
@@ -141,6 +147,29 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
     }
 
+    private fun setupRecyclerView() {
+        binding.messages.adapter = adapter
+        binding.messages.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                if (dy > 0) {
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    val totalItemCount = layoutManager.itemCount
+                    if (totalItemCount - lastVisibleItemPosition <= 5 && canLoadNextPage) {
+                        store.accept(ChatEvent.Ui.ScrollToBottom(channelName, topicName))
+                    }
+                }
+                if (dy < 0) {
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                    if (firstVisibleItemPosition <= 5 && canLoadNextPage) {
+                        store.accept(ChatEvent.Ui.ScrollToTop(channelName, topicName))
+                    }
+                }
+            }
+        })
+    }
+
     private fun addClickListeners() = with(binding) {
         sendMessage.setOnClickListener {
             sendMessage()
@@ -155,7 +184,6 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     fun changeReaction(messageId: Long, emojiName: String, isSelected: Boolean) {
-        Log.e("changeReaction", isSelected.toString())
         store.accept(ChatEvent.Ui.ChangeReaction(messageId, emojiName, isSelected))
     }
 
@@ -167,9 +195,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             messages.isVisible = true
             messages.adapter = adapter
         }
-        adapter.submitList(delegateList) {
-            binding.messages.smoothScrollToPosition(adapter.itemCount - 1)
-        }
+        adapter.submitList(delegateList)
     }
 
     private fun applyLoadingState() {

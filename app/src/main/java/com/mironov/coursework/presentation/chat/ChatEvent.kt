@@ -28,6 +28,16 @@ sealed interface ChatEvent {
         ) : Ui
 
         data object OnBackClicked : Ui
+
+        data class ScrollToTop(
+            val channelName: String,
+            val topicName: String,
+        ) : Ui
+
+        data class ScrollToBottom(
+            val channelName: String,
+            val topicName: String,
+        ) : Ui
     }
 
     sealed interface Domain : ChatEvent {
@@ -35,6 +45,8 @@ sealed interface ChatEvent {
         data class LoadMessagesSuccess(val messages: List<DelegateItem>) : Domain
 
         data object LoadMessagesFailure : Domain
+
+        data object Empty : Domain
 
         data class SendMessageSuccess(val messages: List<DelegateItem>) : Domain
 

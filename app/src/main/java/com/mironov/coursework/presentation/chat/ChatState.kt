@@ -4,5 +4,6 @@ import com.mironov.coursework.ui.adapter.DelegateItem
 
 data class ChatState(
     val isLoading: Boolean = false,
+    val isNextPageLoading: Boolean = false,
     val content: List<DelegateItem>? = null
 )

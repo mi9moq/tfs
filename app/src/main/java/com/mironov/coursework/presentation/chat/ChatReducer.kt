@@ -40,7 +40,11 @@ class ChatReducer @Inject constructor(
 
         is ChatEvent.Domain.LoadMessagesSuccess -> {
             state {
-                copy(isLoading = false, content = event.messages)
+                copy(
+                    isLoading = false,
+                    content = event.messages,
+                    isNextPageLoading = false,
+                )
             }
         }
 
@@ -58,6 +62,8 @@ class ChatReducer @Inject constructor(
                 copy(isLoading = false)
             }
         }
+
+        ChatEvent.Domain.Empty -> {}
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
@@ -90,6 +96,24 @@ class ChatReducer @Inject constructor(
         is ChatEvent.Ui.ChooseReaction -> {
             commands {
                 +ChatCommand.ChooseReaction(event.messageId, event.emojiName)
+            }
+        }
+
+        is ChatEvent.Ui.ScrollToBottom -> {
+            commands {
+                +ChatCommand.LoadNextMessages(event.channelName, event.topicName)
+            }
+            state {
+                copy(isNextPageLoading = true)
+            }
+        }
+
+        is ChatEvent.Ui.ScrollToTop -> {
+            commands {
+                +ChatCommand.LoadPrevMessages(event.channelName, event.topicName)
+            }
+            state {
+                copy(isNextPageLoading = true)
             }
         }
     }

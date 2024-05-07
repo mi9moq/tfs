@@ -4,6 +4,8 @@ import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
 import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
+import com.mironov.coursework.domain.usecase.GetNextMessagesUseCase
+import com.mironov.coursework.domain.usecase.GetPrevMessagesUseCase
 import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
 import com.mironov.coursework.ui.adapter.DelegateItem
@@ -19,9 +21,13 @@ class ChatActor @Inject constructor(
     private val addReactionUseCase: AddReactionUseCase,
     private val removeReactionUseCase: RemoveReactionUseCase,
     private val getMessageByIdUseCase: GetMessageByIdUseCase,
+    private val getNextMessagesUseCase: GetNextMessagesUseCase,
+    private val getPrevMessagesUseCase: GetPrevMessagesUseCase
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private val cache = mutableListOf<DelegateItem>()
+    private var lastMessageId = 0L
+    private var firstMessageId = 0L
 
     override fun execute(command: ChatCommand): Flow<ChatEvent> = flow {
         val event = when (command) {
@@ -41,6 +47,15 @@ class ChatActor @Inject constructor(
             }
 
             is ChatCommand.ChooseReaction -> chooseReaction(command.messageId, command.emojiName)
+            is ChatCommand.LoadNextMessages -> loadNextMessages(
+                command.channelName,
+                command.topicName
+            )
+
+            is ChatCommand.LoadPrevMessages -> loadPrevMessages(
+                command.channelName,
+                command.topicName
+            )
         }
         emit(event)
     }
@@ -52,6 +67,8 @@ class ChatActor @Inject constructor(
             }
 
             is Result.Success -> {
+                firstMessageId = result.content.first().id
+                lastMessageId = result.content.last().id
                 cache.clear()
                 val groupMessages = result.content.groupByDate()
                 cache.addAll(groupMessages)
@@ -97,7 +114,7 @@ class ChatActor @Inject constructor(
         }
 
     private suspend fun chooseReaction(messageId: Long, emojiName: String): ChatEvent.Domain =
-        when (val result = getMessageByIdUseCase(messageId.toInt())) {
+        when (val result = getMessageByIdUseCase(messageId)) {
             is Result.Failure -> ChatEvent.Domain.ChangeReactionFailure(cache)
             is Result.Success -> {
                 var isSelected = false
@@ -109,6 +126,33 @@ class ChatActor @Inject constructor(
                     deleteEmoji(messageId, emojiName)
                 else
                     addReaction(messageId, emojiName)
+            }
+        }
+
+    private suspend fun loadNextMessages(channelName: String, topicName: String): ChatEvent.Domain =
+        when (val result = getNextMessagesUseCase(channelName, topicName, lastMessageId)) {
+            is Result.Failure -> {
+                ChatEvent.Domain.LoadMessagesFailure
+            }
+
+            is Result.Success -> {
+                firstMessageId = result.content.first().id
+                lastMessageId = result.content.last().id
+                ChatEvent.Domain.LoadMessagesSuccess(result.content.groupByDate())
+            }
+        }
+
+    private suspend fun loadPrevMessages(channelName: String, topicName: String): ChatEvent.Domain =
+        when (val result = getPrevMessagesUseCase(channelName, topicName, firstMessageId)) {
+            is Result.Failure -> {
+                ChatEvent.Domain.LoadMessagesFailure
+            }
+
+            is Result.Success -> {
+                firstMessageId = result.content.first().id
+                lastMessageId = result.content.last().id
+                val groupMessages = result.content.groupByDate()
+                ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
             }
         }
 }
