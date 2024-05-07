@@ -6,7 +6,7 @@ import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.GelAllChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsCacheUseCase
-import com.mironov.coursework.domain.usecase.GelSubscribeChannelsUseCase
+import com.mironov.coursework.domain.usecase.GetSubscribeChannelsUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsCacheUseCase
 import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.ui.utils.toDelegates
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ChannelActor @Inject constructor(
     private val getAllChannelsUseCase: GelAllChannelsUseCase,
     private val getAllChannelsCacheUseCase: GelAllChannelsCacheUseCase,
-    private val gelSubscribeChannelsUseCase: GelSubscribeChannelsUseCase,
+    private val getSubscribeChannelsUseCase: GetSubscribeChannelsUseCase,
     private val gelSubscribeChannelsCacheUseCase: GelSubscribeChannelsCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
     private val getTopicsCacheUseCase: GetTopicsCacheUseCase,
@@ -72,7 +72,7 @@ class ChannelActor @Inject constructor(
         }
 
     private suspend fun loadSubscribedChannels(): ChannelEvent.Domain =
-        when (val result = gelSubscribeChannelsUseCase()) {
+        when (val result = getSubscribeChannelsUseCase()) {
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
             is Result.Success -> {
                 cacheChannel.clear()
