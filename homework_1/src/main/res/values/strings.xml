@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">hw1</string>
+    <string name="permission_title">Запрос на чтение контактов</string>
+    <string name="permission_description">Для работы приложения нужен доступ к контактам</string>
+    <string name="alert_button">Дать разрешение</string>
+</resources>

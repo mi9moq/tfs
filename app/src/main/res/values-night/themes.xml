@@ -1,0 +1,34 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Hw1" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="chanel_edit_text_background_color">@color/common_200</item>
+        <item name="chanel_edit_text_hint_color">@color/text_common_300</item>
+        <item name="chanel_background_color">@color/common_300</item>
+        <item name="chanel_messages_background_color">@color/common_500</item>
+        <item name="chanel_date_background_color">@color/chanel_date_background</item>
+        <item name="chanel_date_color">@color/chanel_date</item>
+        <item name="chanel_choose_reaction_divider_color">@color/divider_color</item>
+        <item name="chanel_toolbar_color">@color/primary_color</item>
+
+
+        <item name="profile_name_text_color">@color/text_common_100</item>
+        <item name="profile_log_out_text_color">@color/text_common_100</item>
+        <item name="profile_log_out_background_color">@color/log_out_background</item>
+        <item name="profile_status_text_color">@color/text_common_500</item>
+
+        <item name="background_100">@color/common_100</item>
+        <item name="background_200">@color/common_200</item>
+        <item name="background_300">@color/common_300</item>
+        <item name="background_400">@color/common_400</item>
+        <item name="background_500">@color/common_500</item>
+
+        <item name="text_100">@color/text_common_100</item>
+        <item name="text_200">@color/text_common_200</item>
+        <item name="text_300">@color/text_common_300</item>
+        <item name="text_400">@color/text_common_400</item>
+        <item name="text_500">@color/text_common_500</item>
+    </style>
+</resources>
