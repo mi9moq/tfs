@@ -48,12 +48,12 @@ sealed interface ChatEvent {
 
         data object Empty : Domain
 
-        data class SendMessageSuccess(val messages: List<DelegateItem>) : Domain
+        data object SendMessageSuccess : Domain
 
-        data class SendMessageFailure(val messages: List<DelegateItem>) : Domain
+        data object SendMessageFailure : Domain
 
-        data class ChangeReactionSuccess(val messages: List<DelegateItem>) : Domain
+        data object ChangeReactionSuccess : Domain
 
-        data class ChangeReactionFailure(val messages: List<DelegateItem>) : Domain
+        data object ChangeReactionFailure : Domain
     }
 }

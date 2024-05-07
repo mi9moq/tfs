@@ -8,7 +8,6 @@ import com.mironov.coursework.domain.usecase.GetNextMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetPrevMessagesUseCase
 import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
-import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.utils.groupByDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,7 +24,6 @@ class ChatActor @Inject constructor(
     private val getPrevMessagesUseCase: GetPrevMessagesUseCase
 ) : Actor<ChatCommand, ChatEvent>() {
 
-    private val cache = mutableListOf<DelegateItem>()
     private var lastMessageId = 0L
     private var firstMessageId = 0L
 
@@ -69,9 +67,7 @@ class ChatActor @Inject constructor(
             is Result.Success -> {
                 firstMessageId = result.content.first().id
                 lastMessageId = result.content.last().id
-                cache.clear()
                 val groupMessages = result.content.groupByDate()
-                cache.addAll(groupMessages)
                 ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
             }
         }
@@ -82,22 +78,22 @@ class ChatActor @Inject constructor(
         content: String
     ): ChatEvent.Domain = when (sendMessageUseCase(channelName, topicName, content)) {
         is Result.Failure -> {
-            ChatEvent.Domain.SendMessageFailure(cache)
+            ChatEvent.Domain.SendMessageFailure
         }
 
         is Result.Success -> {
-            ChatEvent.Domain.SendMessageSuccess(cache)
+            ChatEvent.Domain.SendMessageSuccess
         }
     }
 
     private suspend fun addReaction(messageId: Long, emojiName: String): ChatEvent.Domain =
         when (addReactionUseCase(messageId, emojiName)) {
             is Result.Failure -> {
-                ChatEvent.Domain.ChangeReactionFailure(cache)
+                ChatEvent.Domain.ChangeReactionFailure
             }
 
             is Result.Success -> {
-                ChatEvent.Domain.ChangeReactionSuccess(cache)
+                ChatEvent.Domain.ChangeReactionSuccess
             }
         }
 
@@ -105,17 +101,17 @@ class ChatActor @Inject constructor(
     private suspend fun deleteEmoji(messageId: Long, emojiName: String): ChatEvent.Domain =
         when (removeReactionUseCase(messageId, emojiName)) {
             is Result.Failure -> {
-                ChatEvent.Domain.ChangeReactionFailure(cache)
+                ChatEvent.Domain.ChangeReactionFailure
             }
 
             is Result.Success -> {
-                ChatEvent.Domain.ChangeReactionSuccess(cache)
+                ChatEvent.Domain.ChangeReactionSuccess
             }
         }
 
     private suspend fun chooseReaction(messageId: Long, emojiName: String): ChatEvent.Domain =
         when (val result = getMessageByIdUseCase(messageId)) {
-            is Result.Failure -> ChatEvent.Domain.ChangeReactionFailure(cache)
+            is Result.Failure -> ChatEvent.Domain.ChangeReactionFailure
             is Result.Success -> {
                 var isSelected = false
                 result.content.reactions.forEach { (key, value) ->
