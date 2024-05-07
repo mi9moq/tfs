@@ -35,7 +35,7 @@ class MessageLocalDataSourceImpl @Inject constructor(
         if (tableSize <= MESSAGE_CACHE_LIMIT) return
 
         val diff = tableSize - MESSAGE_CACHE_LIMIT
-        dao.deleteMessagesFromOtherTopics(channelName, topicName, diff)
+        dao.deleteMessagesFromOtherChat(channelName, topicName, diff)
 
         val newSize = dao.getTableSize()
         if (newSize <= MESSAGE_CACHE_LIMIT) return
@@ -54,7 +54,7 @@ class MessageLocalDataSourceImpl @Inject constructor(
         if (tableSize <= MESSAGE_CACHE_LIMIT) return
 
         val diff = tableSize - MESSAGE_CACHE_LIMIT
-        dao.deleteMessagesFromOtherTopics(channelName, topicName, diff)
+        dao.deleteMessagesFromOtherChat(channelName, topicName, diff)
 
         val newSize = dao.getTableSize()
         if (newSize <= MESSAGE_CACHE_LIMIT) return
