@@ -39,6 +39,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -71,4 +75,18 @@ dependencies {
     implementation(libs.room)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+
+    androidTestImplementation(libs.kaspresso)
+    implementation(libs.androidx.rules)
+
+    debugImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.httpclient.android)
+    androidTestImplementation(libs.wiremock) {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
+
+    androidTestImplementation(libs.hamcrest)
 }

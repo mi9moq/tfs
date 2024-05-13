@@ -9,7 +9,7 @@ constraintlayout = "2.1.4"
 fragment = "1.6.2"
 lifecycle = "2.7.0"
 cicerone = "7.1"
-ksp = "1.9.22-1.0.16"
+ksp = "1.9.22-1.0.17"
 dagger = "2.48.1"
 shimmer = "0.5.0"
 retrofit = "2.11.0"
@@ -19,6 +19,14 @@ coil = "2.6.0"
 okhttp = "4.12.0"
 elmslie = "3.0.0-alpha10"
 room = "2.6.1"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+rules = "1.5.0"
+androidx-test = "1.5.0"
+kaspresso = "1.5.5"
+hamcrest = "2.2"
+httpclientAndroid = "4.3.5.1"
+wiremock = "2.27.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +58,17 @@ elmslie-core = { module = "com.github.vivid-money.elmslie:elmslie-core", version
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+
+androidx-rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" }
+kaspresso = { group = "com.kaspersky.android-components", name = "kaspresso", version.ref = "kaspresso" }
+
+hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
+wiremock = { group = "com.github.tomakehurst", name = "wiremock-standalone", version.ref = "wiremock" }
+httpclient-android = { module = "org.apache.httpcomponents:httpclient-android", version.ref = "httpclientAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
