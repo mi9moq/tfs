@@ -1,0 +1,12 @@
+{
+  "subscriptions": [
+    {
+      "stream_id": 123456,
+      "name": "Test Channel"
+    },
+    {
+      "stream_id": 234567,
+      "name": "Mock Channel"
+    }
+  ]
+}

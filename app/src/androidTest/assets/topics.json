@@ -1,0 +1,12 @@
+{
+  "topics": [
+    {
+      "name": "Test topic",
+      "max_id": 55555
+    },
+    {
+      "name": "Mock topic",
+      "max_id": 44444
+    }
+  ]
+}
