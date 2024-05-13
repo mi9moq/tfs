@@ -9,7 +9,7 @@ import dagger.Provides
 class TestBaseUrlModule {
 
     companion object {
-        private const val TEST_BASE_URL = "http://localhost:8080"
+        private const val TEST_BASE_URL = "http://localhost:8080/"
     }
 
     @AppScope
