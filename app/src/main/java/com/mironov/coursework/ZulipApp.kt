@@ -1,13 +1,17 @@
 package com.mironov.coursework
 
 import android.app.Application
+import com.mironov.coursework.di.app.AppComponent
 import com.mironov.coursework.di.app.DaggerAppComponent
 
-class ZulipApp: Application() {
+open class ZulipApp: Application() {
 
     val component by lazy {
-        DaggerAppComponent.factory().create(this)
+        createComponent()
     }
+
+    open fun createComponent(): AppComponent =
+        DaggerAppComponent.factory().create(this)
 
     override fun onCreate() {
         component.inject(this)

@@ -3,6 +3,7 @@ package com.mironov.coursework.di.app
 import android.content.Context
 import com.mironov.coursework.ZulipApp
 import com.mironov.coursework.di.app.annotation.AppScope
+import com.mironov.coursework.di.app.module.BaseUrlModule
 import com.mironov.coursework.di.app.module.DataSourceModule
 import com.mironov.coursework.di.app.module.DatabaseModule
 import com.mironov.coursework.di.app.module.DispatcherModule
@@ -29,6 +30,7 @@ import dagger.Component
         RepositoryModule::class,
         DatabaseModule::class,
         DataSourceModule::class,
+        BaseUrlModule::class,
     ]
 )
 interface AppComponent {

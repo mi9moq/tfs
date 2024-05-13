@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.mironov.coursework.data.network.AuthInterceptor
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.di.app.annotation.AppScope
+import com.mironov.coursework.di.app.annotation.BaseUrl
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
@@ -16,7 +17,6 @@ import retrofit2.create
 @Module
 object NetworkModule {
 
-    private const val BASE_URL = "https://tinkoff-android-spring-2024.zulipchat.com/api/v1/"
     private const val MEDIA_TYPE = "application/json"
 
     @AppScope
@@ -40,8 +40,9 @@ object NetworkModule {
     fun provideRetrofit(
         client: OkHttpClient,
         jsonSerializer: Json,
+        @BaseUrl baseUrl: String
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .addConverterFactory(jsonSerializer.asConverterFactory(MEDIA_TYPE.toMediaType()))
         .client(client)
         .build()
