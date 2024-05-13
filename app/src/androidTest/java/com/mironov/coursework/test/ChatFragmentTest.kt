@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 
-class ChatFragmentTest: TestCase() {
+class ChatFragmentTest : TestCase() {
 
     @get:Rule
     val rule = FragmentTestRule(ChatFragment(), Bundle().apply {
@@ -27,9 +27,9 @@ class ChatFragmentTest: TestCase() {
         rule.wiremockRule.messages {
             withGetMessages()
         }
-        ChatFragmentScreen{
-            step("Проверяем, что чат загрузился"){
-                recycler.childAt<ChatFragmentScreen.KDateItem>(0){
+        ChatFragmentScreen {
+            step("Проверяем, что чат загрузился") {
+                recycler.childAt<ChatFragmentScreen.KDateItem>(0) {
                     date.hasText(firstMessageDate)
                 }
                 errorMessage.isGone()
@@ -46,26 +46,25 @@ class ChatFragmentTest: TestCase() {
     }
 
     @Test
-    fun shouldSendMessage() = run{
+    fun shouldSendMessage() = run {
         rule.wiremockRule.messages {
             withGetMessages()
             withPostMessages()
         }
-        ChatFragmentScreen{
-            step("Вводим сообщение"){
+        ChatFragmentScreen {
+            step("Вводим сообщение") {
                 messageInput.replaceText(MESSAGE_TEXT)
             }
-            step("Нажимаем отправить"){
+            step("Нажимаем отправить") {
                 sendMessage.click()
             }
-            step("Проверяем, что сообщение отправленно"){
+            step("Проверяем, что сообщение отправленно") {
                 verify(WireMock.getRequestedFor(MockMessages.messagesUrlPattern))
             }
             step("Проверяем, что поле ввода сообщения пустое") {
                 messageInput.hasEmptyText()
             }
         }
-        Thread.sleep(10000)
     }
 
     private companion object {
