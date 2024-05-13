@@ -97,7 +97,7 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <TextView
-        android:id="@+id/error_message"
+        android:id="@+id/chat_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -122,6 +122,6 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_message" />
+        app:layout_constraintTop_toBottomOf="@+id/chat_error_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -190,7 +190,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun applyContentState(delegateList: List<DelegateItem>) {
         with(binding) {
             shimmer.hide()
-            errorMessage.isVisible = false
+            chatErrorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = true
             messages.adapter = adapter
@@ -201,7 +201,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun applyLoadingState() {
         with(binding) {
             shimmer.show()
-            errorMessage.isVisible = false
+            chatErrorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = false
         }
@@ -210,17 +210,17 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun applyErrorLoadingState() {
         with(binding) {
             shimmer.hide()
-            errorMessage.isVisible = true
+            chatErrorMessage.isVisible = true
             tryAgain.isVisible = true
             messages.isVisible = false
-            errorMessage.text = getString(R.string.error_loading_messages)
+            chatErrorMessage.text = getString(R.string.error_loading_messages)
         }
     }
 
     private fun applySendingError() {
         with(binding) {
             shimmer.hide()
-            errorMessage.isVisible = false
+            chatErrorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = true
         }
@@ -230,7 +230,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun applyChangeReactionError() {
         with(binding) {
             shimmer.hide()
-            errorMessage.isVisible = false
+            chatErrorMessage.isVisible = false
             tryAgain.isVisible = false
             messages.isVisible = true
         }
