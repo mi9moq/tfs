@@ -14,7 +14,7 @@ const val MESSAGE_ID = 1234L
 
 const val EMOJI_NAME = "stub emoji"
 
-private val messages = listOf(
+val messages = listOf(
     Message(
         id = 2L,
         content = "c",
@@ -32,4 +32,5 @@ private val messages = listOf(
         sendTime = LocalDate.of(2001, 6, 10)
     ),
 )
+
 val messageDelegateList = messages.groupByDate()
