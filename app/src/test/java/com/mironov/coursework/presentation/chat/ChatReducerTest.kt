@@ -6,6 +6,7 @@ import com.mironov.coursework.stub.EMOJI_NAME
 import com.mironov.coursework.stub.MESSAGE_CONTENT
 import com.mironov.coursework.stub.MESSAGE_ID
 import com.mironov.coursework.stub.TOPIC_NAME
+import com.mironov.coursework.stub.messageDelegateList
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -88,5 +89,69 @@ class ChatReducerTest {
 
         assertEquals(expected, actual.commands)
         assertTrue(actual.state.isNextPageLoading)
+    }
+
+    @Test
+    fun `event ChooseReaction EXPECT Command ChooseReaction`() {
+        val event = ChatEvent.Ui.ChooseReaction(MESSAGE_ID, EMOJI_NAME)
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+        val expected = listOf(ChatCommand.ChooseReaction(MESSAGE_ID, EMOJI_NAME))
+
+        assertEquals(expected, actual.commands)
+    }
+
+    @Test
+    fun `event LoadMessagesFailure EXPECT effect ErrorLoadingMessages`() {
+        val event = ChatEvent.Domain.LoadMessagesFailure
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+        val expected = listOf(ChatEffect.ErrorLoadingMessages)
+
+        assertEquals(expected, actual.effects)
+    }
+
+    @Test
+    fun `event EmptyCache EXPECT loading state`() {
+        val event = ChatEvent.Domain.EmptyCache
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+
+        assertTrue(actual.state.isLoading)
+    }
+
+    @Test
+    fun `event LoadMessagesSuccess EXPECT content state`() {
+        val event = ChatEvent.Domain.LoadMessagesSuccess(messageDelegateList)
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+
+        assertEquals(messageDelegateList, actual.state.content)
+    }
+
+    @Test
+    fun `event ChangeReactionFailure EXPECT effect ErrorChangeReaction`() {
+        val event = ChatEvent.Domain.ChangeReactionFailure
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+        val expected = listOf(ChatEffect.ErrorChangeReaction)
+
+        assertEquals(expected, actual.effects)
+    }
+
+    @Test
+    fun `event SendMessageFailure EXPECT effect ErrorSendingMessage`() {
+        val event = ChatEvent.Domain.SendMessageFailure
+        val state = ChatState()
+
+        val actual = reducer.reduce(event, state)
+        val expected = listOf(ChatEffect.ErrorSendingMessage)
+
+        assertEquals(expected, actual.effects)
     }
 }
