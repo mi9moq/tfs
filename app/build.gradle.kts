@@ -90,4 +90,7 @@ dependencies {
 
     androidTestImplementation(libs.hamcrest)
     debugImplementation (libs.fragment.testing)
+
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.junit)
 }

@@ -28,6 +28,8 @@ hamcrest = "2.2"
 httpclientAndroid = "4.3.5.1"
 wiremock = "2.27.2"
 fragment-testing = "1.7.0"
+mokito-kotlin = "4.1.0"
+mokito-junit = "5.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +73,9 @@ hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest"
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-standalone", version.ref = "wiremock" }
 httpclient-android = { module = "org.apache.httpcomponents:httpclient-android", version.ref = "httpclientAndroid" }
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragment-testing" }
+
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mokito-kotlin" }
+mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mokito-junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
