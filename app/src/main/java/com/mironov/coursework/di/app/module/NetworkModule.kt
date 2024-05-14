@@ -13,11 +13,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.create
+import java.util.concurrent.TimeUnit
 
 @Module
 object NetworkModule {
 
     private const val MEDIA_TYPE = "application/json"
+
+    private const val TIMEOUT_SECONDS = 5L
 
     @AppScope
     @Provides
@@ -29,6 +32,9 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient = OkHttpClient
         .Builder()
+        .connectTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
         .addInterceptor(authInterceptor)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
