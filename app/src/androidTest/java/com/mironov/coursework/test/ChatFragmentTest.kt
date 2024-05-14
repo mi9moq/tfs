@@ -2,6 +2,7 @@ package com.mironov.coursework.test
 
 import android.os.Bundle
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.mironov.coursework.R
 import com.mironov.coursework.screen.ChatFragmentScreen
@@ -12,7 +13,6 @@ import com.mironov.coursework.util.MockMessages.Companion.messages
 import com.mironov.coursework.util.firstMessageDate
 import org.junit.Rule
 import org.junit.Test
-import com.github.tomakehurst.wiremock.client.WireMock.verify
 
 class ChatFragmentTest : TestCase() {
 
@@ -59,7 +59,7 @@ class ChatFragmentTest : TestCase() {
                 sendMessage.click()
             }
             step("Проверяем, что сообщение отправленно") {
-                verify(WireMock.getRequestedFor(MockMessages.messagesUrlPattern))
+                verify(WireMock.postRequestedFor(MockMessages.messagesUrlPattern))
             }
             step("Проверяем, что поле ввода сообщения пустое") {
                 messageInput.hasEmptyText()
