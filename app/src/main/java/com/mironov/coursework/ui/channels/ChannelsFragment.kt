@@ -25,6 +25,7 @@ class ChannelsFragment : Fragment() {
         private const val POSITION_SUBSCRIBE = 0
         private const val POSITION_ALL = 1
         private const val EMPTY_QUERY = ""
+        private const val FILTER_KEY = "filter"
     }
 
     private var _binding: FragmentChannelsBinding? = null
@@ -38,17 +39,6 @@ class ChannelsFragment : Fragment() {
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
 
-    private val pagerAdapter by lazy {
-        ChannelsPagerAdapter(
-            fragmentManager = childFragmentManager,
-            lifecycle = lifecycle,
-            items = listOf(
-                ChannelsPageFragment.newInstance(false),
-                ChannelsPageFragment.newInstance(true),
-            )
-        )
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +50,13 @@ class ChannelsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState != null) {
+            val array = savedInstanceState.getStringArray(FILTER_KEY)
+            array?.let {
+                queryAtPosition[POSITION_SUBSCRIBE] = array[POSITION_SUBSCRIBE]
+                queryAtPosition[POSITION_ALL] = array[POSITION_ALL]
+            }
+        }
         initStatusBar()
         addTextChangeListener()
         observeViewModel()
@@ -104,6 +101,15 @@ class ChannelsFragment : Fragment() {
             }
         }
 
+        val pagerAdapter =  ChannelsPagerAdapter(
+            fragmentManager = childFragmentManager,
+            lifecycle = lifecycle,
+            items = listOf(
+                ChannelsPageFragment.newInstance(false),
+                ChannelsPageFragment.newInstance(true),
+            )
+        )
+
         binding.viewPager.adapter = pagerAdapter
         binding.viewPager.registerOnPageChangeCallback(onPageChangeCallback)
         tabLayoutMediator = TabLayoutMediator(
@@ -119,10 +125,9 @@ class ChannelsFragment : Fragment() {
         tabLayoutMediator.attach()
     }
 
-    override fun onStop() {
-        super.onStop()
-        tabLayoutMediator.detach()
-        binding.viewPager.adapter = null
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArray(FILTER_KEY, queryAtPosition)
     }
 
     override fun onDestroyView() {
