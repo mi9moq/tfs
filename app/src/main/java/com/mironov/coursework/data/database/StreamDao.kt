@@ -22,6 +22,9 @@ interface StreamDao {
     @Query("DELETE FROM ${StreamDbModel.TABLE_NAME} WHERE is_subscribed = :isSubscribed")
     suspend fun removeStreams(isSubscribed: Boolean)
 
+    @Query("DELETE FROM ${StreamDbModel.TABLE_NAME} WHERE name = :name")
+    suspend fun removeStreams(name: String)
+
     @Query("SELECT * FROM ${TopicDbModel.TABLE_NAME} WHERE stream_id = :streamId")
     suspend fun getTopics(streamId: Int): List<TopicDbModel>
 

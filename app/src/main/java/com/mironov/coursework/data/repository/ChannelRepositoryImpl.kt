@@ -27,7 +27,7 @@ class ChannelRepositoryImpl @Inject constructor(
             val streamsDbModel = remoteDataSource.getSubscribedStreams().map {
                 it.toDbModel(isSubscribed)
             }
-            localDataSource.removeStreams(isSubscribed)
+            streamsDbModel.forEach { localDataSource.removeStreams(it.name) }
             localDataSource.insertStreams(streamsDbModel)
             val channels = localDataSource.getSubscribedStreams().toListChannel()
             Result.Success(channels)
