@@ -66,7 +66,7 @@ class ChatReducer @Inject constructor(
         }
 
         ChatEvent.Domain.EmptyCache -> {
-            state{
+            state {
                 copy(isLoading = true)
             }
         }
@@ -122,5 +122,7 @@ class ChatReducer @Inject constructor(
                 copy(isNextPageLoading = true)
             }
         }
+
+        is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.channelName, event.topicName)
     }
 }

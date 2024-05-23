@@ -75,7 +75,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             addDelegate(DateDelegate())
             addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
             addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
-            addDelegate(MessageTopicDelegate())
+            addDelegate(MessageTopicDelegate(::onTopicClickListener))
         }
     }
 
@@ -267,6 +267,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onTopicClickListener(topic: String) {
+        store.accept(ChatEvent.Ui.OnTopicClicked(channelName = channelName, topicName = topic))
     }
 
     private fun chooseReaction(messageId: Long) {

@@ -6,7 +6,9 @@ import com.mironov.coursework.databinding.ChatTopicItemBinding
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
 
-class MessageTopicDelegate : ListItemAdapterDelegate<MessageTopicDelegateItem, DelegateItem, MessageTopicViewHolder>() {
+class MessageTopicDelegate(
+    private val onTopicClickListener : (String) -> Unit
+) : ListItemAdapterDelegate<MessageTopicDelegateItem, DelegateItem, MessageTopicViewHolder>() {
 
     override fun isOfViewType(item: DelegateItem): Boolean =
         item is MessageTopicDelegateItem
@@ -16,6 +18,7 @@ class MessageTopicDelegate : ListItemAdapterDelegate<MessageTopicDelegateItem, D
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): MessageTopicViewHolder = MessageTopicViewHolder(
-        binding = ChatTopicItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding = ChatTopicItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        onTopicClickListener = onTopicClickListener
     )
 }
