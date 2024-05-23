@@ -44,6 +44,8 @@ class ChatReducer @Inject constructor(
                     isLoading = false,
                     content = event.messages,
                     isNextPageLoading = false,
+                    isNeedLoadNextPage = event.isNeedLoadNextPage,
+                    isNeedLoadPrevPage = event.isNeedLoadPrevPage
                 )
             }
         }

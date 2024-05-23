@@ -42,7 +42,11 @@ sealed interface ChatEvent {
 
     sealed interface Domain : ChatEvent {
 
-        data class LoadMessagesSuccess(val messages: List<DelegateItem>) : Domain
+        data class LoadMessagesSuccess(
+            val messages: List<DelegateItem>,
+            val isNeedLoadNextPage: Boolean = true,
+            val isNeedLoadPrevPage: Boolean = true,
+        ) : Domain
 
         data object LoadMessagesFailure : Domain
 

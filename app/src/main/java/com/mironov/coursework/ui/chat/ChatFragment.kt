@@ -54,6 +54,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private var topicName = ""
 
     private var canLoadNextPage = false
+    private var isNeedLoadNextPage = false
+    private var isNeedLoadPrevPage = false
 
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
@@ -111,6 +113,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
 
         canLoadNextPage = !state.isNextPageLoading
+        isNeedLoadNextPage = state.isNeedLoadNextPage
+        isNeedLoadPrevPage = state.isNeedLoadPrevPage
 
         state.content?.let {
             applyContentState(it)
@@ -162,13 +166,16 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 if (dy > 0) {
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount = layoutManager.itemCount
-                    if (totalItemCount - lastVisibleItemPosition <= 5 && canLoadNextPage) {
+                    if (totalItemCount - lastVisibleItemPosition <= 5
+                        && canLoadNextPage
+                        && isNeedLoadNextPage
+                    ) {
                         store.accept(ChatEvent.Ui.ScrollToBottom(channelName, topicName))
                     }
                 }
                 if (dy < 0) {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    if (firstVisibleItemPosition <= 5 && canLoadNextPage) {
+                    if (firstVisibleItemPosition <= 5 && canLoadNextPage && isNeedLoadPrevPage) {
                         store.accept(ChatEvent.Ui.ScrollToTop(channelName, topicName))
                     }
                 }
@@ -252,11 +259,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private fun changeButtonIcon(inputIsEmpty: Boolean) {
-        val iconId = if (inputIsEmpty) {
-            R.drawable.ic_upload
-        } else {
-            R.drawable.ic_send_message
-        }
+        val iconId = if (inputIsEmpty) R.drawable.ic_upload else R.drawable.ic_send_message
 
         binding.sendMessage.setImageResource(iconId)
     }

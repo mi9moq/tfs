@@ -86,7 +86,7 @@ class ChatActor @Inject constructor(
             }
 
             is Result.Success -> {
-                if (result.content.isEmpty()){
+                if (result.content.isEmpty()) {
                     ChatEvent.Domain.EmptyCache
                 } else {
                     firstMessageId = result.content.first().id
@@ -157,9 +157,15 @@ class ChatActor @Inject constructor(
             }
 
             is Result.Success -> {
+                val isFirstMessageLoaded = firstMessageId == result.content.first().id
                 firstMessageId = result.content.first().id
+                val isLastMessageLoaded = lastMessageId == result.content.last().id
                 lastMessageId = result.content.last().id
-                ChatEvent.Domain.LoadMessagesSuccess(result.content.groupByDate(topicName.isEmpty()))
+                ChatEvent.Domain.LoadMessagesSuccess(
+                    result.content.groupByDate(topicName.isEmpty()),
+                    isNeedLoadNextPage = !isLastMessageLoaded,
+                    isNeedLoadPrevPage = !isFirstMessageLoaded
+                )
             }
         }
 
@@ -170,10 +176,16 @@ class ChatActor @Inject constructor(
             }
 
             is Result.Success -> {
+                val isFirstMessageLoaded = firstMessageId == result.content.first().id
                 firstMessageId = result.content.first().id
+                val isLastMessageLoaded = lastMessageId == result.content.last().id
                 lastMessageId = result.content.last().id
                 val groupMessages = result.content.groupByDate(topicName.isEmpty())
-                ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
+                ChatEvent.Domain.LoadMessagesSuccess(
+                    groupMessages,
+                    isNeedLoadPrevPage = !isFirstMessageLoaded,
+                    isNeedLoadNextPage = !isLastMessageLoaded,
+                )
             }
         }
 }
