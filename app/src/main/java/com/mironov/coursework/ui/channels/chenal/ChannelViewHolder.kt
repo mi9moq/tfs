@@ -1,5 +1,6 @@
 package com.mironov.coursework.ui.channels.chenal
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.ChannelItemBinding
@@ -7,25 +8,29 @@ import com.mironov.coursework.domain.entity.Channel
 
 class ChannelViewHolder(
     private val binding: ChannelItemBinding,
-    private val showTopics: (Channel) -> Unit,
-    private val hideTopics: (Int) -> Unit,
+    private val onArrowDownCLicked: (Channel) -> Unit,
+    private val onArrowUpClicked: (Int) -> Unit,
+    private val onChannelClicked: (String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(channel: Channel) {
-        binding.channel.text = String
-            .format(itemView.context.getString(R.string.channel_name), channel.name)
-        if (channel.isOpen) {
-            binding.arrow.setImageResource(R.drawable.ic_arrow_up)
-        } else {
-            binding.arrow.setImageResource(R.drawable.ic_arrow_down)
+        with(binding) {
+            this.channel.text = String
+                .format(itemView.context.getString(R.string.channel_name), channel.name)
+
+            arrowDown.isVisible = !channel.isOpen
+            arrowUp.isVisible = channel.isOpen
+
+            arrowDown.setOnClickListener {
+                onArrowDownCLicked(channel)
+            }
+            arrowUp.setOnClickListener {
+                onArrowUpClicked(channel.id)
+            }
         }
 
         itemView.setOnClickListener {
-            if (channel.isOpen) {
-                hideTopics(channel.id)
-            } else {
-                showTopics(channel)
-            }
+            onChannelClicked(channel.name)
         }
     }
 }
