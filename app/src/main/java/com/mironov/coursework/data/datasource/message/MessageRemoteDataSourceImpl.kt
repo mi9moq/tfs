@@ -14,7 +14,8 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     override suspend fun getMessages(channelName: String, topicName: String): List<MessageDto> {
         val narrow = mutableListOf<Narrow>().apply {
             add(Narrow(Narrow.STREAM, channelName))
-            add(Narrow(Narrow.TOPIC, topicName))
+            if (topicName.isNotEmpty())
+                add(Narrow(Narrow.TOPIC, topicName))
         }
         return api.getMessages(narrow = Json.encodeToString(narrow)).messages
     }
@@ -26,7 +27,8 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     ): List<MessageDto> {
         val narrow = mutableListOf<Narrow>().apply {
             add(Narrow(Narrow.STREAM, channelName))
-            add(Narrow(Narrow.TOPIC, topicName))
+            if (topicName.isNotEmpty())
+                add(Narrow(Narrow.TOPIC, topicName))
         }
         return api.getMessages(
             narrow = Json.encodeToString(narrow),
@@ -43,7 +45,8 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     ): List<MessageDto> {
         val narrow = mutableListOf<Narrow>().apply {
             add(Narrow(Narrow.STREAM, channelName))
-            add(Narrow(Narrow.TOPIC, topicName))
+            if (topicName.isNotEmpty())
+                add(Narrow(Narrow.TOPIC, topicName))
         }
         return api.getMessages(
             narrow = Json.encodeToString(narrow),

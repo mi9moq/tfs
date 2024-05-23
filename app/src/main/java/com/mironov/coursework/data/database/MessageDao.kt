@@ -18,6 +18,12 @@ interface MessageDao {
     )
     suspend fun getMessages(channelName: String, topicName: String): List<MessageDbModel>
 
+    @Query(
+        "SELECT * FROM ${MessageInfoDbModel.TABLE_NAME} " +
+                "WHERE channel_name = :channelName"
+    )
+    suspend fun getMessages(channelName: String): List<MessageDbModel>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(messageDbModel: MessageInfoDbModel)
 
@@ -39,7 +45,7 @@ interface MessageDao {
                 "(SELECT id FROM ${MessageInfoDbModel.TABLE_NAME} " +
                 "WHERE (channel_name != :channelName OR topic_name != :topicName) LIMIT :messageCount)"
     )
-    suspend fun deleteMessagesFromOtherChat(
+    suspend fun deleteMessagesFromOtherTopic(
         channelName: String,
         topicName: String,
         messageCount: Int
@@ -65,4 +71,17 @@ interface MessageDao {
                 "WHERE channel_name = :channelName AND topic_name = :topicName"
     )
     suspend fun clearTopic(channelName: String, topicName: String)
+
+    @Query("DELETE FROM ${MessageInfoDbModel.TABLE_NAME} WHERE channel_name = :channelName")
+    suspend fun clearChannel(channelName: String)
+
+    @Query(
+        "DELETE FROM ${MessageInfoDbModel.TABLE_NAME} WHERE id IN " +
+                "(SELECT id FROM ${MessageInfoDbModel.TABLE_NAME} " +
+                "WHERE (channel_name != :channelName) LIMIT :messageCount)"
+    )
+    suspend fun deleteMessagesFromOtherChannel(
+        channelName: String,
+        messageCount: Int
+    )
 }
