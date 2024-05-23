@@ -8,14 +8,16 @@ import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
 
 class ChannelDelegate(
-    private val showTopics: (Channel) -> Unit,
-    private val hideTopics: (Int) -> Unit,
+    private val onArrowDownCLicked: (Channel) -> Unit,
+    private val onArrowUpClicked: (Int) -> Unit,
+    private val onChannelClicked: (String) -> Unit
 ) : ListItemAdapterDelegate<ChannelDelegateItem, DelegateItem, ChannelViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ChannelViewHolder = ChannelViewHolder(
         ChannelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        showTopics,
-        hideTopics
+        onArrowDownCLicked,
+        onArrowUpClicked,
+        onChannelClicked,
     )
 
     override fun onBindViewHolder(item: ChannelDelegateItem, holder: ChannelViewHolder) {

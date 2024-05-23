@@ -71,7 +71,8 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
             addDelegate(
                 ChannelDelegate(
                     ::showTopics,
-                    ::hideTopics
+                    ::hideTopics,
+                    ::onChannelClicked,
                 )
             )
             addDelegate(TopicDelegate(::onTopicClicked))
@@ -188,6 +189,10 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
 
     fun onTopicClicked(topic: Topic) {
         store.accept(ChannelEvent.Ui.OnTopicClicked(topic))
+    }
+
+    private fun onChannelClicked(channelName: String) {
+        store.accept(ChannelEvent.Ui.OnChannelClicked(channelName))
     }
 
     private fun parseArguments() {

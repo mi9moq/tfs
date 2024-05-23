@@ -109,5 +109,13 @@ class ChannelReducer @Inject constructor(
         is ChannelEvent.Ui.OnTopicClicked -> {
             router.openChat(event.topic.parentChannelName, event.topic.name)
         }
+
+        is ChannelEvent.Ui.OnChannelClicked ->
+            router.openChat(event.channelName, NO_TOPIC)
+    }
+
+    private companion object {
+
+        private const val NO_TOPIC = ""
     }
 }

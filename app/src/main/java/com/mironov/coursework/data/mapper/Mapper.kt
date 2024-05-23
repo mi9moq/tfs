@@ -31,6 +31,7 @@ fun MessageDbModel.toEntity(userId: Int) = Message(
     senderId = message.senderId,
     sendTime = message.timestamp.toLocalDate(),
     reactions = reactions.toEntity(userId),
+    topicName = message.topicName,
 )
 
 fun List<ReactionDbModel>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
@@ -46,7 +47,7 @@ fun List<ReactionDbModel>.toEntity(userId: Int): Map<Reaction, ReactionCondition
         )
     }
 
-fun MessageDto.toDbModel(channelName: String, topicName: String, messageId: Long): MessageDbModel =
+fun MessageDto.toDbModel(channelName: String, messageId: Long): MessageDbModel =
     MessageDbModel(
         message = MessageInfoDbModel(
             id = id,

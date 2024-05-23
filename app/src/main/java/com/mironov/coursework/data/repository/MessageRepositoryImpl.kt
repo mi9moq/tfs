@@ -27,7 +27,7 @@ class MessageRepositoryImpl @Inject constructor(
         runCatchingNonCancellation {
             val messagesDbModel = remoteDataSource
                 .getMessages(channelName, topicName)
-                .map { it.toDbModel(channelName, topicName, it.id) }
+                .map { it.toDbModel(channelName, it.id) }
             localDataSource.insertMessages(messagesDbModel, channelName, topicName)
 
             val messages = localDataSource.getMessages(channelName, topicName).map {
@@ -76,7 +76,7 @@ class MessageRepositoryImpl @Inject constructor(
         runCatchingNonCancellation {
             val messagesDbModel = remoteDataSource
                 .getPrevPageMessages(channelName, topicName, anchorMessageId)
-                .map { it.toDbModel(channelName, topicName, it.id) }
+                .map { it.toDbModel(channelName, it.id) }
 
             localDataSource.insertOldMessages(messagesDbModel, channelName, topicName)
             val messages = localDataSource.getMessages(channelName, topicName).map {
@@ -94,7 +94,7 @@ class MessageRepositoryImpl @Inject constructor(
         runCatchingNonCancellation {
             val messagesDbModel = remoteDataSource
                 .getNextPageMessages(channelName, topicName, anchorMessageId)
-                .map { it.toDbModel(channelName, topicName, it.id) }
+                .map { it.toDbModel(channelName, it.id) }
 
             localDataSource.insertNewMessages(messagesDbModel, channelName, topicName)
             val messages = localDataSource.getMessages(channelName, topicName).map {

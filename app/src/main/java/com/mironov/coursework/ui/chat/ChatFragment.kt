@@ -20,6 +20,7 @@ import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.chat.date.DateDelegate
 import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
+import com.mironov.coursework.ui.chat.topic.MessageTopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.appComponent
@@ -53,6 +54,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private var topicName = ""
 
     private var canLoadNextPage = false
+    private var isNeedLoadNextPage = false
+    private var isNeedLoadPrevPage = false
 
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
@@ -72,6 +75,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             addDelegate(DateDelegate())
             addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
             addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
+            addDelegate(MessageTopicDelegate())
         }
     }
 
@@ -109,6 +113,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
 
         canLoadNextPage = !state.isNextPageLoading
+        isNeedLoadNextPage = state.isNeedLoadNextPage
+        isNeedLoadPrevPage = state.isNeedLoadPrevPage
 
         state.content?.let {
             applyContentState(it)
@@ -133,6 +139,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         requireActivity().window.statusBarColor = requireContext()
             .getColor(R.color.primary_color)
         binding.toolbar.title = "#$channelName"
+        binding.topic.apply {
+            isVisible = topicName.isNotEmpty()
+            text = String.format(getString(R.string.topic_with_name), topicName)
+        }
     }
 
     private fun parseArguments() {
@@ -156,13 +166,16 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 if (dy > 0) {
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount = layoutManager.itemCount
-                    if (totalItemCount - lastVisibleItemPosition <= 5 && canLoadNextPage) {
+                    if (totalItemCount - lastVisibleItemPosition <= 5
+                        && canLoadNextPage
+                        && isNeedLoadNextPage
+                    ) {
                         store.accept(ChatEvent.Ui.ScrollToBottom(channelName, topicName))
                     }
                 }
                 if (dy < 0) {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    if (firstVisibleItemPosition <= 5 && canLoadNextPage) {
+                    if (firstVisibleItemPosition <= 5 && canLoadNextPage && isNeedLoadPrevPage) {
                         store.accept(ChatEvent.Ui.ScrollToTop(channelName, topicName))
                     }
                 }
@@ -246,11 +259,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private fun changeButtonIcon(inputIsEmpty: Boolean) {
-        val iconId = if (inputIsEmpty) {
-            R.drawable.ic_upload
-        } else {
-            R.drawable.ic_send_message
-        }
+        val iconId = if (inputIsEmpty) R.drawable.ic_upload else R.drawable.ic_send_message
 
         binding.sendMessage.setImageResource(iconId)
     }
