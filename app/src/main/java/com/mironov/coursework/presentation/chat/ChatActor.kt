@@ -74,7 +74,7 @@ class ChatActor @Inject constructor(
             is Result.Success -> {
                 firstMessageId = result.content.first().id
                 lastMessageId = result.content.last().id
-                val groupMessages = result.content.groupByDate()
+                val groupMessages = result.content.groupByDate(topicName.isEmpty())
                 ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
             }
         }
@@ -91,7 +91,7 @@ class ChatActor @Inject constructor(
                 } else {
                     firstMessageId = result.content.first().id
                     lastMessageId = result.content.last().id
-                    val groupMessages = result.content.groupByDate()
+                    val groupMessages = result.content.groupByDate(topicName.isEmpty())
                     ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
                 }
             }
@@ -159,7 +159,7 @@ class ChatActor @Inject constructor(
             is Result.Success -> {
                 firstMessageId = result.content.first().id
                 lastMessageId = result.content.last().id
-                ChatEvent.Domain.LoadMessagesSuccess(result.content.groupByDate())
+                ChatEvent.Domain.LoadMessagesSuccess(result.content.groupByDate(topicName.isEmpty()))
             }
         }
 
@@ -172,7 +172,7 @@ class ChatActor @Inject constructor(
             is Result.Success -> {
                 firstMessageId = result.content.first().id
                 lastMessageId = result.content.last().id
-                val groupMessages = result.content.groupByDate()
+                val groupMessages = result.content.groupByDate(topicName.isEmpty())
                 ChatEvent.Domain.LoadMessagesSuccess(groupMessages)
             }
         }

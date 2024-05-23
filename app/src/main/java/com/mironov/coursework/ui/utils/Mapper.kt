@@ -9,16 +9,21 @@ import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
 import com.mironov.coursework.ui.chat.date.DateDelegateItem
 import com.mironov.coursework.ui.chat.received.ReceivedDelegateItem
 import com.mironov.coursework.ui.chat.sent.SentDelegateItem
+import com.mironov.coursework.ui.chat.topic.MessageTopicDelegateItem
 
-fun List<Message>.groupByDate(): List<DelegateItem> {
+fun List<Message>.groupByDate(isAllTopicsChat: Boolean): List<DelegateItem> {
 
     val delegateItemList = mutableListOf<DelegateItem>()
 
     val dates = mutableSetOf<MessageDate>()
 
-    this.forEach {
+    forEach {
         dates.add(MessageDate(it.sendTime))
     }
+
+    var prevTopic: String = first().topicName
+    if (isAllTopicsChat)
+        delegateItemList.add(MessageTopicDelegateItem(prevTopic))
 
     dates.forEach {
         delegateItemList.add(DateDelegateItem(it))
@@ -28,11 +33,15 @@ fun List<Message>.groupByDate(): List<DelegateItem> {
         }
 
         dateMessages.forEach { message ->
-            if (message.isMeMessage) {
-                delegateItemList.add(SentDelegateItem(message))
-            } else {
-                delegateItemList.add(ReceivedDelegateItem(message))
+            if (message.topicName != prevTopic && isAllTopicsChat) {
+                prevTopic = message.topicName
+                delegateItemList.add(MessageTopicDelegateItem(prevTopic))
             }
+
+            if (message.isMeMessage)
+                delegateItemList.add(SentDelegateItem(message))
+            else
+                delegateItemList.add(ReceivedDelegateItem(message))
         }
     }
 

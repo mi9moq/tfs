@@ -20,6 +20,7 @@ import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.chat.date.DateDelegate
 import com.mironov.coursework.ui.chat.received.ReceivedDelegate
 import com.mironov.coursework.ui.chat.sent.SentDelegate
+import com.mironov.coursework.ui.chat.topic.MessageTopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.appComponent
@@ -72,6 +73,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             addDelegate(DateDelegate())
             addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
             addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
+            addDelegate(MessageTopicDelegate())
         }
     }
 
@@ -133,6 +135,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         requireActivity().window.statusBarColor = requireContext()
             .getColor(R.color.primary_color)
         binding.toolbar.title = "#$channelName"
+        binding.topic.apply {
+            isVisible = topicName.isNotEmpty()
+            text = String.format(getString(R.string.topic_with_name), topicName)
+        }
     }
 
     private fun parseArguments() {
