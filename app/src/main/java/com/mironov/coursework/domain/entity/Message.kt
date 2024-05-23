@@ -10,5 +10,6 @@ data class Message(
     val senderName: String,
     val senderId: Int,
     val sendTime: LocalDate,
-    val reactions: Map<Reaction, ReactionCondition>
+    val reactions: Map<Reaction, ReactionCondition>,
+    val topicName: String = ""
 )
