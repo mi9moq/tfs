@@ -4,7 +4,7 @@ import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.domain.entity.MessageDate
 import com.mironov.coursework.ui.adapter.DelegateItem
-import com.mironov.coursework.ui.channels.chenal.ChannelDelegateItem
+import com.mironov.coursework.ui.channels.channel.ChannelDelegateItem
 import com.mironov.coursework.ui.channels.topic.TopicDelegateItem
 import com.mironov.coursework.ui.chat.date.DateDelegateItem
 import com.mironov.coursework.ui.chat.received.ReceivedDelegateItem

@@ -19,7 +19,7 @@ import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.SharedChannelState
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
-import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
+import com.mironov.coursework.ui.channels.channel.ChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.utils.appComponent
