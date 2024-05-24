@@ -38,6 +38,11 @@ sealed interface ChatEvent {
             val channelName: String,
             val topicName: String,
         ) : Ui
+
+        data class OnTopicClicked(
+            val channelName: String,
+            val topicName: String,
+        ): Ui
     }
 
     sealed interface Domain : ChatEvent {
