@@ -21,6 +21,8 @@ sealed interface ChannelEvent {
         data class OnChannelClicked(val channelName: String) : Ui
 
         data class ChangeFilter(val queryItem: QueryItem): Ui
+
+        data class CreateChannel(val name: String, val description: String): Ui
     }
 
     sealed interface Domain : ChannelEvent {
@@ -41,5 +43,9 @@ sealed interface ChannelEvent {
         ): Domain
 
         data object EmptyCache: Domain
+
+        data object CreateChannelSuccess: Domain
+
+        data object CreateChannelFailure: Domain
     }
 }

@@ -16,7 +16,7 @@ class ChannelViewHolder(
     fun bind(channel: Channel) {
         with(binding) {
             this.channel.text = String
-                .format(itemView.context.getString(R.string.channel_name), channel.name)
+                .format(itemView.context.getString(R.string.formatted_channel_name), channel.name)
 
             arrowDown.isVisible = !channel.isOpen
             arrowUp.isVisible = channel.isOpen

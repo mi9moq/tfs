@@ -3,6 +3,7 @@ package com.mironov.coursework.presentation.channel
 import com.mironov.coursework.di.app.annotation.DefaultDispatcher
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.repository.Result
+import com.mironov.coursework.domain.usecase.CreateChannelUseCase
 import com.mironov.coursework.domain.usecase.GelAllChannelsCacheUseCase
 import com.mironov.coursework.domain.usecase.GelAllChannelsUseCase
 import com.mironov.coursework.domain.usecase.GelSubscribeChannelsCacheUseCase
@@ -18,13 +19,14 @@ import vivid.money.elmslie.core.store.Actor
 import javax.inject.Inject
 
 class ChannelActor @Inject constructor(
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
     private val getAllChannelsUseCase: GelAllChannelsUseCase,
     private val getAllChannelsCacheUseCase: GelAllChannelsCacheUseCase,
     private val getSubscribeChannelsUseCase: GetSubscribeChannelsUseCase,
     private val gelSubscribeChannelsCacheUseCase: GelSubscribeChannelsCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
     private val getTopicsCacheUseCase: GetTopicsCacheUseCase,
-    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
+    private val createChannelUseCase: CreateChannelUseCase,
 ) : Actor<ChannelCommand, ChannelEvent>() {
 
     private val cacheChannel = mutableListOf<Channel>()
@@ -39,6 +41,7 @@ class ChannelActor @Inject constructor(
             ChannelCommand.LoadAllChannelsCache -> loadAllChannelsCache()
             ChannelCommand.LoadSubscribedChannelsCache -> loadSubscribedChannelsCache()
             is ChannelCommand.LoadTopicsCache -> showTopicsCache(command.channel)
+            is ChannelCommand.CreateChannel -> createChannel(command.name, command.description)
         }
         emit(event)
     }
@@ -141,5 +144,11 @@ class ChannelActor @Inject constructor(
                 channel.name.startsWith(queryItem.query)
             }
             ChannelEvent.Domain.FilterSuccess(channels.toDelegates(), queryItem.query)
+        }
+
+    private suspend fun createChannel(name: String, description: String): ChannelEvent =
+        when (createChannelUseCase(name, description)) {
+            is Result.Failure -> ChannelEvent.Domain.CreateChannelFailure
+            is Result.Success -> ChannelEvent.Domain.CreateChannelSuccess
         }
 }
