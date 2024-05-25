@@ -64,6 +64,19 @@ class ChannelReducer @Inject constructor(
                 copy(isLoading = true, content = null)
             }
         }
+
+        ChannelEvent.Domain.CreateChannelFailure -> {
+            effects {
+                +ChannelEffect.ErrorCreateChannel
+            }
+        }
+
+
+        ChannelEvent.Domain.CreateChannelSuccess -> {
+            commands {
+                +ChannelCommand.LoadSubscribedChannels
+            }
+        }
     }
 
     override fun Result.ui(event: ChannelEvent.Ui): Any = when (event) {
@@ -112,6 +125,12 @@ class ChannelReducer @Inject constructor(
 
         is ChannelEvent.Ui.OnChannelClicked ->
             router.openChat(event.channelName, NO_TOPIC)
+
+        is ChannelEvent.Ui.CreateChannel -> {
+            commands {
+                +ChannelCommand.CreateChannel(event.name, event.description)
+            }
+        }
     }
 
     private companion object {
