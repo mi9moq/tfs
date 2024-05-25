@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mironov.coursework.R
@@ -29,6 +28,7 @@ import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import com.mironov.coursework.ui.utils.showDialog
 import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
 import vivid.money.elmslie.core.store.ElmStore
@@ -213,20 +213,18 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     }
 
     private fun createChannel() {
-        val view = CreateChannelDialogBinding.inflate(layoutInflater)
-        AlertDialog.Builder(requireContext()).apply {
-            setTitle(R.string.create_new_channel)
-            setPositiveButton(R.string.create) { _, _ ->
+        val dialogLayout = CreateChannelDialogBinding.inflate(layoutInflater)
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.create,
+            positiveButtonClickListener = {
                 store.accept(
                     ChannelEvent.Ui.CreateChannel(
-                        view.inputName.text.toString(),
-                        view.inputName.text.toString()
+                        dialogLayout.inputName.text.toString(),
+                        dialogLayout.inputName.text.toString()
                     )
                 )
             }
-            setView(view.root)
-            create()
-            show()
-        }
+        )
     }
 }

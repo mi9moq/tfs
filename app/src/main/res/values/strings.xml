@@ -28,6 +28,6 @@
     <string name="create_new_channel">Create new channel</string>
     <string name="create">Create</string>
     <string name="channel_name_hint">Channel name</string>
-    <string name="channel_description_hint">Channel name</string>
+    <string name="channel_description_hint">Channel description</string>
     <string name="error_create_channel">failed to create channel</string>
 </resources>
