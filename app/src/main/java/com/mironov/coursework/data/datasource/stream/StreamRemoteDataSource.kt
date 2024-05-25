@@ -10,4 +10,6 @@ interface StreamRemoteDataSource {
     suspend fun getSubscribedStreams(): List<StreamDto>
 
     suspend fun getTopics(streamId: Int): List<TopicDto>
+
+    suspend fun createStream(name: String, description: String)
 }

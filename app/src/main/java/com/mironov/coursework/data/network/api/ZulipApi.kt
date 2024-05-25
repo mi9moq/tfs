@@ -85,6 +85,11 @@ interface ZulipApi {
         @Path("message_id") messageId: Long
     ): SingleMessageResponse
 
+    @POST("users/me/subscriptions")
+    suspend fun subscribedToStream(
+        @Query("subscriptions") subscriptions: String
+    )
+
     companion object {
 
         private const val PATH_STREAM_ID = "stream_id"

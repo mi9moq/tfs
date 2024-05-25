@@ -16,4 +16,6 @@ interface ChannelRepository {
     suspend fun gelAllChannelsCache() : Result<List<Channel>>
 
     suspend fun getTopicsCache(channel: Channel): Result<List<Topic>>
+
+    suspend fun createChannel(name: String, description: String): Result<Boolean>
 }

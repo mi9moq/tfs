@@ -88,4 +88,12 @@ class ChannelRepositoryImpl @Inject constructor(
                 Result.Success(topics)
             }
         }
+
+    override suspend fun createChannel(name: String, description: String): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.createStream(name, description)
+                Result.Success(true)
+            }
+        }
 }
