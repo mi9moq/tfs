@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mironov.coursework.R
+import com.mironov.coursework.databinding.CreateChannelDialogBinding
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
@@ -20,12 +22,14 @@ import com.mironov.coursework.presentation.channel.SharedChannelState
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
 import com.mironov.coursework.ui.channels.channel.ChannelDelegate
+import com.mironov.coursework.ui.channels.create.CreateChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
 import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
@@ -76,6 +80,7 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
                 )
             )
             addDelegate(TopicDelegate(::onTopicClicked))
+            addDelegate(CreateChannelDelegate(::createChannel))
         }
     }
 
@@ -118,6 +123,7 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     override fun handleEffect(effect: ChannelEffect): Unit = when (effect) {
         ChannelEffect.ErrorLoadingChannels -> applyErrorState()
         ChannelEffect.ErrorLoadingTopics -> applyErrorState()
+        ChannelEffect.ErrorCreateChannel -> showErrorSnackBar(getString(R.string.error_create_channel))
     }
 
     private fun addClickListeners() {
@@ -204,5 +210,23 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         super.onDestroyView()
         binding.channels.adapter = null
         _binding = null
+    }
+
+    private fun createChannel() {
+        val view = CreateChannelDialogBinding.inflate(layoutInflater)
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(R.string.create_new_channel)
+            setPositiveButton(R.string.create) { _, _ ->
+                store.accept(
+                    ChannelEvent.Ui.CreateChannel(
+                        view.inputName.text.toString(),
+                        view.inputName.text.toString()
+                    )
+                )
+            }
+            setView(view.root)
+            create()
+            show()
+        }
     }
 }
