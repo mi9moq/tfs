@@ -80,7 +80,7 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
                 )
             )
             addDelegate(TopicDelegate(::onTopicClicked))
-            addDelegate(CreateChannelDelegate(::createChannel))
+            addDelegate(CreateChannelDelegate(::showCreateChannelDialog))
         }
     }
 
@@ -212,19 +212,24 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         _binding = null
     }
 
-    private fun createChannel() {
+    private fun showCreateChannelDialog() {
         val dialogLayout = CreateChannelDialogBinding.inflate(layoutInflater)
         showDialog(
             view = dialogLayout.root,
             positiveButtonTextId = R.string.create,
             positiveButtonClickListener = {
-                store.accept(
-                    ChannelEvent.Ui.CreateChannel(
-                        dialogLayout.inputName.text.toString(),
-                        dialogLayout.inputName.text.toString()
-                    )
+                createChannel(
+                    name = dialogLayout.inputName.text?.trim().toString(),
+                    description = dialogLayout.inputDescription.text?.trim().toString(),
                 )
             }
         )
+    }
+
+    private fun createChannel(name: String, description: String) {
+        if (name.isNotEmpty())
+            store.accept(ChannelEvent.Ui.CreateChannel(name, description))
+        else
+            showErrorSnackBar(getString(R.string.empty_name_filed))
     }
 }
