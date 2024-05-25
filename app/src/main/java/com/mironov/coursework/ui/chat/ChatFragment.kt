@@ -44,6 +44,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
         private const val CHANNEL_NAME_KEY = "channel name"
         private const val TOPIC_NAME_KEY = "topic name"
+        private const val TARGET_POSITION = 5
     }
 
     private val component by lazy {
@@ -139,7 +140,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         requireActivity().window.statusBarColor = requireContext()
             .getColor(R.color.primary_color)
         binding.toolbar.title = "#$channelName"
-        binding.topic.apply {
+        binding.currentTopic.apply {
             isVisible = topicName.isNotEmpty()
             text = String.format(getString(R.string.topic_with_name), topicName)
         }
@@ -166,7 +167,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 if (dy > 0) {
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount = layoutManager.itemCount
-                    if (totalItemCount - lastVisibleItemPosition <= 5
+                    if (totalItemCount - lastVisibleItemPosition <= TARGET_POSITION
                         && canLoadNextPage
                         && isNeedLoadNextPage
                     ) {
@@ -175,7 +176,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 }
                 if (dy < 0) {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    if (firstVisibleItemPosition <= 5 && canLoadNextPage && isNeedLoadPrevPage) {
+                    if (firstVisibleItemPosition <= TARGET_POSITION
+                        && canLoadNextPage
+                        && isNeedLoadPrevPage
+                    ) {
                         store.accept(ChatEvent.Ui.ScrollToTop(channelName, topicName))
                     }
                 }

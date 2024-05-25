@@ -20,7 +20,7 @@
         tools:title="#general" />
 
     <TextView
-        android:id="@+id/topic"
+        android:id="@+id/current_topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/background_400"
@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topic"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
         tools:listitem="@layout/received_message_item" />
 
     <com.google.android.material.textfield.TextInputEditText
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topic"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
         tools:visibility="gone">
 
         <LinearLayout
