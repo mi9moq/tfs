@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,6 +55,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private var channelName = EMPTY_STRING
     private var topicName = EMPTY_STRING
+    private var channelId = ChatInfo.UNDEFINED_ID
+    private var firstTopic = EMPTY_STRING
 
     private var canLoadNextPage = false
     private var isNeedLoadNextPage = false
@@ -102,7 +105,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        store.accept(ChatEvent.Ui.Load(channelName, topicName))
+        store.accept(ChatEvent.Ui.Load(channelName, topicName, channelId))
         initChatParams()
         setupRecyclerView()
         addClickListeners()
@@ -117,6 +120,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         isNeedLoadNextPage = state.isNeedLoadNextPage
         isNeedLoadPrevPage = state.isNeedLoadPrevPage
 
+        state.topicNameList?.let(::initChooseTopicAdapter)
         state.content?.let(::applyContentState)
     }
 
@@ -144,6 +148,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun parseArguments() {
         val args = requireArguments()
         val chatInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -151,8 +156,11 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         else
             args.getParcelable(CHAT_INFO_KEY)
 
-        topicName = chatInfo?.topicName ?: EMPTY_STRING
-        channelName = chatInfo?.channelName ?: EMPTY_STRING
+        chatInfo?.let {
+            topicName = it.topicName
+            channelName = it.channelName
+            channelId = it.channelId
+        }
     }
 
     private fun addTextWatcher() {
@@ -193,7 +201,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private fun addClickListeners() = with(binding) {
         sendMessage.setOnClickListener {
-            sendMessage()
+            sendMessage(binding.messageInput.text?.trim().toString())
         }
 
         toolbar.setNavigationOnClickListener {
@@ -201,7 +209,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
 
         binding.tryAgain.setOnClickListener {
-            store.accept(ChatEvent.Ui.Load(channelName, topicName))
+            store.accept(ChatEvent.Ui.Load(channelName, topicName, channelId))
         }
     }
 
@@ -259,12 +267,28 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         showErrorSnackBar(getString(R.string.error_change_reaction))
     }
 
-    private fun sendMessage() {
-        val text = binding.messageInput.text.toString()
-        if (text.trim().isNotEmpty()) {
-            store.accept(ChatEvent.Ui.SendMessage(channelName, topicName, text))
-            binding.messageInput.text?.clear()
+    private fun sendMessage(text: String) {
+        if (text.isNotEmpty()) {
+            if (topicName == ChatInfo.NO_TOPIC)
+                sendMessageToChosenTopic(text)
+            else
+                sendMessageToCurrentTopic(text)
         }
+    }
+
+    private fun sendMessageToCurrentTopic(text: String) {
+        store.accept(ChatEvent.Ui.SendMessage(channelName, topicName, text))
+        binding.messageInput.text?.clear()
+    }
+
+    private fun sendMessageToChosenTopic(text: String) {
+        val topic = if (binding.chooseTopic.text.isNullOrEmpty())
+            firstTopic
+        else
+            binding.chooseTopic.text.toString()
+
+        store.accept(ChatEvent.Ui.SendMessage(channelName, topic, text))
+        binding.messageInput.text?.clear()
     }
 
     private fun changeButtonIcon(inputIsEmpty: Boolean) {
@@ -297,5 +321,12 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private fun acceptChooseReaction(messageId: Long, emojiName: String) {
         store.accept(ChatEvent.Ui.ChooseReaction(messageId, emojiName))
+    }
+
+    private fun initChooseTopicAdapter(topics: List<String>) {
+        firstTopic = topics.first()
+        val adapter = ArrayAdapter(requireContext(), R.layout.chat_topic_item, topics)
+        binding.chooseTopic.setAdapter(adapter)
+        binding.chooseTopic.hint = topics.first()
     }
 }
