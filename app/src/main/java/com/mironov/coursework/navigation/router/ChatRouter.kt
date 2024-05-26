@@ -2,13 +2,14 @@ package com.mironov.coursework.navigation.router
 
 import com.github.terrakok.cicerone.Router
 import com.mironov.coursework.navigation.screen.getChatScreen
+import com.mironov.coursework.presentation.chat.ChatInfo
 import javax.inject.Inject
 
 interface ChatRouter {
 
     fun back()
 
-    fun showTopic(channelName: String, topicName: String)
+    fun showTopic(chatInfo: ChatInfo)
 }
 
 class ChatRouterImpl @Inject constructor(
@@ -19,7 +20,7 @@ class ChatRouterImpl @Inject constructor(
         router.exit()
     }
 
-    override fun showTopic(channelName: String, topicName: String) {
-        router.navigateTo(getChatScreen(channelName, topicName))
+    override fun showTopic(chatInfo: ChatInfo) {
+        router.navigateTo(getChatScreen(chatInfo))
     }
 }

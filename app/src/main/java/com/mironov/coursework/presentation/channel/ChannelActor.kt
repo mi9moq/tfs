@@ -103,7 +103,7 @@ class ChannelActor @Inject constructor(
         }
 
     private suspend fun showTopics(channel: Channel): ChannelEvent.Domain =
-        when (val result = getTopicsUseCase(channel)) {
+        when (val result = getTopicsUseCase(channel.id, channel.name)) {
             is Result.Failure -> ChannelEvent.Domain.LoadTopicsFailure
             is Result.Success -> {
                 val ind = cacheChannel.indexOfFirst {

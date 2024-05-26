@@ -70,6 +70,16 @@ class ChatReducer @Inject constructor(
                 copy(isLoading = true)
             }
         }
+
+        ChatEvent.Domain.LoadTopicFailure -> Unit //TODO()
+
+        is ChatEvent.Domain.LoadTopicSuccess -> {
+            state {
+                copy(topicNameList = event.listTopicName)
+            }
+        }
+
+        ChatEvent.Domain.Empty -> Unit
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
@@ -77,9 +87,8 @@ class ChatReducer @Inject constructor(
         is ChatEvent.Ui.Load -> {
             commands {
                 +ChatCommand.LoadMessageCache(event.channelName, event.topicName)
-            }
-            commands {
                 +ChatCommand.LoadMessage(event.channelName, event.topicName)
+                +ChatCommand.LoadExistingTopics(event.id, event.channelName)
             }
         }
 
@@ -123,6 +132,6 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.channelName, event.topicName)
+        is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.chatInfo)
     }
 }

@@ -10,7 +10,7 @@ class ChannelViewHolder(
     private val binding: ChannelItemBinding,
     private val onArrowDownCLicked: (Channel) -> Unit,
     private val onArrowUpClicked: (Int) -> Unit,
-    private val onChannelClicked: (String) -> Unit
+    private val onChannelClicked: (String, Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(channel: Channel) {
@@ -30,7 +30,7 @@ class ChannelViewHolder(
         }
 
         itemView.setOnClickListener {
-            onChannelClicked(channel.name)
+            onChannelClicked(channel.name, channel.id)
         }
     }
 }

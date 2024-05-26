@@ -7,7 +7,7 @@ sealed interface ChatCommand {
         val topicName: String
     ) : ChatCommand
 
-    data class SendMessage (
+    data class SendMessage(
         val channelName: String,
         val topicName: String,
         val content: String,
@@ -38,4 +38,6 @@ sealed interface ChatCommand {
         val channelName: String,
         val topicName: String
     ) : ChatCommand
+
+    data class LoadExistingTopics(val channelId: Int, val channelName: String) : ChatCommand
 }

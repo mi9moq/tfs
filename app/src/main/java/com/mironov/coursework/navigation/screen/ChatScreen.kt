@@ -1,8 +1,9 @@
 package com.mironov.coursework.navigation.screen
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import com.mironov.coursework.presentation.chat.ChatInfo
 import com.mironov.coursework.ui.chat.ChatFragment
 
-fun getChatScreen(channelName: String, topicName: String) = FragmentScreen{
-    ChatFragment.newInstance(channelName, topicName)
+fun getChatScreen(chatInfo: ChatInfo) = FragmentScreen{
+    ChatFragment.newInstance(chatInfo)
 }

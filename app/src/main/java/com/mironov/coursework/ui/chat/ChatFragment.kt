@@ -1,10 +1,12 @@
 package com.mironov.coursework.ui.chat
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.mironov.coursework.databinding.FragmentChatBinding
 import com.mironov.coursework.presentation.chat.ChatCommand
 import com.mironov.coursework.presentation.chat.ChatEffect
 import com.mironov.coursework.presentation.chat.ChatEvent
+import com.mironov.coursework.presentation.chat.ChatInfo
 import com.mironov.coursework.presentation.chat.ChatState
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
@@ -35,23 +38,25 @@ import javax.inject.Inject
 class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     companion object {
-        fun newInstance(channelName: String, topicName: String) = ChatFragment().apply {
+        fun newInstance(chatInfo: ChatInfo) = ChatFragment().apply {
             arguments = Bundle().apply {
-                putString(CHANNEL_NAME_KEY, channelName)
-                putString(TOPIC_NAME_KEY, topicName)
+                putParcelable(CHAT_INFO_KEY, chatInfo)
             }
         }
 
-        private const val CHANNEL_NAME_KEY = "channel name"
-        private const val TOPIC_NAME_KEY = "topic name"
+        private const val EMPTY_STRING = ""
+        private const val CHAT_INFO_KEY = "chat info"
+        private const val TARGET_POSITION = 5
     }
 
     private val component by lazy {
         requireContext().appComponent().getChatComponentFactory().create()
     }
 
-    private var channelName = ""
-    private var topicName = ""
+    private var channelName = EMPTY_STRING
+    private var topicName = EMPTY_STRING
+    private var channelId = ChatInfo.UNDEFINED_ID
+    private var firstTopic = EMPTY_STRING
 
     private var canLoadNextPage = false
     private var isNeedLoadNextPage = false
@@ -59,7 +64,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private var _binding: FragmentChatBinding? = null
     private val binding: FragmentChatBinding
-        get() = _binding!!
+        get() = requireNotNull(_binding)
 
     @Inject
     lateinit var chatStore: ElmStore<ChatEvent, ChatState, ChatEffect, ChatCommand>
@@ -100,55 +105,62 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        store.accept(ChatEvent.Ui.Load(channelName, topicName))
-        initStatusBar()
+        store.accept(ChatEvent.Ui.Load(channelName, topicName, channelId))
+        initChatParams()
         setupRecyclerView()
         addClickListeners()
         addTextWatcher()
     }
 
     override fun render(state: ChatState) {
-        if (state.isLoading) {
+        if (state.isLoading)
             applyLoadingState()
-        }
 
         canLoadNextPage = !state.isNextPageLoading
         isNeedLoadNextPage = state.isNeedLoadNextPage
         isNeedLoadPrevPage = state.isNeedLoadPrevPage
 
-        state.content?.let {
-            applyContentState(it)
-        }
+        state.topicNameList?.let(::initChooseTopicAdapter)
+        state.content?.let(::applyContentState)
     }
 
     override fun handleEffect(effect: ChatEffect): Unit = when (effect) {
-        ChatEffect.ErrorLoadingMessages -> {
-            applyErrorLoadingState()
-        }
+        ChatEffect.ErrorLoadingMessages -> applyErrorLoadingState()
 
-        is ChatEffect.ErrorSendingMessage -> {
-            applySendingError()
-        }
+        is ChatEffect.ErrorSendingMessage -> applySendingError()
 
-        is ChatEffect.ErrorChangeReaction -> {
-            applyChangeReactionError()
+        is ChatEffect.ErrorChangeReaction -> applyChangeReactionError()
+    }
+
+    private fun initChatParams() {
+        requireActivity().window.statusBarColor = requireContext().getColor(R.color.primary_color)
+
+        with(binding) {
+            toolbar.title = "#$channelName"
+            if (topicName.isNotEmpty()) {
+                currentTopic.isVisible = true
+                chooseTopic.isVisible = false
+                currentTopic.text = String.format(getString(R.string.topic_with_name), topicName)
+            } else {
+                chooseTopic.isVisible = true
+                currentTopic.isVisible = false
+            }
         }
     }
 
-    private fun initStatusBar() {
-        requireActivity().window.statusBarColor = requireContext()
-            .getColor(R.color.primary_color)
-        binding.toolbar.title = "#$channelName"
-        binding.topic.apply {
-            isVisible = topicName.isNotEmpty()
-            text = String.format(getString(R.string.topic_with_name), topicName)
-        }
-    }
-
+    @Suppress("DEPRECATION")
     private fun parseArguments() {
         val args = requireArguments()
-        topicName = args.getString(TOPIC_NAME_KEY, "")
-        channelName = args.getString(CHANNEL_NAME_KEY, "")
+        val chatInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            args.getParcelable(CHAT_INFO_KEY, ChatInfo::class.java)
+        else
+            args.getParcelable(CHAT_INFO_KEY)
+
+        chatInfo?.let {
+            topicName = it.topicName
+            channelName = it.channelName
+            channelId = it.channelId
+        }
     }
 
     private fun addTextWatcher() {
@@ -166,16 +178,20 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 if (dy > 0) {
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount = layoutManager.itemCount
-                    if (totalItemCount - lastVisibleItemPosition <= 5
+                    if (totalItemCount - lastVisibleItemPosition <= TARGET_POSITION
                         && canLoadNextPage
                         && isNeedLoadNextPage
                     ) {
                         store.accept(ChatEvent.Ui.ScrollToBottom(channelName, topicName))
                     }
                 }
+
                 if (dy < 0) {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    if (firstVisibleItemPosition <= 5 && canLoadNextPage && isNeedLoadPrevPage) {
+                    if (firstVisibleItemPosition <= TARGET_POSITION
+                        && canLoadNextPage
+                        && isNeedLoadPrevPage
+                    ) {
                         store.accept(ChatEvent.Ui.ScrollToTop(channelName, topicName))
                     }
                 }
@@ -185,14 +201,15 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private fun addClickListeners() = with(binding) {
         sendMessage.setOnClickListener {
-            sendMessage()
+            sendMessage(binding.messageInput.text?.trim().toString())
         }
+
         toolbar.setNavigationOnClickListener {
             store.accept(ChatEvent.Ui.OnBackClicked)
         }
 
         binding.tryAgain.setOnClickListener {
-            store.accept(ChatEvent.Ui.Load(channelName, topicName))
+            store.accept(ChatEvent.Ui.Load(channelName, topicName, channelId))
         }
     }
 
@@ -250,12 +267,28 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         showErrorSnackBar(getString(R.string.error_change_reaction))
     }
 
-    private fun sendMessage() {
-        val text = binding.messageInput.text.toString()
-        if (text.trim().isNotEmpty()) {
-            store.accept(ChatEvent.Ui.SendMessage(channelName, topicName, text))
-            binding.messageInput.text?.clear()
+    private fun sendMessage(text: String) {
+        if (text.isNotEmpty()) {
+            if (topicName == ChatInfo.NO_TOPIC)
+                sendMessageToChosenTopic(text)
+            else
+                sendMessageToCurrentTopic(text)
         }
+    }
+
+    private fun sendMessageToCurrentTopic(text: String) {
+        store.accept(ChatEvent.Ui.SendMessage(channelName, topicName, text))
+        binding.messageInput.text?.clear()
+    }
+
+    private fun sendMessageToChosenTopic(text: String) {
+        val topic = if (binding.chooseTopic.text.isNullOrEmpty())
+            firstTopic
+        else
+            binding.chooseTopic.text.toString()
+
+        store.accept(ChatEvent.Ui.SendMessage(channelName, topic, text))
+        binding.messageInput.text?.clear()
     }
 
     private fun changeButtonIcon(inputIsEmpty: Boolean) {
@@ -270,7 +303,14 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private fun onTopicClickListener(topic: String) {
-        store.accept(ChatEvent.Ui.OnTopicClicked(channelName = channelName, topicName = topic))
+        store.accept(
+            ChatEvent.Ui.OnTopicClicked(
+                chatInfo = ChatInfo(
+                    topicName = topic,
+                    channelName = channelName
+                )
+            )
+        )
     }
 
     private fun chooseReaction(messageId: Long) {
@@ -281,5 +321,12 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private fun acceptChooseReaction(messageId: Long, emojiName: String) {
         store.accept(ChatEvent.Ui.ChooseReaction(messageId, emojiName))
+    }
+
+    private fun initChooseTopicAdapter(topics: List<String>) {
+        firstTopic = topics.first()
+        val adapter = ArrayAdapter(requireContext(), R.layout.chat_topic_item, topics)
+        binding.chooseTopic.setAdapter(adapter)
+        binding.chooseTopic.hint = topics.first()
     }
 }

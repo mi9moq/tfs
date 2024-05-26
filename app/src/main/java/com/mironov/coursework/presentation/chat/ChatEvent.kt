@@ -8,7 +8,7 @@ sealed interface ChatEvent {
 
         data object Initial : Ui
 
-        data class Load(val channelName: String, val topicName: String) : Ui
+        data class Load(val channelName: String, val topicName: String, val id: Int) : Ui
 
         data class ChangeReaction(
             val messageId: Long,
@@ -40,9 +40,8 @@ sealed interface ChatEvent {
         ) : Ui
 
         data class OnTopicClicked(
-            val channelName: String,
-            val topicName: String,
-        ): Ui
+            val chatInfo: ChatInfo
+        ) : Ui
     }
 
     sealed interface Domain : ChatEvent {
@@ -64,5 +63,11 @@ sealed interface ChatEvent {
         data object ChangeReactionSuccess : Domain
 
         data object ChangeReactionFailure : Domain
+
+        data object LoadTopicFailure : Domain
+
+        data class LoadTopicSuccess(val listTopicName: List<String>) : Domain
+
+        data object Empty : Domain
     }
 }

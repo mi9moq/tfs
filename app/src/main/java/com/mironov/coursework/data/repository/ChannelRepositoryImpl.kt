@@ -47,17 +47,16 @@ class ChannelRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTopics(channel: Channel): Result<List<Topic>> =
+    override suspend fun getTopics(channelId: Int, channelName: String): Result<List<Topic>> =
         withContext(dispatcher) {
             runCatchingNonCancellation {
-                val streamId = channel.id
-                val topicsDbModel = remoteDataSource.getTopics(streamId).map {
-                    it.toDbModel(streamId)
+                val topicsDbModel = remoteDataSource.getTopics(channelId).map {
+                    it.toDbModel(channelId)
                 }
-                localDataSource.removeTopics(streamId)
+                localDataSource.removeTopics(channelId)
                 localDataSource.insertTopics(topicsDbModel)
-                val topics = localDataSource.getTopics(streamId).map {
-                    it.toTopic(channel.name)
+                val topics = localDataSource.getTopics(channelId).map {
+                    it.toTopic(channelName)
                 }
                 Result.Success(topics)
             }

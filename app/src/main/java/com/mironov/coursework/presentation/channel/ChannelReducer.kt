@@ -1,6 +1,7 @@
 package com.mironov.coursework.presentation.channel
 
 import com.mironov.coursework.navigation.router.ChannelRouter
+import com.mironov.coursework.presentation.chat.ChatInfo
 import vivid.money.elmslie.core.store.dsl.ScreenDslReducer
 import javax.inject.Inject
 
@@ -120,21 +121,26 @@ class ChannelReducer @Inject constructor(
         }
 
         is ChannelEvent.Ui.OnTopicClicked -> {
-            router.openChat(event.topic.parentChannelName, event.topic.name)
+            router.openChat(
+                ChatInfo(
+                    channelName = event.topic.parentChannelName,
+                    topicName = event.topic.name
+                )
+            )
         }
 
         is ChannelEvent.Ui.OnChannelClicked ->
-            router.openChat(event.channelName, NO_TOPIC)
+            router.openChat(
+                ChatInfo(
+                    channelName = event.channelName,
+                    channelId = event.channelId
+                )
+            )
 
         is ChannelEvent.Ui.CreateChannel -> {
             commands {
                 +ChannelCommand.CreateChannel(event.name, event.description)
             }
         }
-    }
-
-    private companion object {
-
-        private const val NO_TOPIC = ""
     }
 }

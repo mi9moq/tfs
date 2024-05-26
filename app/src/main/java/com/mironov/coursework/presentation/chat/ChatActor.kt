@@ -7,6 +7,7 @@ import com.mironov.coursework.domain.usecase.GetMessagesCacheUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetNextMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetPrevMessagesUseCase
+import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
 import com.mironov.coursework.ui.utils.groupByDate
@@ -24,6 +25,7 @@ class ChatActor @Inject constructor(
     private val getNextMessagesUseCase: GetNextMessagesUseCase,
     private val getPrevMessagesUseCase: GetPrevMessagesUseCase,
     private val getMessagesCacheUseCase: GetMessagesCacheUseCase,
+    private val getTopicsUseCase: GetTopicsUseCase,
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private var lastMessageId = 0L
@@ -31,13 +33,11 @@ class ChatActor @Inject constructor(
 
     override fun execute(command: ChatCommand): Flow<ChatEvent> = flow {
         val event = when (command) {
-            is ChatCommand.LoadMessage -> {
+            is ChatCommand.LoadMessage ->
                 loadMessage(command.channelName, command.topicName)
-            }
 
-            is ChatCommand.SendMessage -> {
+            is ChatCommand.SendMessage ->
                 sendMessage(command.channelName, command.topicName, command.content)
-            }
 
             is ChatCommand.ChangeReaction -> {
                 if (command.isSelected)
@@ -47,10 +47,9 @@ class ChatActor @Inject constructor(
             }
 
             is ChatCommand.ChooseReaction -> chooseReaction(command.messageId, command.emojiName)
-            is ChatCommand.LoadNextMessages -> loadNextMessages(
-                command.channelName,
-                command.topicName
-            )
+
+            is ChatCommand.LoadNextMessages ->
+                loadNextMessages(command.channelName, command.topicName)
 
             is ChatCommand.LoadPrevMessages -> loadPrevMessages(
                 command.channelName,
@@ -61,6 +60,9 @@ class ChatActor @Inject constructor(
                 command.channelName,
                 command.topicName
             )
+
+            is ChatCommand.LoadExistingTopics ->
+                loadExistingTopics(command.channelId, command.channelName)
         }
         emit(event)
     }
@@ -182,6 +184,20 @@ class ChatActor @Inject constructor(
                     groupMessages,
                     isNeedLoadPrevPage = !isFirstMessageLoaded,
                 )
+            }
+        }
+
+    private suspend fun loadExistingTopics(
+        channelId: Int,
+        channelName: String
+    ): ChatEvent.Domain = if (channelId == ChatInfo.UNDEFINED_ID)
+        ChatEvent.Domain.Empty
+    else
+        when (val result = getTopicsUseCase(channelId, channelName)) {
+            is Result.Failure -> ChatEvent.Domain.LoadTopicFailure
+            is Result.Success -> {
+                val topicNameList = result.content.map { it.name }
+                ChatEvent.Domain.LoadTopicSuccess(topicNameList)
             }
         }
 }

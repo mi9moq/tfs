@@ -18,7 +18,7 @@ sealed interface ChannelEvent {
 
         data class OnTopicClicked(val topic: Topic) : Ui
 
-        data class OnChannelClicked(val channelName: String) : Ui
+        data class OnChannelClicked(val channelName: String, val channelId: Int) : Ui
 
         data class ChangeFilter(val queryItem: QueryItem): Ui
 
