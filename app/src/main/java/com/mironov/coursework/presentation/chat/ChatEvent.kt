@@ -40,8 +40,7 @@ sealed interface ChatEvent {
         ) : Ui
 
         data class OnTopicClicked(
-            val channelName: String,
-            val topicName: String,
+            val chatInfo: ChatInfo
         ): Ui
     }
 

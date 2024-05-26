@@ -197,8 +197,8 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         store.accept(ChannelEvent.Ui.OnTopicClicked(topic))
     }
 
-    private fun onChannelClicked(channelName: String) {
-        store.accept(ChannelEvent.Ui.OnChannelClicked(channelName))
+    private fun onChannelClicked(channelName: String, channelId: Int) {
+        store.accept(ChannelEvent.Ui.OnChannelClicked(channelName, channelId))
     }
 
     private fun parseArguments() {

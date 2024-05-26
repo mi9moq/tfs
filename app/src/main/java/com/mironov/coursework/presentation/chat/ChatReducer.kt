@@ -123,6 +123,6 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.channelName, event.topicName)
+        is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.chatInfo)
     }
 }

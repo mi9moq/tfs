@@ -10,7 +10,7 @@ import com.mironov.coursework.ui.adapter.ListItemAdapterDelegate
 class ChannelDelegate(
     private val onArrowDownCLicked: (Channel) -> Unit,
     private val onArrowUpClicked: (Int) -> Unit,
-    private val onChannelClicked: (String) -> Unit
+    private val onChannelClicked: (String, Int) -> Unit
 ) : ListItemAdapterDelegate<ChannelDelegateItem, DelegateItem, ChannelViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ChannelViewHolder = ChannelViewHolder(
