@@ -8,4 +8,5 @@ data class ChatState(
     val content: List<DelegateItem>? = null,
     val isNeedLoadNextPage: Boolean = true,
     val isNeedLoadPrevPage: Boolean = true,
+    val topicNameList: List<String>? = null,
 )
