@@ -360,54 +360,12 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     private fun showMessageActionDialog(effect: ChatEffect.ShowMessageActionDialog) {
         val dialog = BottomSheetDialog(requireContext())
         val dialogBinding = DialogMessageActionBinding.inflate(layoutInflater)
-
-        with(dialogBinding) {
-            setVisibility(isVisible = effect.isContentEditable, icEditMessage, editMessage)
-            setVisibility(isVisible = effect.canDelete, icDelete, delete)
-            setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
-
-            editTopic.setOnClickListener {
-                store.accept(
-                    ChatEvent.Ui.OnEditMessageTopicClicked(
-                        messageId = effect.message.id,
-                        oldTopic = effect.message.topicName
-                    )
-                )
+        dialogBinding.initViews(
+            effect = effect,
+            onDismiss = {
                 dialog.dismiss()
             }
-
-            editMessage.setOnClickListener {
-                store.accept(
-                    ChatEvent.Ui.OnEditMessageContentClicked(
-                        messageId = effect.message.id,
-                        oldMessage = effect.message.content
-                    )
-                )
-                dialog.dismiss()
-            }
-
-            delete.setOnClickListener {
-                store.accept(
-                    ChatEvent.Ui.OnDeleteTopicClicked(effect.message.id)
-                )
-                dialog.dismiss()
-            }
-
-            addReaction.setOnClickListener {
-                chooseReaction(effect.message.id)
-                dialog.dismiss()
-            }
-
-            copy.setOnClickListener {
-                store.accept(
-                    ChatEvent.Ui.OnCopyMessageTextClicked(
-                        context = requireContext(),
-                        text = effect.message.content
-                    )
-                )
-                dialog.dismiss()
-            }
-        }
+        )
 
         dialog.apply {
             setContentView(dialogBinding.root)
@@ -456,9 +414,86 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         store.accept(ChatEvent.Ui.SaveNewMessage(messageId, message))
     }
 
+    private fun DialogMessageActionBinding.initViews(
+        effect: ChatEffect.ShowMessageActionDialog,
+        onDismiss: () -> Unit
+    ) {
+        setVisibility(isVisible = effect.isContentEditable, icEditMessage, editMessage)
+        setVisibility(isVisible = effect.canDelete, icDelete, delete)
+        setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageTopicClicked(
+                        messageId = effect.message.id,
+                        oldTopic = effect.message.topicName
+                    )
+                )
+                onDismiss()
+            },
+            icEditTopic, editTopic
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageContentClicked(
+                        messageId = effect.message.id,
+                        oldMessage = effect.message.content
+                    )
+                )
+                onDismiss()
+            },
+            icEditMessage, editMessage
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnDeleteTopicClicked(effect.message.id)
+                )
+                onDismiss()
+            },
+            icDelete, delete
+        )
+
+        addClickListener(
+            onClick = {
+                chooseReaction(effect.message.id)
+                onDismiss()
+            },
+            icEmoji, addReaction
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnCopyMessageTextClicked(
+                        context = requireContext(),
+                        text = effect.message.content
+                    )
+                )
+                onDismiss()
+            },
+            icCopy, copy
+        )
+    }
+
     private fun setVisibility(isVisible: Boolean, vararg views: View) {
         views.forEach {
             it.isVisible = isVisible
+        }
+    }
+
+    private fun addClickListener(
+        onClick: () -> Unit,
+        vararg views: View
+    ) {
+        views.forEach {
+            it.setOnClickListener {
+                onClick()
+            }
         }
     }
 }
