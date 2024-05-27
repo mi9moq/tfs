@@ -44,4 +44,6 @@ sealed interface ChatCommand {
     data class ChangeTopic(val messageId: Long, val newTopic: String) : ChatCommand
 
     data class ChangeMessage(val messageId: Long, val newMessage: String) : ChatCommand
+
+    data class DeleteMessage(val messageId: Long) : ChatCommand
 }

@@ -366,7 +366,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             setVisibility(isVisible = effect.canDelete, icDelete, delete)
             setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
 
-            dialogBinding.editTopic.setOnClickListener {
+            editTopic.setOnClickListener {
                 store.accept(
                     ChatEvent.Ui.OnEditMessageTopicClicked(
                         messageId = effect.message.id,
@@ -376,12 +376,19 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 dialog.dismiss()
             }
 
-            dialogBinding.editMessage.setOnClickListener {
+            editMessage.setOnClickListener {
                 store.accept(
                     ChatEvent.Ui.OnEditMessageContentClicked(
                         messageId = effect.message.id,
                         oldMessage = effect.message.content
                     )
+                )
+                dialog.dismiss()
+            }
+
+            delete.setOnClickListener {
+                store.accept(
+                    ChatEvent.Ui.OnDeleteTopicClicked(effect.message.id)
                 )
                 dialog.dismiss()
             }

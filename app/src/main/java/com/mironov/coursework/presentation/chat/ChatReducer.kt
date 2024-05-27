@@ -91,6 +91,10 @@ class ChatReducer @Inject constructor(
         ChatEvent.Domain.ChangeMessageFailure -> Unit //TODO()
 
         ChatEvent.Domain.ChangeMessageSuccess -> Unit //TODO()
+
+        ChatEvent.Domain.DeleteMessageFailure -> Unit //TODO()
+
+        ChatEvent.Domain.DeleteMessageSuccess -> Unit //TODO()
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
@@ -180,6 +184,12 @@ class ChatReducer @Inject constructor(
         is ChatEvent.Ui.SaveNewMessage -> {
             commands {
                 +ChatCommand.ChangeMessage(event.messageId, event.newMessage)
+            }
+        }
+
+        is ChatEvent.Ui.OnDeleteTopicClicked -> {
+            commands {
+                +ChatCommand.DeleteMessage(event.messageId)
             }
         }
     }

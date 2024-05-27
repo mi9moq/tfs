@@ -51,6 +51,8 @@ sealed interface ChatEvent {
         data class OnEditMessageContentClicked(val messageId: Long, val oldMessage: String): Ui
 
         data class SaveNewMessage(val messageId: Long, val newMessage: String): Ui
+
+        data class OnDeleteTopicClicked(val messageId: Long): Ui
     }
 
     sealed interface Domain : ChatEvent {
@@ -86,5 +88,9 @@ sealed interface ChatEvent {
         data object ChangeMessageSuccess: Domain
 
         data object ChangeMessageFailure: Domain
+
+        data object DeleteMessageSuccess: Domain
+
+        data object DeleteMessageFailure: Domain
     }
 }
