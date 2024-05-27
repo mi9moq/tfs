@@ -1,7 +1,5 @@
 package com.mironov.coursework.domain.entity
 
-import java.time.LocalDate
-
 data class Message(
     val avatarUrl: String? = null,
     val content: String,
@@ -9,7 +7,7 @@ data class Message(
     val isMeMessage: Boolean = false,
     val senderName: String,
     val senderId: Int,
-    val sendTime: LocalDate,
+    val sendTime: Long,
     val reactions: Map<Reaction, ReactionCondition>,
     val topicName: String = ""
 )

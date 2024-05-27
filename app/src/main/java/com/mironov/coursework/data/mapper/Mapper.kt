@@ -18,9 +18,6 @@ import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.domain.entity.ReactionCondition
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.domain.entity.User
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 fun MessageDbModel.toEntity(userId: Int) = Message(
     avatarUrl = message.avatarUrl,
@@ -29,7 +26,7 @@ fun MessageDbModel.toEntity(userId: Int) = Message(
     isMeMessage = message.senderId == userId,
     senderName = message.senderName,
     senderId = message.senderId,
-    sendTime = message.timestamp.toLocalDate(),
+    sendTime = message.timestamp,
     reactions = reactions.toEntity(userId),
     topicName = message.topicName,
 )
@@ -79,7 +76,7 @@ fun MessageDto.toEntity(userId: Int) = Message(
     isMeMessage = senderId == userId,
     senderName = senderName,
     senderId = senderId,
-    sendTime = timestamp.toLocalDate(),
+    sendTime = timestamp,
     reactions = reactions.toMapEntity(userId),
 )
 
@@ -95,11 +92,6 @@ fun List<ReactionDto>.toMapEntity(userId: Int): Map<Reaction, ReactionCondition>
             }
         )
     }
-
-fun Long.toLocalDate(): LocalDate {
-    val zoneId = ZoneId.systemDefault()
-    return Instant.ofEpochSecond(this).atZone(zoneId).toLocalDate()
-}
 
 fun UserDto.toEntity(presence: User.Presence) = User(
     id = userId,

@@ -11,6 +11,9 @@ import com.mironov.coursework.ui.chat.date.DateDelegateItem
 import com.mironov.coursework.ui.chat.received.ReceivedDelegateItem
 import com.mironov.coursework.ui.chat.sent.SentDelegateItem
 import com.mironov.coursework.ui.chat.topic.MessageTopicDelegateItem
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 fun List<Message>.groupByDate(isAllTopicsChat: Boolean): List<DelegateItem> {
 
@@ -19,7 +22,7 @@ fun List<Message>.groupByDate(isAllTopicsChat: Boolean): List<DelegateItem> {
     val dates = mutableSetOf<MessageDate>()
 
     forEach {
-        dates.add(MessageDate(it.sendTime))
+        dates.add(MessageDate(it.sendTime.toLocalDate()))
     }
 
     var prevTopic: String = first().topicName
@@ -30,7 +33,7 @@ fun List<Message>.groupByDate(isAllTopicsChat: Boolean): List<DelegateItem> {
         delegateItemList.add(DateDelegateItem(it))
 
         val dateMessages = this.filter { message ->
-            message.sendTime == it.date
+            message.sendTime.toLocalDate() == it.date
         }
 
         dateMessages.forEach { message ->
@@ -62,4 +65,9 @@ fun List<Channel>.toDelegates(): List<DelegateItem> {
     delegateItemList.add(CreateChannelDelegateItem())
 
     return delegateItemList
+}
+
+fun Long.toLocalDate(): LocalDate {
+    val zoneId = ZoneId.systemDefault()
+    return Instant.ofEpochSecond(this).atZone(zoneId).toLocalDate()
 }
