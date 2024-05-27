@@ -355,9 +355,9 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         val dialogBinding = DialogMessageActionBinding.inflate(layoutInflater)
 
         with(dialogBinding) {
-            setVisibility(icEditMessage, editMessage, isVisible = effect.isContentEditable)
-            setVisibility(icDelete, delete, isVisible = effect.canDelete)
-            setVisibility(icEditTopic, editTopic, isVisible = effect.isTopicEditable)
+            setVisibility(isVisible = effect.isContentEditable, icEditMessage, editMessage)
+            setVisibility(isVisible = effect.canDelete, icDelete, delete)
+            setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
         }
 
         BottomSheetDialog(requireContext()).apply {
@@ -366,7 +366,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         }
     }
 
-    private fun setVisibility(vararg views: View, isVisible: Boolean) {
+    private fun setVisibility(isVisible: Boolean, vararg views: View) {
         views.forEach {
             it.isVisible = isVisible
         }
