@@ -2,6 +2,7 @@ package com.mironov.coursework.presentation.chat
 
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
+import com.mironov.coursework.domain.usecase.EditMessageContentUseCase
 import com.mironov.coursework.domain.usecase.EditMessageTopicUseCase
 import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesCacheUseCase
@@ -27,7 +28,8 @@ class ChatActor @Inject constructor(
     private val getPrevMessagesUseCase: GetPrevMessagesUseCase,
     private val getMessagesCacheUseCase: GetMessagesCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
-    private val editMessageTopicUseCase: EditMessageTopicUseCase
+    private val editMessageTopicUseCase: EditMessageTopicUseCase,
+    private val editMessageContentUseCase: EditMessageContentUseCase,
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private var lastMessageId = 0L
@@ -67,6 +69,8 @@ class ChatActor @Inject constructor(
                 loadExistingTopics(command.channelId, command.channelName)
 
             is ChatCommand.ChangeTopic -> changeTopic(command.messageId, command.newTopic)
+
+            is ChatCommand.ChangeMessage -> changeMessage(command.messageId, command.newMessage)
         }
         emit(event)
     }
@@ -209,5 +213,11 @@ class ChatActor @Inject constructor(
         when (editMessageTopicUseCase(messageId, newTopic)) {
             is Result.Failure -> ChatEvent.Domain.ChangeTopicFailure
             is Result.Success -> ChatEvent.Domain.ChangeTopicSuccess
+        }
+
+    private suspend fun changeMessage(messageId: Long, newMessage: String): ChatEvent.Domain =
+        when (editMessageContentUseCase(messageId, newMessage)) {
+            is Result.Failure -> ChatEvent.Domain.ChangeMessageFailure
+            is Result.Success -> ChatEvent.Domain.ChangeMessageSuccess
         }
 }

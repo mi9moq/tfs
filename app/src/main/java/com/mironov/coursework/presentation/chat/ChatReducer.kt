@@ -87,6 +87,10 @@ class ChatReducer @Inject constructor(
         ChatEvent.Domain.ChangeTopicFailure -> Unit //TODO() показать оишбку
 
         ChatEvent.Domain.ChangeTopicSuccess -> Unit //TODO()
+
+        ChatEvent.Domain.ChangeMessageFailure -> Unit //TODO()
+
+        ChatEvent.Domain.ChangeMessageSuccess -> Unit //TODO()
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
@@ -163,7 +167,19 @@ class ChatReducer @Inject constructor(
 
         is ChatEvent.Ui.SaveNewTopic -> {
             commands {
-                +ChatCommand.ChangeTopic(event.messageId,event.newTopic)
+                +ChatCommand.ChangeTopic(event.messageId, event.newTopic)
+            }
+        }
+
+        is ChatEvent.Ui.OnEditMessageContentClicked -> {
+            effects {
+                +ChatEffect.ShowEditMessageDialog(event.messageId, event.oldMessage)
+            }
+        }
+
+        is ChatEvent.Ui.SaveNewMessage -> {
+            commands {
+                +ChatCommand.ChangeMessage(event.messageId, event.newMessage)
             }
         }
     }

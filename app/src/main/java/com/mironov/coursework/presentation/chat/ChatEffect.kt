@@ -18,4 +18,6 @@ sealed interface ChatEffect {
     ) : ChatEffect
 
     data class ShowEditTopicDialog(val messageId: Long, val oldTopic: String) : ChatEffect
+
+    data class ShowEditMessageDialog(val messageId: Long, val oldMessage: String) : ChatEffect
 }

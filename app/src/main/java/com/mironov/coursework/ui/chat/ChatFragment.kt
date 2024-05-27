@@ -151,6 +151,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         is ChatEffect.ShowMessageActionDialog -> showMessageActionDialog(effect)
 
         is ChatEffect.ShowEditTopicDialog -> showEditTopicDialog(effect)
+
+        is ChatEffect.ShowEditMessageDialog -> showEditMessageDialog(effect)
     }
 
     private fun initChatParams() {
@@ -373,6 +375,16 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 )
                 dialog.dismiss()
             }
+
+            dialogBinding.editMessage.setOnClickListener {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageContentClicked(
+                        messageId = effect.message.id,
+                        oldMessage = effect.message.content
+                    )
+                )
+                dialog.dismiss()
+            }
         }
 
         dialog.apply {
@@ -397,9 +409,29 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         )
     }
 
+    private fun showEditMessageDialog(effect: ChatEffect.ShowEditMessageDialog) {
+        val dialogLayout = ChangeMessageDialogBinding.inflate(layoutInflater)
+        dialogLayout.changeInput.setText(effect.oldMessage)
+
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.save,
+            positiveButtonClickListener = {
+                saveChangeMessage(
+                    messageId = effect.messageId,
+                    message = dialogLayout.changeInput.text?.trim().toString(),
+                )
+            }
+        )
+    }
+
     private fun saveChangeTopic(messageId: Long, topic: String) {
         if (topic.isNotEmpty())
             store.accept(ChatEvent.Ui.SaveNewTopic(messageId, topic))
+    }
+
+    private fun saveChangeMessage(messageId: Long, message: String) {
+        store.accept(ChatEvent.Ui.SaveNewMessage(messageId, message))
     }
 
     private fun setVisibility(isVisible: Boolean, vararg views: View) {
