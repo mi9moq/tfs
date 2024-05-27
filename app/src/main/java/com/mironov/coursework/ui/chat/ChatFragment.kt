@@ -392,6 +392,11 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 )
                 dialog.dismiss()
             }
+
+            addReaction.setOnClickListener {
+                chooseReaction(effect.message.id)
+                dialog.dismiss()
+            }
         }
 
         dialog.apply {
