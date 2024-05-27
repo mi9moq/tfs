@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mironov.coursework.R
 import com.mironov.coursework.databinding.FragmentChatBinding
+import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.chat.ChatCommand
 import com.mironov.coursework.presentation.chat.ChatEffect
 import com.mironov.coursework.presentation.chat.ChatEvent
@@ -78,8 +79,20 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     val adapter by lazy {
         MainAdapter().apply {
             addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
-            addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
+            addDelegate(
+                ReceivedDelegate(
+                    ::chooseReaction,
+                    ::changeReaction,
+                    ::onMessageLongClickListener
+                )
+            )
+            addDelegate(
+                SentDelegate(
+                    ::chooseReaction,
+                    ::changeReaction,
+                    ::onMessageLongClickListener
+                )
+            )
             addDelegate(MessageTopicDelegate(::onTopicClickListener))
         }
     }
@@ -317,6 +330,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         val dialog = ChooseReactionDialogFragment.newInstance(messageId)
         dialog.show(requireActivity().supportFragmentManager, ChooseReactionDialogFragment.TAG)
         dialog.onEmojiClickedCallback = ::acceptChooseReaction
+    }
+
+    private fun onMessageLongClickListener(message: Message) {
+        //TODO добавить лоигку
     }
 
     private fun acceptChooseReaction(messageId: Long, emojiName: String) {
