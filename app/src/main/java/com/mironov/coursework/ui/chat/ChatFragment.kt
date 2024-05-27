@@ -11,7 +11,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mironov.coursework.R
+import com.mironov.coursework.databinding.DialogMessageActionBinding
 import com.mironov.coursework.databinding.FragmentChatBinding
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.chat.ChatCommand
@@ -143,6 +145,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         is ChatEffect.ErrorSendingMessage -> applySendingError()
 
         is ChatEffect.ErrorChangeReaction -> applyChangeReactionError()
+
+        is ChatEffect.ShowMessageActionDialog -> showMessageActionDialog(effect)
     }
 
     private fun initChatParams() {
@@ -333,7 +337,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private fun onMessageLongClickListener(message: Message) {
-        //TODO добавить лоигку
+        store.accept(ChatEvent.Ui.OnMessageLongClicked(message))
     }
 
     private fun acceptChooseReaction(messageId: Long, emojiName: String) {
@@ -345,5 +349,26 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         val adapter = ArrayAdapter(requireContext(), R.layout.chat_topic_item, topics)
         binding.chooseTopic.setAdapter(adapter)
         binding.chooseTopic.hint = topics.first()
+    }
+
+    private fun showMessageActionDialog(effect: ChatEffect.ShowMessageActionDialog) {
+        val dialogBinding = DialogMessageActionBinding.inflate(layoutInflater)
+
+        with(dialogBinding) {
+            setVisibility(icEditMessage, editMessage, isVisible = effect.isContentEditable)
+            setVisibility(icDelete, delete, isVisible = effect.canDelete)
+            setVisibility(icEditTopic, editTopic, isVisible = effect.isTopicEditable)
+        }
+
+        BottomSheetDialog(requireContext()).apply {
+            setContentView(dialogBinding.root)
+            show()
+        }
+    }
+
+    private fun setVisibility(vararg views: View, isVisible: Boolean) {
+        views.forEach {
+            it.isVisible = isVisible
+        }
     }
 }

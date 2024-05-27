@@ -1,5 +1,8 @@
 package com.mironov.coursework.presentation.chat
 
+import com.mironov.coursework.domain.entity.Message
+import com.mironov.coursework.domain.utils.MILLIS_IN_SECONDS
+import com.mironov.coursework.domain.utils.SECONDS_IN_MINUTES
 import com.mironov.coursework.navigation.router.ChatRouter
 import vivid.money.elmslie.core.store.dsl.ScreenDslReducer
 import javax.inject.Inject
@@ -133,5 +136,36 @@ class ChatReducer @Inject constructor(
         }
 
         is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.chatInfo)
+        is ChatEvent.Ui.OnMessageLongClicked -> {
+            val isContentEditable = event.message.isContentEditable()
+            val isTopicEditable = event.message.isTopicEditable()
+            val canDelete = event.message.canDelete()
+            effects {
+                +ChatEffect.ShowMessageActionDialog(
+                    messageId = event.message.id,
+                    isContentEditable = isContentEditable,
+                    isTopicEditable = isTopicEditable,
+                    canDelete = canDelete
+                )
+            }
+        }
+    }
+
+    private fun Message.isContentEditable(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_CONTENT_EDITABLE_MINUTES
+    }
+
+    private fun Message.isTopicEditable(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_TOPIC_EDITABLE_MINUTES
+    }
+
+    private fun Message.canDelete(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_CAN_DELETED_MINUTES
     }
 }

@@ -7,4 +7,11 @@ sealed interface ChatEffect {
     data object ErrorSendingMessage : ChatEffect
 
     data object ErrorChangeReaction : ChatEffect
+
+    data class ShowMessageActionDialog(
+        val messageId: Long,
+        val isContentEditable: Boolean,
+        val isTopicEditable: Boolean,
+        val canDelete: Boolean,
+    ) : ChatEffect
 }

@@ -1,5 +1,6 @@
 package com.mironov.coursework.presentation.chat
 
+import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.ui.adapter.DelegateItem
 
 sealed interface ChatEvent {
@@ -39,9 +40,9 @@ sealed interface ChatEvent {
             val topicName: String,
         ) : Ui
 
-        data class OnTopicClicked(
-            val chatInfo: ChatInfo
-        ) : Ui
+        data class OnTopicClicked(val chatInfo: ChatInfo) : Ui
+
+        data class OnMessageLongClicked(val message: Message) : Ui
     }
 
     sealed interface Domain : ChatEvent {
