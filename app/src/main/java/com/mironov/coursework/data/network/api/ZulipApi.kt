@@ -12,6 +12,7 @@ import com.mironov.coursework.data.network.model.user.UserDto
 import com.mironov.coursework.data.network.model.user.UserResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -80,10 +81,27 @@ interface ZulipApi {
     @POST("users/me/presence?status=active")
     suspend fun setOwnStatusActive()
 
-    @GET("messages/{message_id}")
+    @GET("messages/{$PATH_MESSAGE_ID}")
     suspend fun getMessageById(
-        @Path("message_id") messageId: Long
+        @Path(PATH_MESSAGE_ID) messageId: Long
     ): SingleMessageResponse
+
+    @PATCH("messages/{$PATH_MESSAGE_ID}")
+    suspend fun editMessageContent(
+        @Path(PATH_MESSAGE_ID) messageId: Long,
+        @Query("content") content: String
+    )
+
+    @PATCH("messages/{$PATH_MESSAGE_ID}")
+    suspend fun editMessageTopic(
+        @Path(PATH_MESSAGE_ID) messageId: Long,
+        @Query("topic") topic: String
+    )
+
+    @DELETE("messages/{$PATH_MESSAGE_ID}")
+    suspend fun deleteMessage(
+        @Path(PATH_MESSAGE_ID) messageId: Long
+    )
 
     @POST("users/me/subscriptions")
     suspend fun subscribedToStream(
