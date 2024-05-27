@@ -67,4 +67,13 @@ class MessageRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun removeReaction(messageId: Long, emojiName: String) =
         api.removeReaction(messageId, emojiName)
+
+    override suspend fun editMessageContent(messageId: Long, content: String) =
+        api.editMessageContent(messageId, content)
+
+    override suspend fun editMessageTopic(messageId: Long, topic: String) =
+        api.editMessageTopic(messageId, topic)
+
+    override suspend fun deleteMessage(messageId: Long) =
+        api.deleteMessage(messageId)
 }
