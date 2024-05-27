@@ -103,4 +103,28 @@ class MessageRepositoryImpl @Inject constructor(
             Result.Success(messages)
         }
     }
+
+    override suspend fun editMessageContent(messageId: Long, content: String): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.editMessageContent(messageId, content)
+                Result.Success(true)
+            }
+        }
+
+    override suspend fun editMessageTopic(messageId: Long, topic: String): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.editMessageTopic(messageId, topic)
+                Result.Success(true)
+            }
+        }
+
+    override suspend fun deleteMessage(messageId: Long): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.deleteMessage(messageId)
+                Result.Success(true)
+            }
+        }
 }
