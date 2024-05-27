@@ -40,4 +40,6 @@ sealed interface ChatCommand {
     ) : ChatCommand
 
     data class LoadExistingTopics(val channelId: Int, val channelName: String) : ChatCommand
+
+    data class ChangeTopic(val messageId: Long, val newTopic: String) : ChatCommand
 }

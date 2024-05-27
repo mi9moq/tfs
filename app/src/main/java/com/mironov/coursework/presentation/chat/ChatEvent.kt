@@ -43,6 +43,10 @@ sealed interface ChatEvent {
         data class OnTopicClicked(val chatInfo: ChatInfo) : Ui
 
         data class OnMessageLongClicked(val message: Message) : Ui
+
+        data class OnEditMessageTopicClicked(val messageId: Long, val oldTopic: String): Ui
+
+        data class SaveNewTopic(val messageId: Long, val newTopic: String): Ui
     }
 
     sealed interface Domain : ChatEvent {
@@ -70,5 +74,9 @@ sealed interface ChatEvent {
         data class LoadTopicSuccess(val listTopicName: List<String>) : Domain
 
         data object Empty : Domain
+
+        data object ChangeTopicSuccess: Domain
+
+        data object ChangeTopicFailure: Domain
     }
 }

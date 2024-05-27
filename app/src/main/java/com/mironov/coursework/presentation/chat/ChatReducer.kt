@@ -83,6 +83,10 @@ class ChatReducer @Inject constructor(
         }
 
         ChatEvent.Domain.Empty -> Unit
+
+        ChatEvent.Domain.ChangeTopicFailure -> Unit //TODO() показать оишбку
+
+        ChatEvent.Domain.ChangeTopicSuccess -> Unit //TODO()
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
@@ -136,17 +140,30 @@ class ChatReducer @Inject constructor(
         }
 
         is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.chatInfo)
+
         is ChatEvent.Ui.OnMessageLongClicked -> {
             val isContentEditable = event.message.isContentEditable()
             val isTopicEditable = event.message.isTopicEditable()
             val canDelete = event.message.canDelete()
             effects {
                 +ChatEffect.ShowMessageActionDialog(
-                    messageId = event.message.id,
+                    message = event.message,
                     isContentEditable = isContentEditable,
                     isTopicEditable = isTopicEditable,
                     canDelete = canDelete
                 )
+            }
+        }
+
+        is ChatEvent.Ui.OnEditMessageTopicClicked -> {
+            effects {
+                +ChatEffect.ShowEditTopicDialog(event.messageId, event.oldTopic)
+            }
+        }
+
+        is ChatEvent.Ui.SaveNewTopic -> {
+            commands {
+                +ChatCommand.ChangeTopic(event.messageId,event.newTopic)
             }
         }
     }

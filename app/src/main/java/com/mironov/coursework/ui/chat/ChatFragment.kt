@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mironov.coursework.R
+import com.mironov.coursework.databinding.ChangeMessageDialogBinding
 import com.mironov.coursework.databinding.DialogMessageActionBinding
 import com.mironov.coursework.databinding.FragmentChatBinding
 import com.mironov.coursework.domain.entity.Message
@@ -32,6 +33,7 @@ import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import com.mironov.coursework.ui.utils.showDialog
 import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
 import vivid.money.elmslie.core.store.ElmStore
@@ -147,6 +149,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         is ChatEffect.ErrorChangeReaction -> applyChangeReactionError()
 
         is ChatEffect.ShowMessageActionDialog -> showMessageActionDialog(effect)
+
+        is ChatEffect.ShowEditTopicDialog -> showEditTopicDialog(effect)
     }
 
     private fun initChatParams() {
@@ -352,18 +356,50 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     }
 
     private fun showMessageActionDialog(effect: ChatEffect.ShowMessageActionDialog) {
+        val dialog = BottomSheetDialog(requireContext())
         val dialogBinding = DialogMessageActionBinding.inflate(layoutInflater)
 
         with(dialogBinding) {
             setVisibility(isVisible = effect.isContentEditable, icEditMessage, editMessage)
             setVisibility(isVisible = effect.canDelete, icDelete, delete)
             setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
+
+            dialogBinding.editTopic.setOnClickListener {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageTopicClicked(
+                        messageId = effect.message.id,
+                        oldTopic = effect.message.topicName
+                    )
+                )
+                dialog.dismiss()
+            }
         }
 
-        BottomSheetDialog(requireContext()).apply {
+        dialog.apply {
             setContentView(dialogBinding.root)
             show()
         }
+    }
+
+    private fun showEditTopicDialog(effect: ChatEffect.ShowEditTopicDialog) {
+        val dialogLayout = ChangeMessageDialogBinding.inflate(layoutInflater)
+        dialogLayout.changeInput.setText(effect.oldTopic)
+
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.save,
+            positiveButtonClickListener = {
+                saveChangeTopic(
+                    messageId = effect.messageId,
+                    topic = dialogLayout.changeInput.text?.trim().toString(),
+                )
+            }
+        )
+    }
+
+    private fun saveChangeTopic(messageId: Long, topic: String) {
+        if (topic.isNotEmpty())
+            store.accept(ChatEvent.Ui.SaveNewTopic(messageId, topic))
     }
 
     private fun setVisibility(isVisible: Boolean, vararg views: View) {
