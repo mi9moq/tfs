@@ -1,5 +1,9 @@
 package com.mironov.coursework.presentation.chat
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import com.mironov.coursework.R
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
 import com.mironov.coursework.domain.usecase.DeleteMessageUseCase
@@ -75,6 +79,8 @@ class ChatActor @Inject constructor(
             is ChatCommand.ChangeMessage -> changeMessage(command.messageId, command.newMessage)
 
             is ChatCommand.DeleteMessage -> deleteMessage(command.messageId)
+
+            is ChatCommand.SaveMessageText -> saveMessage(command.context, command.text)
         }
         emit(event)
     }
@@ -230,4 +236,15 @@ class ChatActor @Inject constructor(
             is Result.Failure -> ChatEvent.Domain.DeleteMessageFailure
             is Result.Success -> ChatEvent.Domain.DeleteMessageSuccess
         }
+
+    private fun saveMessage(context: Context, text: String): ChatEvent.Domain {
+        val clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        val clipData = ClipData.newPlainText(context.getString(R.string.message_text), text)
+
+        clipboardManager.setPrimaryClip(clipData)
+
+        return ChatEvent.Domain.Empty
+    }
 }

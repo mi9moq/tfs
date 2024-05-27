@@ -1,5 +1,6 @@
 package com.mironov.coursework.presentation.chat
 
+import android.content.Context
 import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.ui.adapter.DelegateItem
 
@@ -53,6 +54,8 @@ sealed interface ChatEvent {
         data class SaveNewMessage(val messageId: Long, val newMessage: String): Ui
 
         data class OnDeleteTopicClicked(val messageId: Long): Ui
+
+        data class OnCopyMessageTextClicked(val context: Context, val text: String): Ui
     }
 
     sealed interface Domain : ChatEvent {

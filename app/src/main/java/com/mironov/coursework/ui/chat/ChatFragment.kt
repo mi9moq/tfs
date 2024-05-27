@@ -397,6 +397,16 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
                 chooseReaction(effect.message.id)
                 dialog.dismiss()
             }
+
+            copy.setOnClickListener {
+                store.accept(
+                    ChatEvent.Ui.OnCopyMessageTextClicked(
+                        context = requireContext(),
+                        text = effect.message.content
+                    )
+                )
+                dialog.dismiss()
+            }
         }
 
         dialog.apply {

@@ -192,6 +192,12 @@ class ChatReducer @Inject constructor(
                 +ChatCommand.DeleteMessage(event.messageId)
             }
         }
+
+        is ChatEvent.Ui.OnCopyMessageTextClicked -> {
+            commands {
+                +ChatCommand.SaveMessageText(event.context, event.text)
+            }
+        }
     }
 
     private fun Message.isContentEditable(): Boolean {
