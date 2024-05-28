@@ -3,7 +3,6 @@ package com.mironov.coursework.ui.chat
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -257,9 +256,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             messages.isVisible = true
             messages.adapter = adapter
         }
-        adapter.submitList(delegateList){
-            Log.e("Subbub", "submit")
-        }
+        adapter.submitList(delegateList)
     }
 
     private fun applyLoadingState() {
