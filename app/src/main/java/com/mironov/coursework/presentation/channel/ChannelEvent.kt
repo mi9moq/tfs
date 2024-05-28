@@ -12,6 +12,10 @@ sealed interface ChannelEvent {
 
         data object InitialSubscribed : Ui
 
+        data object ReloadAll : Ui
+
+        data object ReloadSubscribed : Ui
+
         data class ShowTopic(val channel: Channel) : Ui
 
         data class HideTopic(val channelId: Int) : Ui
@@ -42,10 +46,12 @@ sealed interface ChannelEvent {
             val query: String
         ): Domain
 
-        data object EmptyCache: Domain
+        data object EmptyChannelCache: Domain
 
         data object CreateChannelSuccess: Domain
 
         data object CreateChannelFailure: Domain
+
+        data object EmptyEvent: Domain
     }
 }

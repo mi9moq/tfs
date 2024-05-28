@@ -63,7 +63,7 @@ class ChannelActor @Inject constructor(
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
             is Result.Success -> {
                 if (result.content.isEmpty()) {
-                    ChannelEvent.Domain.EmptyCache
+                    ChannelEvent.Domain.EmptyChannelCache
                 } else {
                     cacheChannel.clear()
                     cacheChannel.addAll(result.content)
@@ -91,7 +91,7 @@ class ChannelActor @Inject constructor(
             is Result.Failure -> ChannelEvent.Domain.LoadChannelFailure
             is Result.Success -> {
                 if (result.content.isEmpty()) {
-                    ChannelEvent.Domain.EmptyCache
+                    ChannelEvent.Domain.EmptyChannelCache
                 } else {
                     cacheChannel.clear()
                     cacheChannel.addAll(result.content)
@@ -119,12 +119,17 @@ class ChannelActor @Inject constructor(
         when (val result = getTopicsCacheUseCase(channel)) {
             is Result.Failure -> ChannelEvent.Domain.LoadTopicsFailure
             is Result.Success -> {
-                val ind = cacheChannel.indexOfFirst {
-                    it.id == channel.id
+                if (result.content.isEmpty()) {
+                    ChannelEvent.Domain.EmptyEvent
+                } else {
+                    val ind = cacheChannel.indexOfFirst {
+                        it.id == channel.id
+                    }
+                    val newChannel =
+                        (cacheChannel[ind]).copy(isOpen = true, topics = result.content)
+                    cacheChannel[ind] = newChannel
+                    ChannelEvent.Domain.LoadTopicsSuccess(cacheChannel.toDelegates())
                 }
-                val newChannel = (cacheChannel[ind]).copy(isOpen = true, topics = result.content)
-                cacheChannel[ind] = newChannel
-                ChannelEvent.Domain.LoadTopicsSuccess(cacheChannel.toDelegates())
             }
         }
 
@@ -140,6 +145,7 @@ class ChannelActor @Inject constructor(
 
     private suspend fun applyFilter(queryItem: QueryItem): ChannelEvent.Domain =
         withContext(dispatcher) {
+            if (cacheChannel.isEmpty()) return@withContext ChannelEvent.Domain.EmptyEvent
             val channels = cacheChannel.filter { channel ->
                 channel.name.startsWith(queryItem.query)
             }

@@ -111,9 +111,10 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     }
 
     override fun render(state: ChannelState) {
-        if (state.isLoading) {
-            applyLoadingState()
-        }
+        if (state.isLoading)
+            binding.shimmer.show()
+        else
+            binding.shimmer.hide()
 
         state.content?.let {
             applyContentState(it)
@@ -122,16 +123,17 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
 
     override fun handleEffect(effect: ChannelEffect): Unit = when (effect) {
         ChannelEffect.ErrorLoadingChannels -> applyErrorState()
-        ChannelEffect.ErrorLoadingTopics -> applyErrorState()
+        ChannelEffect.ErrorLoadingTopics -> showErrorSnackBar(getString(R.string.error_load_topic))
         ChannelEffect.ErrorCreateChannel -> showErrorSnackBar(getString(R.string.error_create_channel))
+        ChannelEffect.ErrorUpdateData -> showErrorSnackBar(getString(R.string.error_update_data))
     }
 
     private fun addClickListeners() {
         binding.tryAgain.setOnClickListener {
             if (isAllChannels)
-                store.accept(ChannelEvent.Ui.InitialAll)
+                store.accept(ChannelEvent.Ui.ReloadAll)
             else
-                store.accept(ChannelEvent.Ui.InitialSubscribed)
+                store.accept(ChannelEvent.Ui.ReloadSubscribed)
         }
     }
 
@@ -150,20 +152,11 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         with(binding) {
             shimmer.hide()
             tryAgain.isVisible = false
-            channels.isVisible = false
+            errorMessage.isVisible = false
             channels.isVisible = true
             channels.adapter = adapter
         }
         adapter.submitList(delegateItemList)
-    }
-
-    private fun applyLoadingState() {
-        with(binding) {
-            errorMessage.isVisible = false
-            tryAgain.isVisible = false
-            channels.isVisible = false
-            shimmer.show()
-        }
     }
 
     private fun applyErrorState() {

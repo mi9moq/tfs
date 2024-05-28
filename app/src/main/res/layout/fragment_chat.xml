@@ -33,6 +33,34 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:text="TOPIC: Testing" />
 
+    <TextView
+        android:id="@+id/chat_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="?attr/text_100"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        tools:text="не удалось загрузить сообщения" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/try_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/black"
+        android:paddingHorizontal="56dp"
+        android:paddingVertical="14dp"
+        android:text="@string/try_again"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chat_error_message" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages"
         android:layout_width="match_parent"
@@ -44,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        app:layout_constraintTop_toBottomOf="@id/try_again"
         tools:listitem="@layout/received_message_item" />
 
     <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -125,33 +153,5 @@
             <include layout="@layout/message_placeholder" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <TextView
-        android:id="@+id/chat_error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:textColor="?attr/text_100"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:text="не удалось загрузить сообщения" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/try_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/black"
-        android:paddingHorizontal="56dp"
-        android:paddingVertical="14dp"
-        android:text="@string/try_again"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_error_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
