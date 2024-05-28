@@ -90,7 +90,14 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        ChatEvent.Domain.ChangeTopicSuccess -> Unit //TODO()
+        ChatEvent.Domain.ChangeTopicSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
 
         ChatEvent.Domain.ChangeMessageFailure -> {
             effects {
@@ -98,7 +105,14 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        ChatEvent.Domain.ChangeMessageSuccess -> Unit //TODO()
+        ChatEvent.Domain.ChangeMessageSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
 
         ChatEvent.Domain.DeleteMessageFailure -> {
             effects {
@@ -106,12 +120,28 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        ChatEvent.Domain.DeleteMessageSuccess -> Unit //TODO()
+        ChatEvent.Domain.DeleteMessageSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
         ChatEvent.Ui.Initial -> {}
         is ChatEvent.Ui.Load -> {
+            state {
+                copy(
+                    chatInfo = ChatInfo(
+                        topicName = event.topicName,
+                        channelName = event.channelName,
+                        channelId = event.id
+                    )
+                )
+            }
             commands {
                 +ChatCommand.LoadMessageCache(event.channelName, event.topicName)
                 +ChatCommand.LoadMessage(event.channelName, event.topicName)

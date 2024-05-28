@@ -50,4 +50,9 @@ sealed interface ChatCommand {
     data class DeleteMessage(val messageId: Long) : ChatCommand
 
     data class SaveMessageText(val context: Context, val text: String) : ChatCommand
+
+    data class LoadUpdateMessageCache(
+        val channelName: String,
+        val topicName: String
+    ) : ChatCommand
 }

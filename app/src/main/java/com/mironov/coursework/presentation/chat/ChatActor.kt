@@ -81,6 +81,9 @@ class ChatActor @Inject constructor(
             is ChatCommand.DeleteMessage -> deleteMessage(command.messageId)
 
             is ChatCommand.SaveMessageText -> saveMessage(command.context, command.text)
+
+            is ChatCommand.LoadUpdateMessageCache ->
+                loadMessageCache(command.channelName, command.topicName)
         }
         emit(event)
     }

@@ -108,6 +108,12 @@ class MessageRepositoryImpl @Inject constructor(
         withContext(dispatcher) {
             runCatchingNonCancellation {
                 remoteDataSource.editMessageContent(messageId, content)
+                val oldMessageDbModel = localDataSource.getMessage(messageId)
+                val newMessage = remoteDataSource.getMessageById(messageId).toDbModel(
+                    channelName = oldMessageDbModel.message.channelName,
+                    messageId = messageId
+                )
+                localDataSource.updateMessage(newMessage)
                 Result.Success(true)
             }
         }
@@ -116,6 +122,12 @@ class MessageRepositoryImpl @Inject constructor(
         withContext(dispatcher) {
             runCatchingNonCancellation {
                 remoteDataSource.editMessageTopic(messageId, topic)
+                val oldMessageDbModel = localDataSource.getMessage(messageId)
+                val newMessage = remoteDataSource.getMessageById(messageId).toDbModel(
+                    channelName = oldMessageDbModel.message.channelName,
+                    messageId = messageId
+                )
+                localDataSource.updateMessage(newMessage)
                 Result.Success(true)
             }
         }
@@ -124,6 +136,7 @@ class MessageRepositoryImpl @Inject constructor(
         withContext(dispatcher) {
             runCatchingNonCancellation {
                 remoteDataSource.deleteMessage(messageId)
+                localDataSource.deleteMessage(messageId)
                 Result.Success(true)
             }
         }

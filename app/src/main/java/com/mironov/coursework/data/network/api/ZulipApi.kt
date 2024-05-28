@@ -83,7 +83,8 @@ interface ZulipApi {
 
     @GET("messages/{$PATH_MESSAGE_ID}")
     suspend fun getMessageById(
-        @Path(PATH_MESSAGE_ID) messageId: Long
+        @Path(PATH_MESSAGE_ID) messageId: Long,
+        @Query("apply_markdown") applyMarkdown: Boolean = false,
     ): SingleMessageResponse
 
     @PATCH("messages/{$PATH_MESSAGE_ID}")

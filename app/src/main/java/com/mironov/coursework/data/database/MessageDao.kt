@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.mironov.coursework.data.database.model.message.MessageDbModel
 import com.mironov.coursework.data.database.model.message.MessageInfoDbModel
 import com.mironov.coursework.data.database.model.message.ReactionDbModel
@@ -84,4 +85,19 @@ interface MessageDao {
         channelName: String,
         messageCount: Int
     )
+
+    @Query("SELECT * FROM ${MessageInfoDbModel.TABLE_NAME} WHERE id = :messageId")
+    suspend fun getMessage(messageId: Long): MessageDbModel
+
+    @Update
+    @Transaction
+    suspend fun updateMessage(messageDbModel: MessageDbModel) {
+        insertMessage(messageDbModel.message)
+        messageDbModel.reactions.forEach {
+            insertReaction(it)
+        }
+    }
+
+    @Query("DELETE FROM ${MessageInfoDbModel.TABLE_NAME} WHERE id = :messageId")
+    suspend fun deleteMessage(messageId: Long)
 }
