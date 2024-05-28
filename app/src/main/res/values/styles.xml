@@ -34,4 +34,37 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">?attr/text_300</item>
     </style>
+
+    <style name="DialogEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="TryAgainButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:paddingHorizontal">56dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:text">@string/try_again</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:backgroundTint">?attr/profile_log_out_background_color</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ErrorMessageTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
 </resources>
