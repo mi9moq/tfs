@@ -19,7 +19,8 @@
         }
       ],
       "sender_full_name": "Notification Bot",
-      "avatar_url": null
+      "avatar_url": null,
+      "subject": "Test topic"
     },{
       "id": 433419052,
       "sender_id": 100006,
@@ -50,7 +51,8 @@
         }
       ],
       "sender_full_name": "Notification Bot",
-      "avatar_url": null
+      "avatar_url": null,
+      "subject": "Test topic"
     },
     {
       "id": 434537695,
@@ -93,7 +95,8 @@
         }
       ],
       "sender_full_name": "Dmitry Kucherenko",
-      "avatar_url": null
+      "avatar_url": null,
+      "subject": "Test topic"
     }
   ]
 }

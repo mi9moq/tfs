@@ -4,6 +4,7 @@ import android.view.View
 import com.kaspersky.kaspresso.screens.KScreen
 import com.mironov.coursework.R
 import com.mironov.coursework.ui.channels.ChannelsPageFragment
+import io.github.kakaocup.kakao.image.KImageView
 import io.github.kakaocup.kakao.recycler.KRecyclerItem
 import io.github.kakaocup.kakao.recycler.KRecyclerView
 import io.github.kakaocup.kakao.text.KTextView
@@ -22,6 +23,8 @@ object ChannelFragmentScreen : KScreen<ChannelFragmentScreen>() {
 
     class KChannelItem(parent: Matcher<View>) : KRecyclerItem<KChannelItem>(parent) {
         val channel = KTextView(parent) { withId(R.id.channel) }
+        val iconArrowUp = KImageView(parent) { withId(R.id.arrow_up) }
+        val iconArrowDown = KImageView(parent) { withId(R.id.arrow_down) }
     }
 
     class KTopicItem(parent: Matcher<View>) : KRecyclerItem<KTopicItem>(parent) {
