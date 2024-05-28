@@ -88,7 +88,7 @@ fun Fragment.showDialog(
     positiveButtonTextId: Int,
     positiveButtonClickListener: () -> Unit,
 ) {
-    AlertDialog.Builder(requireContext()).apply {
+    AlertDialog.Builder(requireContext(),R.style.CustomAlertDialog).apply {
         titleTextId?.let { setTitle(it) }
         messageTextId?.let { setMessage(it) }
         view?.let { setView(it) }

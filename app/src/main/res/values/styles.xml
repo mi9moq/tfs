@@ -42,6 +42,8 @@
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:textColorHint">?attr/text_200</item>
     </style>
 
     <style name="TryAgainButton">
