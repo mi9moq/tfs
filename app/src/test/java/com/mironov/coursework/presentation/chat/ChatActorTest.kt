@@ -3,11 +3,15 @@ package com.mironov.coursework.presentation.chat
 import app.cash.turbine.test
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
+import com.mironov.coursework.domain.usecase.DeleteMessageUseCase
+import com.mironov.coursework.domain.usecase.EditMessageContentUseCase
+import com.mironov.coursework.domain.usecase.EditMessageTopicUseCase
 import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesCacheUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetNextMessagesUseCase
 import com.mironov.coursework.domain.usecase.GetPrevMessagesUseCase
+import com.mironov.coursework.domain.usecase.GetTopicsUseCase
 import com.mironov.coursework.domain.usecase.RemoveReactionUseCase
 import com.mironov.coursework.domain.usecase.SendMessageUseCase
 import com.mironov.coursework.stub.CHANNEL_NAME
@@ -37,6 +41,10 @@ class ChatActorTest {
     private val getNextMessagesUseCase: GetNextMessagesUseCase = mock()
     private val getPrevMessagesUseCase: GetPrevMessagesUseCase = mock()
     private val getMessagesCacheUseCase: GetMessagesCacheUseCase = mock()
+    private val getTopicsUseCase: GetTopicsUseCase = mock()
+    private val editMessageTopicUseCase: EditMessageTopicUseCase = mock()
+    private val editMessageContentUseCase: EditMessageContentUseCase = mock()
+    private val deleteMessageUseCase: DeleteMessageUseCase = mock()
 
     val actor = ChatActor(
         sendMessageUseCase,
@@ -47,6 +55,10 @@ class ChatActorTest {
         getNextMessagesUseCase,
         getPrevMessagesUseCase,
         getMessagesCacheUseCase,
+        getTopicsUseCase,
+        editMessageTopicUseCase,
+        editMessageContentUseCase,
+        deleteMessageUseCase,
     )
 
     @Test

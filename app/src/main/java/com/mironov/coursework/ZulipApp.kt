@@ -12,9 +12,4 @@ open class ZulipApp: Application() {
 
     open fun createComponent(): AppComponent =
         DaggerAppComponent.factory().create(this)
-
-    override fun onCreate() {
-        component.inject(this)
-        super.onCreate()
-    }
 }

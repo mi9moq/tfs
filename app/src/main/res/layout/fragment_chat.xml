@@ -24,14 +24,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/background_400"
-        android:textColor="?attr/text_300"
-        android:textSize="18sp"
         android:gravity="center"
         android:paddingVertical="12dp"
+        android:textColor="?attr/text_300"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:text="TOPIC: Testing" />
+
+    <TextView
+        android:id="@+id/chat_error_message"
+        style="@style/ErrorMessageTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        tools:text="не удалось загрузить сообщения" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/try_again"
+        style="@style/TryAgainButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chat_error_message" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages"
@@ -44,24 +59,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        app:layout_constraintTop_toBottomOf="@id/try_again"
         tools:listitem="@layout/received_message_item" />
 
     <com.google.android.material.textfield.MaterialAutoCompleteTextView
         android:id="@+id/choose_topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/edit_text_bg"
-        android:textColorHint="?attr/text_300"
-        android:textColor="?attr/text_300"
-        app:layout_constraintBottom_toTopOf="@id/message_input"
-        android:paddingLeft="20dp"
         android:paddingVertical="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:paddingLeft="20dp"
+        android:textColor="?attr/text_300"
+        android:textColorHint="?attr/text_300"
+        app:layout_constraintBottom_toTopOf="@id/message_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/message_input"
@@ -125,33 +140,5 @@
             <include layout="@layout/message_placeholder" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <TextView
-        android:id="@+id/chat_error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:textColor="?attr/text_100"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:text="не удалось загрузить сообщения" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/try_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/black"
-        android:paddingHorizontal="56dp"
-        android:paddingVertical="14dp"
-        android:text="@string/try_again"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_error_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

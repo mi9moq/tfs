@@ -21,6 +21,8 @@ object ChatFragmentScreen : KScreen<ChatFragmentScreen>() {
     val tryAgain = KButton { withId(R.id.try_again) }
     val messageInput = KEditText { withId(R.id.message_input) }
     val sendMessage = KImageView { withId(R.id.send_message) }
+    val currentTopic = KTextView { withId(R.id.current_topic) }
+    val chooseTopic = KEditText { withId(R.id.choose_topic) }
 
     val recycler = KRecyclerView({ withId(R.id.messages) },
         {

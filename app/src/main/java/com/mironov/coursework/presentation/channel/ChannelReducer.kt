@@ -23,10 +23,13 @@ class ChannelReducer @Inject constructor(
 
         ChannelEvent.Domain.LoadChannelFailure -> {
             state {
-                copy(isLoading = false, content = null)
+                copy(isLoading = false)
             }
             effects {
-                +ChannelEffect.ErrorLoadingChannels
+                if (state.content == null)
+                    +ChannelEffect.ErrorLoadingChannels
+                else
+                    +ChannelEffect.ErrorUpdateData
             }
         }
 
@@ -53,14 +56,11 @@ class ChannelReducer @Inject constructor(
 
         is ChannelEvent.Domain.FilterSuccess -> {
             state {
-                if (event.content.isEmpty() && event.query.isEmpty())
-                    copy(isLoading = true)
-                else
-                    copy(isLoading = false, content = event.content)
+                copy(content = event.content)
             }
         }
 
-        ChannelEvent.Domain.EmptyCache -> {
+        ChannelEvent.Domain.EmptyChannelCache -> {
             state {
                 copy(isLoading = true, content = null)
             }
@@ -78,6 +78,8 @@ class ChannelReducer @Inject constructor(
                 +ChannelCommand.LoadSubscribedChannels
             }
         }
+
+        ChannelEvent.Domain.EmptyEvent -> Unit
     }
 
     override fun Result.ui(event: ChannelEvent.Ui): Any = when (event) {
@@ -140,6 +142,23 @@ class ChannelReducer @Inject constructor(
         is ChannelEvent.Ui.CreateChannel -> {
             commands {
                 +ChannelCommand.CreateChannel(event.name, event.description)
+            }
+        }
+
+        ChannelEvent.Ui.ReloadAll -> {
+            state {
+                copy(isLoading = true)
+            }
+            commands {
+                +ChannelCommand.LoadAllChannels
+            }
+        }
+        ChannelEvent.Ui.ReloadSubscribed -> {
+            state {
+                copy(isLoading = true)
+            }
+            commands {
+                +ChannelCommand.LoadSubscribedChannels
             }
         }
     }

@@ -30,8 +30,8 @@
     <string name="channel_name_hint">Channel name</string>
     <string name="channel_description_hint">Channel description</string>
     <string name="error_create_channel">failed to create channel</string>
-    <string name="empty_name_filed">The "name" field cannot be empty</string>
-    <string name="copy_message_text">Сopy message text</string>
+    <string name="empty_name_filed">The Name field cannot be empty</string>
+    <string name="copy_message_text">Copy message text</string>
     <string name="add_reaction">Add reaction</string>
     <string name="edit_message">Edit message</string>
     <string name="edit_topic">Edit topic</string>
@@ -42,4 +42,7 @@
     <string name="error_change_message">Failed to change message</string>
     <string name="error_change_topic">Failed to change topic</string>
     <string name="error_delete_message">Failed to delete message</string>
+    <string name="error_load_topic">Failed to load topic</string>
+    <string name="error_update_data">Failed to update data</string>
+    <string name="unread_message">%s mes</string>
 </resources>

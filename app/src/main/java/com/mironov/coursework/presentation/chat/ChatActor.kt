@@ -176,7 +176,7 @@ class ChatActor @Inject constructor(
     private suspend fun loadNextMessages(channelName: String, topicName: String): ChatEvent.Domain =
         when (val result = getNextMessagesUseCase(channelName, topicName, lastMessageId)) {
             is Result.Failure -> {
-                ChatEvent.Domain.LoadMessagesFailure
+                ChatEvent.Domain.PagingFailure
             }
 
             is Result.Success -> {
@@ -193,7 +193,7 @@ class ChatActor @Inject constructor(
     private suspend fun loadPrevMessages(channelName: String, topicName: String): ChatEvent.Domain =
         when (val result = getPrevMessagesUseCase(channelName, topicName, firstMessageId)) {
             is Result.Failure -> {
-                ChatEvent.Domain.LoadMessagesFailure
+                ChatEvent.Domain.PagingFailure
             }
 
             is Result.Success -> {

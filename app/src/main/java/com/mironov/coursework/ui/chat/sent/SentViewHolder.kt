@@ -14,7 +14,6 @@ class SentViewHolder(
     fun bind(model: Message) {
         with(binding.main) {
             setMessage(model)
-            //setOnMessageLongClickListener(chooseReaction)
             setOnAddClickListener(chooseReaction)
             setOnReactionsClickListeners(onReactionClickListener)
         }

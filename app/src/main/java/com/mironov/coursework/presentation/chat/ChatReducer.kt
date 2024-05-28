@@ -128,6 +128,15 @@ class ChatReducer @Inject constructor(
                 )
             }
         }
+
+        ChatEvent.Domain.PagingFailure -> {
+            state {
+                copy(isNextPageLoading = false)
+            }
+            effects {
+                +ChatEffect.ErrorLoadingNewPage
+            }
+        }
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {

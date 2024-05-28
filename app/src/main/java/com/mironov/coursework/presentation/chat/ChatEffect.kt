@@ -26,4 +26,6 @@ sealed interface ChatEffect {
     data object ErrorChangeMessage : ChatEffect
 
     data object ErrorDeleteMessage : ChatEffect
+
+    data object ErrorLoadingNewPage: ChatEffect
 }
