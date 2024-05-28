@@ -7,19 +7,21 @@ import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.mironov.coursework.R
 import com.mironov.coursework.screen.ChatFragmentScreen
 import com.mironov.coursework.ui.chat.ChatFragment
+import com.mironov.coursework.util.CHAT_INFO_KEY
 import com.mironov.coursework.util.FragmentTestRule
 import com.mironov.coursework.util.MockMessages
 import com.mironov.coursework.util.MockMessages.Companion.messages
+import com.mironov.coursework.util.chatInfo
+import com.mironov.coursework.util.chatInfoWithTopic
 import com.mironov.coursework.util.firstMessageDate
 import org.junit.Rule
 import org.junit.Test
 
-class ChatFragmentTest : TestCase() {
+class TopicChatFragmentTest : TestCase() {
 
     @get:Rule
     val rule = FragmentTestRule(ChatFragment(), Bundle().apply {
-        putString("channel name", "Test Channel")
-        putString("topic name", "Test topic")
+        putParcelable(CHAT_INFO_KEY, chatInfoWithTopic)
     })
 
     @Test
@@ -33,6 +35,13 @@ class ChatFragmentTest : TestCase() {
                     date.hasText(firstMessageDate)
                 }
                 errorMessage.isGone()
+            }
+            step("Проверяем, что открылся чат коннкретного топика"){
+                currentTopic{
+                    isVisible()
+                    containsText(chatInfo.topicName)
+                }
+                chooseTopic.isNotDisplayed()
             }
             step("Проверяем, что поле ввода сообщения пустое, отображается иконка загрузки фала") {
                 messageInput.hasEmptyText()
