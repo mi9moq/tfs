@@ -153,6 +153,12 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         is ChatEffect.ShowEditTopicDialog -> showEditTopicDialog(effect)
 
         is ChatEffect.ShowEditMessageDialog -> showEditMessageDialog(effect)
+
+        ChatEffect.ErrorChangeMessage -> showErrorSnackBar(getString(R.string.error_change_message))
+
+        ChatEffect.ErrorChangeTopic -> showErrorSnackBar(getString(R.string.error_change_topic))
+
+        ChatEffect.ErrorDeleteMessage -> showErrorSnackBar(getString(R.string.error_delete_message))
     }
 
     private fun initChatParams() {

@@ -84,15 +84,27 @@ class ChatReducer @Inject constructor(
 
         ChatEvent.Domain.Empty -> Unit
 
-        ChatEvent.Domain.ChangeTopicFailure -> Unit //TODO() показать оишбку
+        ChatEvent.Domain.ChangeTopicFailure -> {
+            effects {
+                +ChatEffect.ErrorChangeTopic
+            }
+        }
 
         ChatEvent.Domain.ChangeTopicSuccess -> Unit //TODO()
 
-        ChatEvent.Domain.ChangeMessageFailure -> Unit //TODO()
+        ChatEvent.Domain.ChangeMessageFailure -> {
+            effects {
+                +ChatEffect.ErrorChangeMessage
+            }
+        }
 
         ChatEvent.Domain.ChangeMessageSuccess -> Unit //TODO()
 
-        ChatEvent.Domain.DeleteMessageFailure -> Unit //TODO()
+        ChatEvent.Domain.DeleteMessageFailure -> {
+            effects {
+                +ChatEffect.ErrorDeleteMessage
+            }
+        }
 
         ChatEvent.Domain.DeleteMessageSuccess -> Unit //TODO()
     }

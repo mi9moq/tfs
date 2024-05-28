@@ -39,4 +39,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="message_text">Message text</string>
+    <string name="error_change_message">Failed to change message</string>
+    <string name="error_change_topic">Failed to change topic</string>
+    <string name="error_delete_message">Failed to delete message</string>
 </resources>
