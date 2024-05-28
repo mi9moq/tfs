@@ -15,7 +15,6 @@ class ReceivedViewHolder(
         with(binding.main) {
             setMessage(model)
             setAvatar(model.avatarUrl)
-            //setOnMessageLongClickListener(chooseReaction)
             setOnAddClickListener(chooseReaction)
             setOnReactionsClickListeners(onReactionClickListener)
         }
