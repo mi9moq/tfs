@@ -3,6 +3,7 @@ package com.mironov.coursework.ui.chat
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -159,6 +160,8 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         ChatEffect.ErrorChangeTopic -> showErrorSnackBar(getString(R.string.error_change_topic))
 
         ChatEffect.ErrorDeleteMessage -> showErrorSnackBar(getString(R.string.error_delete_message))
+
+        ChatEffect.ErrorLoadingNewPage -> showErrorSnackBar(getString(R.string.error_loading_messages))
     }
 
     private fun initChatParams() {
@@ -254,7 +257,9 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
             messages.isVisible = true
             messages.adapter = adapter
         }
-        adapter.submitList(delegateList)
+        adapter.submitList(delegateList){
+            Log.e("Subbub", "submit")
+        }
     }
 
     private fun applyLoadingState() {

@@ -95,5 +95,7 @@ sealed interface ChatEvent {
         data object DeleteMessageSuccess: Domain
 
         data object DeleteMessageFailure: Domain
+
+        data object PagingFailure: Domain
     }
 }
