@@ -9,8 +9,8 @@ import com.mironov.coursework.util.AppTestRule
 import com.mironov.coursework.util.CHAT_INFO_KEY
 import com.mironov.coursework.util.MockChannels.Companion.channels
 import com.mironov.coursework.util.MockMessages.Companion.messages
-import com.mironov.coursework.util.channelInfo
-import com.mironov.coursework.util.channelInfoWithTopic
+import com.mironov.coursework.util.chatInfo
+import com.mironov.coursework.util.chatInfoWithTopic
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -43,7 +43,7 @@ class ChannelsPageFragmentTest : TestCase() {
             step("Проверяем переданные аргументы") {
                 rule.activityScenarioRule.scenario.onActivity {
                     it.supportFragmentManager.fragments[0]?.arguments?.apply {
-                        assertEquals(channelInfoWithTopic, getParcelable(CHAT_INFO_KEY))
+                        assertEquals(chatInfoWithTopic, getParcelable(CHAT_INFO_KEY))
                     }
                 }
             }
@@ -67,7 +67,7 @@ class ChannelsPageFragmentTest : TestCase() {
             step("Проверяем переданные аргументы") {
                 rule.activityScenarioRule.scenario.onActivity {
                     it.supportFragmentManager.fragments[0]?.arguments?.apply {
-                        assertEquals(channelInfo, getParcelable(CHAT_INFO_KEY))
+                        assertEquals(chatInfo, getParcelable(CHAT_INFO_KEY))
                     }
                 }
             }

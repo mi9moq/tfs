@@ -10,12 +10,12 @@ const val CHANNEL_NAME = "Test Channel"
 const val TOPIC_NAME = "Test topic"
 const val CHAT_INFO_KEY = "chat info"
 
-val channelInfoWithTopic = ChatInfo(
+val chatInfoWithTopic = ChatInfo(
     topicName = TOPIC_NAME,
     channelName = CHANNEL_NAME,
     channelId = ChatInfo.UNDEFINED_ID,
 )
-val channelInfo = ChatInfo(
+val chatInfo = ChatInfo(
     topicName = ChatInfo.NO_TOPIC,
     channelName = CHANNEL_NAME,
     channelId = 123456,
