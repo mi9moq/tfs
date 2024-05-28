@@ -44,4 +44,5 @@
     <string name="error_delete_message">Failed to delete message</string>
     <string name="error_load_topic">Failed to load topic</string>
     <string name="error_update_data">Failed to update data</string>
+    <string name="unread_message">%s mes</string>
 </resources>
