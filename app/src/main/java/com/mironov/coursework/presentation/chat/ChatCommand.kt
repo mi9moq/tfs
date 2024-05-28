@@ -1,5 +1,7 @@
 package com.mironov.coursework.presentation.chat
 
+import android.content.Context
+
 sealed interface ChatCommand {
 
     data class LoadMessage(
@@ -40,4 +42,17 @@ sealed interface ChatCommand {
     ) : ChatCommand
 
     data class LoadExistingTopics(val channelId: Int, val channelName: String) : ChatCommand
+
+    data class ChangeTopic(val messageId: Long, val newTopic: String) : ChatCommand
+
+    data class ChangeMessage(val messageId: Long, val newMessage: String) : ChatCommand
+
+    data class DeleteMessage(val messageId: Long) : ChatCommand
+
+    data class SaveMessageText(val context: Context, val text: String) : ChatCommand
+
+    data class LoadUpdateMessageCache(
+        val channelName: String,
+        val topicName: String
+    ) : ChatCommand
 }

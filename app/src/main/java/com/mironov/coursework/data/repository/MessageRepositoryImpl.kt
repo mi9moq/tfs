@@ -103,4 +103,41 @@ class MessageRepositoryImpl @Inject constructor(
             Result.Success(messages)
         }
     }
+
+    override suspend fun editMessageContent(messageId: Long, content: String): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.editMessageContent(messageId, content)
+                val oldMessageDbModel = localDataSource.getMessage(messageId)
+                val newMessage = remoteDataSource.getMessageById(messageId).toDbModel(
+                    channelName = oldMessageDbModel.message.channelName,
+                    messageId = messageId
+                )
+                localDataSource.updateMessage(newMessage)
+                Result.Success(true)
+            }
+        }
+
+    override suspend fun editMessageTopic(messageId: Long, topic: String): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.editMessageTopic(messageId, topic)
+                val oldMessageDbModel = localDataSource.getMessage(messageId)
+                val newMessage = remoteDataSource.getMessageById(messageId).toDbModel(
+                    channelName = oldMessageDbModel.message.channelName,
+                    messageId = messageId
+                )
+                localDataSource.updateMessage(newMessage)
+                Result.Success(true)
+            }
+        }
+
+    override suspend fun deleteMessage(messageId: Long): Result<Boolean> =
+        withContext(dispatcher) {
+            runCatchingNonCancellation {
+                remoteDataSource.deleteMessage(messageId)
+                localDataSource.deleteMessage(messageId)
+                Result.Success(true)
+            }
+        }
 }

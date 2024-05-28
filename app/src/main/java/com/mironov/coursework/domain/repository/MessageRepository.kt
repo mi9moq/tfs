@@ -27,4 +27,10 @@ interface MessageRepository {
         topicName: String,
         anchorMessageId: Long
     ): Result<List<Message>>
+
+    suspend fun editMessageContent(messageId: Long, content: String): Result<Boolean>
+
+    suspend fun editMessageTopic(messageId: Long, topic: String): Result<Boolean>
+
+    suspend fun deleteMessage(messageId: Long): Result<Boolean>
 }

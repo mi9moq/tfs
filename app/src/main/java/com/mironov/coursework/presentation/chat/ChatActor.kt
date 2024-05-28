@@ -1,7 +1,14 @@
 package com.mironov.coursework.presentation.chat
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import com.mironov.coursework.R
 import com.mironov.coursework.domain.repository.Result
 import com.mironov.coursework.domain.usecase.AddReactionUseCase
+import com.mironov.coursework.domain.usecase.DeleteMessageUseCase
+import com.mironov.coursework.domain.usecase.EditMessageContentUseCase
+import com.mironov.coursework.domain.usecase.EditMessageTopicUseCase
 import com.mironov.coursework.domain.usecase.GetMessageByIdUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesCacheUseCase
 import com.mironov.coursework.domain.usecase.GetMessagesUseCase
@@ -26,6 +33,9 @@ class ChatActor @Inject constructor(
     private val getPrevMessagesUseCase: GetPrevMessagesUseCase,
     private val getMessagesCacheUseCase: GetMessagesCacheUseCase,
     private val getTopicsUseCase: GetTopicsUseCase,
+    private val editMessageTopicUseCase: EditMessageTopicUseCase,
+    private val editMessageContentUseCase: EditMessageContentUseCase,
+    private val deleteMessageUseCase: DeleteMessageUseCase,
 ) : Actor<ChatCommand, ChatEvent>() {
 
     private var lastMessageId = 0L
@@ -63,6 +73,17 @@ class ChatActor @Inject constructor(
 
             is ChatCommand.LoadExistingTopics ->
                 loadExistingTopics(command.channelId, command.channelName)
+
+            is ChatCommand.ChangeTopic -> changeTopic(command.messageId, command.newTopic)
+
+            is ChatCommand.ChangeMessage -> changeMessage(command.messageId, command.newMessage)
+
+            is ChatCommand.DeleteMessage -> deleteMessage(command.messageId)
+
+            is ChatCommand.SaveMessageText -> saveMessage(command.context, command.text)
+
+            is ChatCommand.LoadUpdateMessageCache ->
+                loadMessageCache(command.channelName, command.topicName)
         }
         emit(event)
     }
@@ -200,4 +221,33 @@ class ChatActor @Inject constructor(
                 ChatEvent.Domain.LoadTopicSuccess(topicNameList)
             }
         }
+
+    private suspend fun changeTopic(messageId: Long, newTopic: String): ChatEvent.Domain =
+        when (editMessageTopicUseCase(messageId, newTopic)) {
+            is Result.Failure -> ChatEvent.Domain.ChangeTopicFailure
+            is Result.Success -> ChatEvent.Domain.ChangeTopicSuccess
+        }
+
+    private suspend fun changeMessage(messageId: Long, newMessage: String): ChatEvent.Domain =
+        when (editMessageContentUseCase(messageId, newMessage)) {
+            is Result.Failure -> ChatEvent.Domain.ChangeMessageFailure
+            is Result.Success -> ChatEvent.Domain.ChangeMessageSuccess
+        }
+
+    private suspend fun deleteMessage(messageId: Long): ChatEvent.Domain =
+        when (deleteMessageUseCase(messageId)) {
+            is Result.Failure -> ChatEvent.Domain.DeleteMessageFailure
+            is Result.Success -> ChatEvent.Domain.DeleteMessageSuccess
+        }
+
+    private fun saveMessage(context: Context, text: String): ChatEvent.Domain {
+        val clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        val clipData = ClipData.newPlainText(context.getString(R.string.message_text), text)
+
+        clipboardManager.setPrimaryClip(clipData)
+
+        return ChatEvent.Domain.Empty
+    }
 }

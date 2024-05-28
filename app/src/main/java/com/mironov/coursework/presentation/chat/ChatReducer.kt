@@ -1,5 +1,8 @@
 package com.mironov.coursework.presentation.chat
 
+import com.mironov.coursework.domain.entity.Message
+import com.mironov.coursework.domain.utils.MILLIS_IN_SECONDS
+import com.mironov.coursework.domain.utils.SECONDS_IN_MINUTES
 import com.mironov.coursework.navigation.router.ChatRouter
 import vivid.money.elmslie.core.store.dsl.ScreenDslReducer
 import javax.inject.Inject
@@ -80,11 +83,65 @@ class ChatReducer @Inject constructor(
         }
 
         ChatEvent.Domain.Empty -> Unit
+
+        ChatEvent.Domain.ChangeTopicFailure -> {
+            effects {
+                +ChatEffect.ErrorChangeTopic
+            }
+        }
+
+        ChatEvent.Domain.ChangeTopicSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
+
+        ChatEvent.Domain.ChangeMessageFailure -> {
+            effects {
+                +ChatEffect.ErrorChangeMessage
+            }
+        }
+
+        ChatEvent.Domain.ChangeMessageSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
+
+        ChatEvent.Domain.DeleteMessageFailure -> {
+            effects {
+                +ChatEffect.ErrorDeleteMessage
+            }
+        }
+
+        ChatEvent.Domain.DeleteMessageSuccess -> {
+            commands {
+                +ChatCommand.LoadUpdateMessageCache(
+                    channelName = state.chatInfo.channelName,
+                    topicName = state.chatInfo.topicName
+                )
+            }
+        }
     }
 
     override fun Result.ui(event: ChatEvent.Ui): Any = when (event) {
         ChatEvent.Ui.Initial -> {}
         is ChatEvent.Ui.Load -> {
+            state {
+                copy(
+                    chatInfo = ChatInfo(
+                        topicName = event.topicName,
+                        channelName = event.channelName,
+                        channelId = event.id
+                    )
+                )
+            }
             commands {
                 +ChatCommand.LoadMessageCache(event.channelName, event.topicName)
                 +ChatCommand.LoadMessage(event.channelName, event.topicName)
@@ -133,5 +190,73 @@ class ChatReducer @Inject constructor(
         }
 
         is ChatEvent.Ui.OnTopicClicked -> router.showTopic(event.chatInfo)
+
+        is ChatEvent.Ui.OnMessageLongClicked -> {
+            val isContentEditable = event.message.isContentEditable()
+            val isTopicEditable = event.message.isTopicEditable()
+            val canDelete = event.message.canDelete()
+            effects {
+                +ChatEffect.ShowMessageActionDialog(
+                    message = event.message,
+                    isContentEditable = isContentEditable,
+                    isTopicEditable = isTopicEditable,
+                    canDelete = canDelete
+                )
+            }
+        }
+
+        is ChatEvent.Ui.OnEditMessageTopicClicked -> {
+            effects {
+                +ChatEffect.ShowEditTopicDialog(event.messageId, event.oldTopic)
+            }
+        }
+
+        is ChatEvent.Ui.SaveNewTopic -> {
+            commands {
+                +ChatCommand.ChangeTopic(event.messageId, event.newTopic)
+            }
+        }
+
+        is ChatEvent.Ui.OnEditMessageContentClicked -> {
+            effects {
+                +ChatEffect.ShowEditMessageDialog(event.messageId, event.oldMessage)
+            }
+        }
+
+        is ChatEvent.Ui.SaveNewMessage -> {
+            commands {
+                +ChatCommand.ChangeMessage(event.messageId, event.newMessage)
+            }
+        }
+
+        is ChatEvent.Ui.OnDeleteTopicClicked -> {
+            commands {
+                +ChatCommand.DeleteMessage(event.messageId)
+            }
+        }
+
+        is ChatEvent.Ui.OnCopyMessageTextClicked -> {
+            commands {
+                +ChatCommand.SaveMessageText(event.context, event.text)
+            }
+        }
+    }
+
+    private fun Message.isContentEditable(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_CONTENT_EDITABLE_MINUTES
+    }
+
+    private fun Message.isTopicEditable(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_TOPIC_EDITABLE_MINUTES
+    }
+
+    private fun Message.canDelete(): Boolean {
+        val timesLeft =
+            (System.currentTimeMillis() / MILLIS_IN_SECONDS - sendTime) / SECONDS_IN_MINUTES
+        return isMeMessage && timesLeft < Message.MESSAGE_CAN_DELETED_MINUTES
     }
 }

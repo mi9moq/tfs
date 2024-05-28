@@ -11,8 +11,12 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mironov.coursework.R
+import com.mironov.coursework.databinding.ChangeMessageDialogBinding
+import com.mironov.coursework.databinding.DialogMessageActionBinding
 import com.mironov.coursework.databinding.FragmentChatBinding
+import com.mironov.coursework.domain.entity.Message
 import com.mironov.coursework.presentation.chat.ChatCommand
 import com.mironov.coursework.presentation.chat.ChatEffect
 import com.mironov.coursework.presentation.chat.ChatEvent
@@ -29,6 +33,7 @@ import com.mironov.coursework.ui.reaction.ChooseReactionDialogFragment
 import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import com.mironov.coursework.ui.utils.showDialog
 import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
 import vivid.money.elmslie.core.store.ElmStore
@@ -78,8 +83,20 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
     val adapter by lazy {
         MainAdapter().apply {
             addDelegate(DateDelegate())
-            addDelegate(ReceivedDelegate(::chooseReaction, ::changeReaction))
-            addDelegate(SentDelegate(::chooseReaction, ::changeReaction))
+            addDelegate(
+                ReceivedDelegate(
+                    ::chooseReaction,
+                    ::changeReaction,
+                    ::onMessageLongClickListener
+                )
+            )
+            addDelegate(
+                SentDelegate(
+                    ::chooseReaction,
+                    ::changeReaction,
+                    ::onMessageLongClickListener
+                )
+            )
             addDelegate(MessageTopicDelegate(::onTopicClickListener))
         }
     }
@@ -130,6 +147,18 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         is ChatEffect.ErrorSendingMessage -> applySendingError()
 
         is ChatEffect.ErrorChangeReaction -> applyChangeReactionError()
+
+        is ChatEffect.ShowMessageActionDialog -> showMessageActionDialog(effect)
+
+        is ChatEffect.ShowEditTopicDialog -> showEditTopicDialog(effect)
+
+        is ChatEffect.ShowEditMessageDialog -> showEditMessageDialog(effect)
+
+        ChatEffect.ErrorChangeMessage -> showErrorSnackBar(getString(R.string.error_change_message))
+
+        ChatEffect.ErrorChangeTopic -> showErrorSnackBar(getString(R.string.error_change_topic))
+
+        ChatEffect.ErrorDeleteMessage -> showErrorSnackBar(getString(R.string.error_delete_message))
     }
 
     private fun initChatParams() {
@@ -319,6 +348,10 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         dialog.onEmojiClickedCallback = ::acceptChooseReaction
     }
 
+    private fun onMessageLongClickListener(message: Message) {
+        store.accept(ChatEvent.Ui.OnMessageLongClicked(message))
+    }
+
     private fun acceptChooseReaction(messageId: Long, emojiName: String) {
         store.accept(ChatEvent.Ui.ChooseReaction(messageId, emojiName))
     }
@@ -328,5 +361,145 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
         val adapter = ArrayAdapter(requireContext(), R.layout.chat_topic_item, topics)
         binding.chooseTopic.setAdapter(adapter)
         binding.chooseTopic.hint = topics.first()
+    }
+
+    private fun showMessageActionDialog(effect: ChatEffect.ShowMessageActionDialog) {
+        val dialog = BottomSheetDialog(requireContext())
+        val dialogBinding = DialogMessageActionBinding.inflate(layoutInflater)
+        dialogBinding.initViews(
+            effect = effect,
+            onDismiss = {
+                dialog.dismiss()
+            }
+        )
+
+        dialog.apply {
+            setContentView(dialogBinding.root)
+            show()
+        }
+    }
+
+    private fun showEditTopicDialog(effect: ChatEffect.ShowEditTopicDialog) {
+        val dialogLayout = ChangeMessageDialogBinding.inflate(layoutInflater)
+        dialogLayout.changeInput.setText(effect.oldTopic)
+
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.save,
+            positiveButtonClickListener = {
+                saveChangeTopic(
+                    messageId = effect.messageId,
+                    topic = dialogLayout.changeInput.text?.trim().toString(),
+                )
+            }
+        )
+    }
+
+    private fun showEditMessageDialog(effect: ChatEffect.ShowEditMessageDialog) {
+        val dialogLayout = ChangeMessageDialogBinding.inflate(layoutInflater)
+        dialogLayout.changeInput.setText(effect.oldMessage)
+
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.save,
+            positiveButtonClickListener = {
+                saveChangeMessage(
+                    messageId = effect.messageId,
+                    message = dialogLayout.changeInput.text?.trim().toString(),
+                )
+            }
+        )
+    }
+
+    private fun saveChangeTopic(messageId: Long, topic: String) {
+        if (topic.isNotEmpty())
+            store.accept(ChatEvent.Ui.SaveNewTopic(messageId, topic))
+    }
+
+    private fun saveChangeMessage(messageId: Long, message: String) {
+        store.accept(ChatEvent.Ui.SaveNewMessage(messageId, message))
+    }
+
+    private fun DialogMessageActionBinding.initViews(
+        effect: ChatEffect.ShowMessageActionDialog,
+        onDismiss: () -> Unit
+    ) {
+        setVisibility(isVisible = effect.isContentEditable, icEditMessage, editMessage)
+        setVisibility(isVisible = effect.canDelete, icDelete, delete)
+        setVisibility(isVisible = effect.isTopicEditable, icEditTopic, editTopic)
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageTopicClicked(
+                        messageId = effect.message.id,
+                        oldTopic = effect.message.topicName
+                    )
+                )
+                onDismiss()
+            },
+            icEditTopic, editTopic
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnEditMessageContentClicked(
+                        messageId = effect.message.id,
+                        oldMessage = effect.message.content
+                    )
+                )
+                onDismiss()
+            },
+            icEditMessage, editMessage
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnDeleteTopicClicked(effect.message.id)
+                )
+                onDismiss()
+            },
+            icDelete, delete
+        )
+
+        addClickListener(
+            onClick = {
+                chooseReaction(effect.message.id)
+                onDismiss()
+            },
+            icEmoji, addReaction
+        )
+
+        addClickListener(
+            onClick = {
+                store.accept(
+                    ChatEvent.Ui.OnCopyMessageTextClicked(
+                        context = requireContext(),
+                        text = effect.message.content
+                    )
+                )
+                onDismiss()
+            },
+            icCopy, copy
+        )
+    }
+
+    private fun setVisibility(isVisible: Boolean, vararg views: View) {
+        views.forEach {
+            it.isVisible = isVisible
+        }
+    }
+
+    private fun addClickListener(
+        onClick: () -> Unit,
+        vararg views: View
+    ) {
+        views.forEach {
+            it.setOnClickListener {
+                onClick()
+            }
+        }
     }
 }

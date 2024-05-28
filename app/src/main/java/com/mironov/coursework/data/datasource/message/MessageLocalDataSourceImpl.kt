@@ -55,6 +55,15 @@ class MessageLocalDataSourceImpl @Inject constructor(
             insertNewMessagesInTopic(messages, channelName, topicName)
     }
 
+    override suspend fun getMessage(id: Long): MessageDbModel =
+        dao.getMessage(id)
+
+    override suspend fun updateMessage(message: MessageDbModel) =
+        dao.updateMessage(message)
+
+    override suspend fun deleteMessage(id: Long) =
+        dao.deleteMessage(id)
+
     private suspend fun insertOldMessagesInTopic(
         messages: List<MessageDbModel>,
         channelName: String,

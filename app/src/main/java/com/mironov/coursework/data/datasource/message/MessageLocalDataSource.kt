@@ -13,7 +13,7 @@ interface MessageLocalDataSource {
         messages: List<MessageDbModel>,
         channelName: String,
         topicName: String,
-        )
+    )
 
     suspend fun insertOldMessages(
         messages: List<MessageDbModel>,
@@ -25,5 +25,11 @@ interface MessageLocalDataSource {
         messages: List<MessageDbModel>,
         channelName: String,
         topicName: String,
-        )
+    )
+
+    suspend fun getMessage(id: Long): MessageDbModel
+
+    suspend fun updateMessage(message: MessageDbModel)
+
+    suspend fun deleteMessage(id: Long)
 }

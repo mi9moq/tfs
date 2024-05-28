@@ -31,4 +31,15 @@
     <string name="channel_description_hint">Channel description</string>
     <string name="error_create_channel">failed to create channel</string>
     <string name="empty_name_filed">The "name" field cannot be empty</string>
+    <string name="copy_message_text">Сopy message text</string>
+    <string name="add_reaction">Add reaction</string>
+    <string name="edit_message">Edit message</string>
+    <string name="edit_topic">Edit topic</string>
+    <string name="delete_message">Delete message</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="message_text">Message text</string>
+    <string name="error_change_message">Failed to change message</string>
+    <string name="error_change_topic">Failed to change topic</string>
+    <string name="error_delete_message">Failed to delete message</string>
 </resources>
