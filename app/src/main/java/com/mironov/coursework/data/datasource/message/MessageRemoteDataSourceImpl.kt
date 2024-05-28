@@ -62,12 +62,6 @@ class MessageRemoteDataSourceImpl @Inject constructor(
     override suspend fun getMessageById(id: Long): MessageDto =
         api.getMessageById(id).message
 
-    override suspend fun addReaction(messageId: Long, emojiName: String) =
-        api.addReaction(messageId, emojiName)
-
-    override suspend fun removeReaction(messageId: Long, emojiName: String) =
-        api.removeReaction(messageId, emojiName)
-
     override suspend fun editMessageContent(messageId: Long, content: String) =
         api.editMessageContent(messageId, content)
 

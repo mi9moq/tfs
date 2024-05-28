@@ -34,8 +34,4 @@ interface MessageRemoteDataSource {
     suspend fun editMessageTopic(messageId: Long, topic: String)
 
     suspend fun deleteMessage(messageId: Long)
-
-    suspend fun addReaction(messageId: Long, emojiName: String)
-
-    suspend fun removeReaction(messageId: Long, emojiName: String)
 }
