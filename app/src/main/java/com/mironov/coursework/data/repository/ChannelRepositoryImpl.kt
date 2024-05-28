@@ -28,6 +28,7 @@ class ChannelRepositoryImpl @Inject constructor(
                 it.toDbModel(isSubscribed)
             }
             streamsDbModel.forEach { localDataSource.removeStreams(it.name) }
+            localDataSource.removeStreams(isSubscribed)
             localDataSource.insertStreams(streamsDbModel)
             val channels = localDataSource.getSubscribedStreams().toListChannel()
             Result.Success(channels)
