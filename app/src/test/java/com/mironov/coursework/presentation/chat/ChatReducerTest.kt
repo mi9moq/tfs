@@ -1,6 +1,7 @@
 package com.mironov.coursework.presentation.chat
 
 import com.mironov.coursework.navigation.router.ChatRouter
+import com.mironov.coursework.stub.CHANNEL_ID
 import com.mironov.coursework.stub.CHANNEL_NAME
 import com.mironov.coursework.stub.EMOJI_NAME
 import com.mironov.coursework.stub.MESSAGE_CONTENT
@@ -22,14 +23,15 @@ class ChatReducerTest {
     private val reducer = ChatReducer(router)
 
     @Test
-    fun `event Load EXPECT Commands LoadMessageCache & LoadMessage`() {
-        val event = ChatEvent.Ui.Load(CHANNEL_NAME, TOPIC_NAME)
+    fun `event Load EXPECT Commands LoadMessageCache, LoadMessage & LoadExistingTopics`() {
+        val event = ChatEvent.Ui.Load(CHANNEL_NAME, TOPIC_NAME, CHANNEL_ID)
         val state = ChatState()
 
         val actual = reducer.reduce(event, state)
         val expectedCommands = listOf(
             ChatCommand.LoadMessageCache(CHANNEL_NAME, TOPIC_NAME),
             ChatCommand.LoadMessage(CHANNEL_NAME, TOPIC_NAME),
+            ChatCommand.LoadExistingTopics(CHANNEL_ID, CHANNEL_NAME),
         )
 
         assertEquals(expectedCommands, actual.commands)
