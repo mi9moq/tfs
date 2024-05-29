@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mironov.coursework.R
+import com.mironov.coursework.databinding.CreateChannelDialogBinding
 import com.mironov.coursework.databinding.FragmentChannelsPageBinding
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Topic
@@ -19,13 +20,16 @@ import com.mironov.coursework.presentation.channel.ChannelState
 import com.mironov.coursework.presentation.channel.SharedChannelState
 import com.mironov.coursework.ui.adapter.DelegateItem
 import com.mironov.coursework.ui.adapter.MainAdapter
-import com.mironov.coursework.ui.channels.chenal.ChannelDelegate
+import com.mironov.coursework.ui.channels.channel.ChannelDelegate
+import com.mironov.coursework.ui.channels.create.CreateChannelDelegate
 import com.mironov.coursework.ui.channels.topic.TopicDelegate
 import com.mironov.coursework.ui.main.ElmBaseFragment
 import com.mironov.coursework.ui.utils.appComponent
 import com.mironov.coursework.ui.utils.collectStateFlow
 import com.mironov.coursework.ui.utils.hide
 import com.mironov.coursework.ui.utils.show
+import com.mironov.coursework.ui.utils.showDialog
+import com.mironov.coursework.ui.utils.showErrorSnackBar
 import vivid.money.elmslie.android.renderer.elmStoreWithRenderer
 import vivid.money.elmslie.core.store.ElmStore
 import vivid.money.elmslie.core.store.Store
@@ -71,10 +75,12 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
             addDelegate(
                 ChannelDelegate(
                     ::showTopics,
-                    ::hideTopics
+                    ::hideTopics,
+                    ::onChannelClicked,
                 )
             )
             addDelegate(TopicDelegate(::onTopicClicked))
+            addDelegate(CreateChannelDelegate(::showCreateChannelDialog))
         }
     }
 
@@ -99,15 +105,16 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyInitialState()
+        initPage()
         addClickListeners()
-        observeState()
+        observeSharedState()
     }
 
     override fun render(state: ChannelState) {
-        if (state.isLoading) {
-            applyLoadingState()
-        }
+        if (state.isLoading)
+            binding.shimmer.show()
+        else
+            binding.shimmer.hide()
 
         state.content?.let {
             applyContentState(it)
@@ -116,23 +123,25 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
 
     override fun handleEffect(effect: ChannelEffect): Unit = when (effect) {
         ChannelEffect.ErrorLoadingChannels -> applyErrorState()
-        ChannelEffect.ErrorLoadingTopics -> applyErrorState()
+        ChannelEffect.ErrorLoadingTopics -> showErrorSnackBar(getString(R.string.error_load_topic))
+        ChannelEffect.ErrorCreateChannel -> showErrorSnackBar(getString(R.string.error_create_channel))
+        ChannelEffect.ErrorUpdateData -> showErrorSnackBar(getString(R.string.error_update_data))
     }
 
     private fun addClickListeners() {
         binding.tryAgain.setOnClickListener {
             if (isAllChannels)
-                store.accept(ChannelEvent.Ui.InitialAll)
+                store.accept(ChannelEvent.Ui.ReloadAll)
             else
-                store.accept(ChannelEvent.Ui.InitialSubscribed)
+                store.accept(ChannelEvent.Ui.ReloadSubscribed)
         }
     }
 
-    private fun observeState() {
+    private fun observeSharedState() {
         collectStateFlow(sharedViewModel.state, ::applySharedState)
     }
 
-    private fun applyInitialState() {
+    private fun initPage() {
         if (isAllChannels)
             store.accept(ChannelEvent.Ui.InitialAll)
         else
@@ -143,20 +152,11 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         with(binding) {
             shimmer.hide()
             tryAgain.isVisible = false
-            channels.isVisible = false
+            errorMessage.isVisible = false
             channels.isVisible = true
             channels.adapter = adapter
         }
         adapter.submitList(delegateItemList)
-    }
-
-    private fun applyLoadingState() {
-        with(binding) {
-            errorMessage.isVisible = false
-            tryAgain.isVisible = false
-            channels.isVisible = false
-            shimmer.show()
-        }
     }
 
     private fun applyErrorState() {
@@ -172,9 +172,8 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     private fun applySharedState(state: SharedChannelState) {
         when (state) {
             SharedChannelState.Initial -> Unit
-            is SharedChannelState.Content -> {
+            is SharedChannelState.Content ->
                 store.accept(ChannelEvent.Ui.ChangeFilter(state.data))
-            }
         }
     }
 
@@ -190,9 +189,34 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         store.accept(ChannelEvent.Ui.OnTopicClicked(topic))
     }
 
+    private fun onChannelClicked(channelName: String, channelId: Int) {
+        store.accept(ChannelEvent.Ui.OnChannelClicked(channelName, channelId))
+    }
+
     private fun parseArguments() {
         val args = requireArguments()
         isAllChannels = args.getBoolean(IS_ALL_CHANNELS_KEY)
+    }
+
+    private fun showCreateChannelDialog() {
+        val dialogLayout = CreateChannelDialogBinding.inflate(layoutInflater)
+        showDialog(
+            view = dialogLayout.root,
+            positiveButtonTextId = R.string.create,
+            positiveButtonClickListener = {
+                createChannel(
+                    name = dialogLayout.inputName.text?.trim().toString(),
+                    description = dialogLayout.inputDescription.text?.trim().toString(),
+                )
+            }
+        )
+    }
+
+    private fun createChannel(name: String, description: String) {
+        if (name.isNotEmpty())
+            store.accept(ChannelEvent.Ui.CreateChannel(name, description))
+        else
+            showErrorSnackBar(getString(R.string.empty_name_filed))
     }
 
     override fun onDestroyView() {

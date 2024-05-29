@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.parcelize)
 }
 
 android {
@@ -16,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mironov.coursework.CustomRunner"
     }
 
     buildTypes {
@@ -29,15 +30,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
         viewBinding = true
+    }
+
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -67,4 +72,28 @@ dependencies {
 
     implementation(libs.elmslie.core)
     implementation(libs.elmslie.android)
+
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+
+    androidTestImplementation(libs.kaspresso)
+    implementation(libs.androidx.rules)
+
+    debugImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.httpclient.android)
+    androidTestImplementation(libs.wiremock) {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
+
+    androidTestImplementation(libs.hamcrest)
+    debugImplementation (libs.fragment.testing)
+
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
@@ -79,3 +80,22 @@ fun ImageView.setCircleAvatar(avatarUrl: String?) {
 }
 
 fun Context.appComponent(): AppComponent = (applicationContext as ZulipApp).component
+
+fun Fragment.showDialog(
+    titleTextId: Int? = null,
+    messageTextId: Int? = null,
+    view: View?,
+    positiveButtonTextId: Int,
+    positiveButtonClickListener: () -> Unit,
+) {
+    AlertDialog.Builder(requireContext(),R.style.CustomAlertDialog).apply {
+        titleTextId?.let { setTitle(it) }
+        messageTextId?.let { setMessage(it) }
+        view?.let { setView(it) }
+        setPositiveButton(positiveButtonTextId) { _, _ ->
+            positiveButtonClickListener()
+        }
+        create()
+        show()
+    }
+}

@@ -30,16 +30,6 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
         fun newInstance() = ContactsFragment()
     }
 
-    override fun render(state: ContactsState) {
-        if (state.isLoading) {
-            applyLoadingState()
-        }
-
-        state.users?.let {
-            applyContentState(it)
-        }
-    }
-
     @Inject
     lateinit var contactStore: ElmStore<ContactsEvent, ContactsState, ContactsEffect, ContactsCommand>
 
@@ -83,6 +73,16 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
         addTextChangeListener()
     }
 
+    override fun render(state: ContactsState) {
+        if (state.isLoading) {
+            applyLoadingState()
+        }
+
+        state.users?.let {
+            applyContentState(it)
+        }
+    }
+
     override fun handleEffect(effect: ContactsEffect): Unit = when (effect) {
         ContactsEffect.Error -> applyErrorState()
     }
@@ -102,10 +102,6 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
         binding.tryAgain.setOnClickListener {
             store.accept(ContactsEvent.Ui.Refresh)
         }
-    }
-
-    private fun openUserProfile(id: Int) {
-        store.accept(ContactsEvent.Ui.OpenUserProfile(id))
     }
 
     private fun applyContentState(contactList: List<User>) {
@@ -130,6 +126,10 @@ class ContactsFragment : ElmBaseFragment<ContactsEffect, ContactsState, Contacts
         binding.contacts.isVisible = false
         binding.tryAgain.isVisible = true
         binding.errorMessage.isVisible = true
+    }
+
+    private fun openUserProfile(id: Int) {
+        store.accept(ContactsEvent.Ui.OpenUserProfile(id))
     }
 
     override fun onDestroyView() {

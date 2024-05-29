@@ -1,0 +1,102 @@
+{
+  "messages": [
+    {
+      "id": 433419352,
+      "sender_id": 708832,
+      "content": "MY MOCK MESSAGE",
+      "timestamp": 1713230866,
+      "reactions": [
+        {
+          "emoji_name": "thinking",
+          "emoji_code": "1f914",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user709765@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 709765,
+            "full_name": "Rostislav Kashentsev"
+          },
+          "user_id": 709765
+        }
+      ],
+      "sender_full_name": "Notification Bot",
+      "avatar_url": null,
+      "subject": "Test topic"
+    },{
+      "id": 433419052,
+      "sender_id": 100006,
+      "content": "Mock messages",
+      "timestamp": 1713230866,
+      "reactions": [
+        {
+          "emoji_name": "thinking",
+          "emoji_code": "1f914",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user709765@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 709765,
+            "full_name": "Rostislav Kashentsev"
+          },
+          "user_id": 709765
+        },
+        {
+          "emoji_name": "thinking",
+          "emoji_code": "1f914",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user708835@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 708835,
+            "full_name": "Mikhail Loginov"
+          },
+          "user_id": 708835
+        }
+      ],
+      "sender_full_name": "Notification Bot",
+      "avatar_url": null,
+      "subject": "Test topic"
+    },
+    {
+      "id": 434537695,
+      "sender_id": 709699,
+      "content": "123",
+      "timestamp": 1713651211,
+      "reactions": [
+        {
+          "emoji_name": "wink",
+          "emoji_code": "1f609",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user708822@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 708822,
+            "full_name": "Павел Шелковенко"
+          },
+          "user_id": 708822
+        },
+        {
+          "emoji_name": "stuck_out_tongue",
+          "emoji_code": "1f61b",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user709286@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 709286,
+            "full_name": "Daniil Elmirov"
+          },
+          "user_id": 709286
+        },
+        {
+          "emoji_name": "wink",
+          "emoji_code": "1f609",
+          "reaction_type": "unicode_emoji",
+          "user": {
+            "email": "user708832@tinkoff-android-spring-2024.zulipchat.com",
+            "id": 708832,
+            "full_name": "Denis Mironov"
+          },
+          "user_id": 708832
+        }
+      ],
+      "sender_full_name": "Dmitry Kucherenko",
+      "avatar_url": null,
+      "subject": "Test topic"
+    }
+  ]
+}

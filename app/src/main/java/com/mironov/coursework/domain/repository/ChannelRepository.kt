@@ -9,5 +9,13 @@ interface ChannelRepository {
 
     suspend fun gelAllChannels() : Result<List<Channel>>
 
-    suspend fun getTopics(channel: Channel): Result<List<Topic>>
+    suspend fun getTopics(channelId: Int, channelName: String): Result<List<Topic>>
+
+    suspend fun gelSubscribeChannelsCache() : Result<List<Channel>>
+
+    suspend fun gelAllChannelsCache() : Result<List<Channel>>
+
+    suspend fun getTopicsCache(channel: Channel): Result<List<Topic>>
+
+    suspend fun createChannel(name: String, description: String): Result<Boolean>
 }

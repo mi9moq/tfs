@@ -4,6 +4,7 @@ import com.mironov.coursework.navigation.LocalCiceroneHolder
 import com.mironov.coursework.navigation.screen.getChannelsScreen
 import com.mironov.coursework.navigation.screen.getContactsScreen
 import com.mironov.coursework.navigation.screen.getOwnProfileScreen
+import com.mironov.coursework.ui.main.NavigationFragment.Companion.CICERONE_CONTAINER_TAG
 import javax.inject.Inject
 
 interface MainRouter {
@@ -19,7 +20,7 @@ class MainRouterImpl @Inject constructor(
     private val localCiceroneHolder: LocalCiceroneHolder
 ) : MainRouter {
 
-    val router = localCiceroneHolder.getCicerone("bottom navigation").router
+    val router = localCiceroneHolder.getCicerone(CICERONE_CONTAINER_TAG).router
 
     override fun openChannels() {
         router.navigateTo(getChannelsScreen())

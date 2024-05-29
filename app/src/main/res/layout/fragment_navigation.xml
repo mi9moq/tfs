@@ -18,6 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/common_300"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        android:paddingVertical="8dp"
         app:itemIconTint="@color/bottom_navigation_state_color"
         app:itemTextColor="@color/bottom_navigation_state_color"
         app:layout_constraintBottom_toBottomOf="parent"

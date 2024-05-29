@@ -1,12 +1,16 @@
 package com.mironov.coursework.data.mapper
 
+import com.mironov.coursework.data.database.model.message.MessageDbModel
+import com.mironov.coursework.data.database.model.message.MessageInfoDbModel
+import com.mironov.coursework.data.database.model.message.ReactionDbModel
+import com.mironov.coursework.data.database.model.stream.StreamDbModel
+import com.mironov.coursework.data.database.model.stream.TopicDbModel
 import com.mironov.coursework.data.network.model.message.MessageDto
 import com.mironov.coursework.data.network.model.message.ReactionDto
 import com.mironov.coursework.data.network.model.presences.PresencesDto
 import com.mironov.coursework.data.network.model.presences.PresencesType
 import com.mironov.coursework.data.network.model.streams.StreamDto
 import com.mironov.coursework.data.network.model.topic.TopicDto
-import com.mironov.coursework.data.network.model.topic.TopicResponse
 import com.mironov.coursework.data.network.model.user.UserDto
 import com.mironov.coursework.domain.entity.Channel
 import com.mironov.coursework.domain.entity.Message
@@ -14,26 +18,20 @@ import com.mironov.coursework.domain.entity.Reaction
 import com.mironov.coursework.domain.entity.ReactionCondition
 import com.mironov.coursework.domain.entity.Topic
 import com.mironov.coursework.domain.entity.User
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
-fun List<MessageDto>.toListEntity(userId: Int): List<Message> = map {
-    it.toEntity(userId)
-}
-
-fun MessageDto.toEntity(userId: Int) = Message(
-    avatarUrl = avatarUrl,
-    content = content,
-    id = id,
-    isMeMessage = senderId == userId,
-    senderName = senderName,
-    senderId = senderId,
-    sendTime = timestamp.toLocalDate(),
+fun MessageDbModel.toEntity(userId: Int) = Message(
+    avatarUrl = message.avatarUrl,
+    content = message.content,
+    id = message.id,
+    isMeMessage = message.senderId == userId,
+    senderName = message.senderName,
+    senderId = message.senderId,
+    sendTime = message.timestamp,
     reactions = reactions.toEntity(userId),
+    topicName = message.topicName,
 )
 
-fun List<ReactionDto>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
+fun List<ReactionDbModel>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
     associate { reactionDto ->
         Reaction(
             emojiUnicode = reactionDto.emojiCode.toIntOrNull(16) ?: 0x1F916,
@@ -46,10 +44,54 @@ fun List<ReactionDto>.toEntity(userId: Int): Map<Reaction, ReactionCondition> =
         )
     }
 
-fun Long.toLocalDate(): LocalDate {
-    val zoneId = ZoneId.systemDefault()
-    return Instant.ofEpochSecond(this).atZone(zoneId).toLocalDate()
-}
+fun MessageDto.toDbModel(channelName: String, messageId: Long): MessageDbModel =
+    MessageDbModel(
+        message = MessageInfoDbModel(
+            id = id,
+            avatarUrl = avatarUrl,
+            senderId = senderId,
+            senderName = senderName,
+            timestamp = timestamp,
+            content = content,
+            channelName = channelName,
+            topicName = topicName
+        ),
+        reactions = reactions.toListDbModel(messageId)
+    )
+
+fun ReactionDto.toDbModel(messageId: Long): ReactionDbModel = ReactionDbModel(
+    emojiCode = emojiCode,
+    emojiName = emojiName,
+    userId = userId,
+    messageId = messageId
+)
+
+fun List<ReactionDto>.toListDbModel(messageId: Long): List<ReactionDbModel> =
+    map { it.toDbModel(messageId) }
+
+fun MessageDto.toEntity(userId: Int) = Message(
+    avatarUrl = avatarUrl,
+    content = content,
+    id = id,
+    isMeMessage = senderId == userId,
+    senderName = senderName,
+    senderId = senderId,
+    sendTime = timestamp,
+    reactions = reactions.toMapEntity(userId),
+)
+
+fun List<ReactionDto>.toMapEntity(userId: Int): Map<Reaction, ReactionCondition> =
+    associate { reactionDto ->
+        Reaction(
+            emojiUnicode = reactionDto.emojiCode.toIntOrNull(16) ?: 0x1F916,
+            emojiName = reactionDto.emojiName
+        ) to ReactionCondition(
+            isSelected = reactionDto.userId == userId,
+            count = this.count {
+                it.emojiCode == reactionDto.emojiCode
+            }
+        )
+    }
 
 fun UserDto.toEntity(presence: User.Presence) = User(
     id = userId,
@@ -58,21 +100,6 @@ fun UserDto.toEntity(presence: User.Presence) = User(
     email = email,
     presence = presence,
 )
-
-fun StreamDto.toChannel(): Channel = Channel(id = streamId, name = name)
-
-fun List<StreamDto>.toListChannel(): List<Channel> = map { it.toChannel() }
-
-fun TopicDto.toTopic(parentChannelName: String): Topic = Topic(
-    id = maxId,
-    name = name,
-    messageCount = 0,
-    parentChannelName = parentChannelName
-)
-
-fun TopicResponse.toListTopic(parentChannelName: String): List<Topic> = topics.map {
-    it.toTopic(parentChannelName)
-}
 
 fun PresencesDto.toEntity(): User.Presence = when {
     aggregated.status == PresencesType.ACTIVE.value
@@ -85,6 +112,28 @@ fun PresencesDto.toEntity(): User.Presence = when {
 
     else -> User.Presence.OFFLINE
 }
+
+fun StreamDto.toDbModel(isSubscribed: Boolean): StreamDbModel = StreamDbModel(
+    id = streamId,
+    name = name,
+    isSubscribed = isSubscribed
+)
+
+fun StreamDbModel.toEntity(): Channel = Channel(id = id, name = name)
+
+fun TopicDbModel.toTopic(parentChannelName: String): Topic = Topic(
+    id = id,
+    name = name,
+    messageCount = 0,
+    parentChannelName = parentChannelName
+)
+
+fun TopicDto.toDbModel(streamId: Int): TopicDbModel = TopicDbModel(
+    name = name,
+    streamId = streamId
+)
+
+fun List<StreamDbModel>.toListChannel(): List<Channel> = map { it.toEntity() }
 
 const val MY_ID = 708832
 

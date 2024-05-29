@@ -19,7 +19,7 @@
         <item name="profile_log_out_text_color">@color/text_common_100</item>
         <item name="profile_log_out_background_color">@color/log_out_background</item>
         <item name="profile_status_text_color">@color/text_common_500</item>
-        
+
         <item name="background_100">@color/common_100</item>
         <item name="background_200">@color/common_200</item>
         <item name="background_300">@color/common_300</item>
@@ -34,4 +34,9 @@
     </style>
 
     <style name="Theme.Hw1" parent="Base.Theme.Hw1" />
+
+    <style name="CustomAlertDialog" parent="Theme.Material3.Dark.Dialog">
+        <item name="android:background">@color/common_500</item>
+        <item name="colorPrimary">@color/text_common_100</item>
+    </style>
 </resources>

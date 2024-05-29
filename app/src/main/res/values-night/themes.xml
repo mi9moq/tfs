@@ -31,4 +31,11 @@
         <item name="text_400">@color/text_common_400</item>
         <item name="text_500">@color/text_common_500</item>
     </style>
+
+    <style name="Theme.Hw1" parent="Base.Theme.Hw1" />
+
+    <style name="CustomAlertDialog" parent="Theme.Material3.Dark.Dialog">
+        <item name="android:background">@color/common_500</item>
+        <item name="colorPrimary">@color/text_common_100</item>
+    </style>
 </resources>

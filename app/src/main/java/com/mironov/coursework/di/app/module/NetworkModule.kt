@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.mironov.coursework.data.network.AuthInterceptor
 import com.mironov.coursework.data.network.api.ZulipApi
 import com.mironov.coursework.di.app.annotation.AppScope
+import com.mironov.coursework.di.app.annotation.BaseUrl
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
@@ -12,12 +13,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.create
+import java.util.concurrent.TimeUnit
 
 @Module
 object NetworkModule {
 
-    private const val BASE_URL = "https://tinkoff-android-spring-2024.zulipchat.com/api/v1/"
     private const val MEDIA_TYPE = "application/json"
+
+    private const val TIMEOUT_SECONDS = 5L
 
     @AppScope
     @Provides
@@ -29,6 +32,9 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient = OkHttpClient
         .Builder()
+        .connectTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT_SECONDS,TimeUnit.SECONDS)
         .addInterceptor(authInterceptor)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -40,8 +46,9 @@ object NetworkModule {
     fun provideRetrofit(
         client: OkHttpClient,
         jsonSerializer: Json,
+        @BaseUrl baseUrl: String
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .addConverterFactory(jsonSerializer.asConverterFactory(MEDIA_TYPE.toMediaType()))
         .client(client)
         .build()

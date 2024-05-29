@@ -12,13 +12,21 @@ sealed interface ChannelEvent {
 
         data object InitialSubscribed : Ui
 
+        data object ReloadAll : Ui
+
+        data object ReloadSubscribed : Ui
+
         data class ShowTopic(val channel: Channel) : Ui
 
         data class HideTopic(val channelId: Int) : Ui
 
         data class OnTopicClicked(val topic: Topic) : Ui
 
+        data class OnChannelClicked(val channelName: String, val channelId: Int) : Ui
+
         data class ChangeFilter(val queryItem: QueryItem): Ui
+
+        data class CreateChannel(val name: String, val description: String): Ui
     }
 
     sealed interface Domain : ChannelEvent {
@@ -37,5 +45,13 @@ sealed interface ChannelEvent {
             val content: List<DelegateItem>,
             val query: String
         ): Domain
+
+        data object EmptyChannelCache: Domain
+
+        data object CreateChannelSuccess: Domain
+
+        data object CreateChannelFailure: Domain
+
+        data object EmptyEvent: Domain
     }
 }

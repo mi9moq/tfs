@@ -5,4 +5,8 @@ sealed interface ChannelEffect {
     data object ErrorLoadingChannels: ChannelEffect
 
     data object ErrorLoadingTopics: ChannelEffect
+
+    data object ErrorCreateChannel: ChannelEffect
+
+    data object ErrorUpdateData: ChannelEffect
 }

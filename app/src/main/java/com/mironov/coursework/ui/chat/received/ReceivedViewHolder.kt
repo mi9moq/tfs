@@ -8,15 +8,19 @@ class ReceivedViewHolder(
     private val binding: ReceivedMessageItemBinding,
     private val chooseReaction: (Long) -> Unit,
     private val onReactionClickListener: (id: Long, emoji: String, isSelected: Boolean) -> Unit,
+    private val onMessageLongClickListener: (Message) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: Message) {
         with(binding.main) {
             setMessage(model)
             setAvatar(model.avatarUrl)
-            setOnMessageLongClickListener(chooseReaction)
             setOnAddClickListener(chooseReaction)
             setOnReactionsClickListeners(onReactionClickListener)
+        }
+        itemView.setOnLongClickListener {
+            onMessageLongClickListener(model)
+            true
         }
     }
 }

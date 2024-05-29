@@ -24,6 +24,8 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
 
     companion object {
         fun newInstance() = NavigationFragment()
+
+        const val CICERONE_CONTAINER_TAG = "bottom navigation"
     }
 
     private val component by lazy {
@@ -41,7 +43,7 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     }
 
     private val cicerone: Cicerone<Router>
-        get() = localCiceroneHolder.getCicerone("bottom navigation")
+        get() = localCiceroneHolder.getCicerone(CICERONE_CONTAINER_TAG)
 
     private var _binding: FragmentNavigationBinding? = null
     private val binding: FragmentNavigationBinding
@@ -54,9 +56,8 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
             cicerone.router.newRootScreen(getChannelsScreen())
-        }
     }
 
     override fun onCreateView(
@@ -93,17 +94,14 @@ class NavigationFragment : Fragment(), OnItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.itemId != binding.bottomNavigation.selectedItemId) {
             when (item.itemId) {
-                R.id.menu_channels -> {
+                R.id.menu_channels ->
                     viewModel.openChannels()
-                }
 
-                R.id.menu_people -> {
+                R.id.menu_people ->
                     viewModel.openContacts()
-                }
 
-                R.id.menu_profile -> {
+                R.id.menu_profile ->
                     viewModel.openOwnProfile()
-                }
             }
         }
         return true
