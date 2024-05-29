@@ -78,9 +78,6 @@ interface ZulipApi {
         @Path(PATH_USER_ID) userId: Int
     ): PresencesResponse
 
-    @POST("users/me/presence?status=active")
-    suspend fun setOwnStatusActive()
-
     @GET("messages/{$PATH_MESSAGE_ID}")
     suspend fun getMessageById(
         @Path(PATH_MESSAGE_ID) messageId: Long,

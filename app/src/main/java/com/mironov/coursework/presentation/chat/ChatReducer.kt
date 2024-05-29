@@ -74,7 +74,7 @@ class ChatReducer @Inject constructor(
             }
         }
 
-        ChatEvent.Domain.LoadTopicFailure -> Unit //TODO()
+        ChatEvent.Domain.LoadTopicFailure -> Unit
 
         is ChatEvent.Domain.LoadTopicSuccess -> {
             state {
