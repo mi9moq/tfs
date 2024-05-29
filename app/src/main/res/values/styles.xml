@@ -69,4 +69,9 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="AppTabLayout">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">?attr/text_100</item>
+    </style>
 </resources>
