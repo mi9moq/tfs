@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SearchEditTex">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableEnd">@drawable/ic_search</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/text_common_100</item>
+        <item name="android:textColorHint">@color/text_common_100</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:paddingStart">62dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingVertical">20dp</item>
+        <item name="android:background">?attr/background_300</item>
+    </style>
+
+    <style name="ToolbarTitle">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="DialogIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="DialogTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">?attr/text_300</item>
+    </style>
+
+    <style name="DialogEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:textColorHint">?attr/text_200</item>
+    </style>
+
+    <style name="TryAgainButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:paddingHorizontal">56dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:text">@string/try_again</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:backgroundTint">?attr/profile_log_out_background_color</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ErrorMessageTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?attr/text_100</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
+</resources>

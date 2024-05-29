@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="common">
+        <attr name="background_100" format="color" />
+        <attr name="background_200" format="color" />
+        <attr name="background_300" format="color" />
+        <attr name="background_400" format="color" />
+        <attr name="background_500" format="color" />
+        <attr name="text_100" format="color" />
+        <attr name="text_200" format="color" />
+        <attr name="text_300" format="color" />
+        <attr name="text_400" format="color" />
+        <attr name="text_500" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="EmojiView">
+        <attr name="count" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="FlexboxLayout">
+        <attr name="row_margin" format="integer" />
+        <attr name="column_margin" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MessageViewGroup">
+        <attr name="message_background" format="color" />
+        <attr name="is_sent_message" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="chanel">
+        <attr name="chanel_edit_text_background_color" format="color" />
+        <attr name="chanel_edit_text_hint_color" format="color" />
+        <attr name="chanel_background_color" format="color" />
+        <attr name="chanel_messages_background_color" format="color" />
+        <attr name="chanel_date_background_color" format="color" />
+        <attr name="chanel_date_color" format="color" />
+        <attr name="chanel_choose_reaction_divider_color" format="color" />
+        <attr name="chanel_toolbar_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="profile">
+        <attr name="profile_name_text_color" format="color" />
+        <attr name="profile_status_text_color" format="color" />
+        <attr name="profile_log_out_text_color" format="color" />
+        <attr name="profile_log_out_background_color" format="color" />
+    </declare-styleable>
+</resources>

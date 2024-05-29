@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/background_300">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/chanel_toolbar_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        app:titleTextColor="?attr/text_100"
+        tools:title="#general" />
+
+    <TextView
+        android:id="@+id/current_topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/background_400"
+        android:gravity="center"
+        android:paddingVertical="12dp"
+        android:textColor="?attr/text_300"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:text="TOPIC: Testing" />
+
+    <TextView
+        android:id="@+id/chat_error_message"
+        style="@style/ErrorMessageTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        tools:text="не удалось загрузить сообщения" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/try_again"
+        style="@style/TryAgainButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chat_error_message" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/background_500"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/choose_topic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/try_again"
+        tools:listitem="@layout/received_message_item" />
+
+    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        android:id="@+id/choose_topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:paddingVertical="10dp"
+        android:paddingLeft="20dp"
+        android:textColor="?attr/text_300"
+        android:textColorHint="?attr/text_300"
+        app:layout_constraintBottom_toTopOf="@id/message_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/message_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/edit_text_bg"
+        android:hint="@string/write"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:paddingVertical="16dp"
+        android:paddingLeft="20dp"
+        android:textColor="?attr/text_300"
+        android:textColorHint="?attr/text_300"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/send_message"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/send_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_input" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_topic"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+
+            <include layout="@layout/message_placeholder" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
