@@ -105,9 +105,9 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyInitialState()
+        initPage()
         addClickListeners()
-        observeState()
+        observeSharedState()
     }
 
     override fun render(state: ChannelState) {
@@ -137,11 +137,11 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         }
     }
 
-    private fun observeState() {
+    private fun observeSharedState() {
         collectStateFlow(sharedViewModel.state, ::applySharedState)
     }
 
-    private fun applyInitialState() {
+    private fun initPage() {
         if (isAllChannels)
             store.accept(ChannelEvent.Ui.InitialAll)
         else
@@ -172,9 +172,8 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
     private fun applySharedState(state: SharedChannelState) {
         when (state) {
             SharedChannelState.Initial -> Unit
-            is SharedChannelState.Content -> {
+            is SharedChannelState.Content ->
                 store.accept(ChannelEvent.Ui.ChangeFilter(state.data))
-            }
         }
     }
 
@@ -199,12 +198,6 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
         isAllChannels = args.getBoolean(IS_ALL_CHANNELS_KEY)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.channels.adapter = null
-        _binding = null
-    }
-
     private fun showCreateChannelDialog() {
         val dialogLayout = CreateChannelDialogBinding.inflate(layoutInflater)
         showDialog(
@@ -224,5 +217,11 @@ class ChannelsPageFragment : ElmBaseFragment<ChannelEffect, ChannelState, Channe
             store.accept(ChannelEvent.Ui.CreateChannel(name, description))
         else
             showErrorSnackBar(getString(R.string.empty_name_filed))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.channels.adapter = null
+        _binding = null
     }
 }

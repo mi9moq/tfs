@@ -69,10 +69,6 @@ class OwnProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, ProfileE
         addClickListeners()
     }
 
-    override fun handleEffect(effect: ProfileEffect): Unit = when (effect) {
-        ProfileEffect.Error -> applyErrorState()
-    }
-
     override fun render(state: ProfileState) {
         if (state.isLoading) {
             applyLoadingState()
@@ -81,6 +77,10 @@ class OwnProfileFragment : ElmBaseFragment<ProfileEffect, ProfileState, ProfileE
         state.user?.let {
             applyContentState(it)
         }
+    }
+
+    override fun handleEffect(effect: ProfileEffect): Unit = when (effect) {
+        ProfileEffect.Error -> applyErrorState()
     }
 
     private fun initStatusBar() {
