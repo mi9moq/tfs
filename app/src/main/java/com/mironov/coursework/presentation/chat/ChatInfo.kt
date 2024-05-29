@@ -5,13 +5,13 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ChatInfo(
-    val topicName: String = NO_TOPIC,
-    val channelName: String,
+    val topicName: String = EMPTY_STRING,
+    val channelName: String = EMPTY_STRING,
     val channelId: Int = UNDEFINED_ID,
 ) : Parcelable {
 
     companion object {
-        const val NO_TOPIC = ""
+        const val EMPTY_STRING = ""
         const val UNDEFINED_ID = -1
     }
 }

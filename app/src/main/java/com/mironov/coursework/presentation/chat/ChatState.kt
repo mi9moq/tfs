@@ -9,5 +9,5 @@ data class ChatState(
     val isNeedLoadNextPage: Boolean = true,
     val isNeedLoadPrevPage: Boolean = true,
     val topicNameList: List<String>? = null,
-    val chatInfo: ChatInfo = ChatInfo(channelName = ""),
+    val chatInfo: ChatInfo = ChatInfo(),
 )

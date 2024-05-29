@@ -16,7 +16,7 @@ val chatInfoWithTopic = ChatInfo(
     channelId = ChatInfo.UNDEFINED_ID,
 )
 val chatInfo = ChatInfo(
-    topicName = ChatInfo.NO_TOPIC,
+    topicName = ChatInfo.EMPTY_STRING,
     channelName = CHANNEL_NAME,
     channelId = 123456,
 )

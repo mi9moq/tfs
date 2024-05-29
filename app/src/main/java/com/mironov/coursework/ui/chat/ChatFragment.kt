@@ -300,7 +300,7 @@ class ChatFragment : ElmBaseFragment<ChatEffect, ChatState, ChatEvent>() {
 
     private fun sendMessage(text: String) {
         if (text.isNotEmpty()) {
-            if (topicName == ChatInfo.NO_TOPIC)
+            if (topicName == ChatInfo.EMPTY_STRING)
                 sendMessageToChosenTopic(text)
             else
                 sendMessageToCurrentTopic(text)
